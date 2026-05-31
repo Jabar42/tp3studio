@@ -4,6 +4,9 @@ dist/
 # generated types
 .astro/
 
+# claude code local config
+.mcp.json
+
 # dependencies
 node_modules/
 

@@ -9,9 +9,9 @@ const cases = [
   { name: 'Clínica Veterinaria Patitas', location: 'Santiago, RD', description: 'Web con sistema de citas y recordatorios automáticos. 90% de clientes agenda en línea.', tags: ['Web + Agente + Calendario', 'WhatsApp'] },
 ];
 ---
-<BaseLayout title="Casos de Éxito — Konversa" description="Descubre cómo negocios reales están creciendo con su web y chatbot de Konversa.">
+<BaseLayout title="Casos de Éxito — Tp3studio" description="Descubre cómo negocios reales están creciendo con su web y chatbot de Tp3studio.">
   <section class="section"><div class="container">
-    <div class="page-header"><span class="section-label">Casos de Éxito</span><h1>Negocios reales, resultados reales</h1><p>Cada uno de estos negocios dio el salto digital con Konversa.</p></div>
+    <div class="page-header"><span class="section-label">Casos de Éxito</span><h1>Negocios reales, resultados reales</h1><p>Cada uno de estos negocios dio el salto digital con Tp3studio.</p></div>
     <div class="portfolio-grid">
       {cases.map(c => (<article class="portfolio-card"><div class="portfolio-card-tags">{c.tags.map(t => <span class="tag">{t}</span>)}</div><h3>{c.name}</h3><p class="portfolio-location">{c.location}</p><p class="portfolio-desc">{c.description}</p></article>))}
     </div>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
   --color-terracotta: #C67B5C;
@@ -21,7 +21,7 @@
   --color-destructive: #DC2626;
   --color-whatsapp: #25D366;
 
-  --font-heading: 'Fredoka', system-ui, sans-serif;
+  --font-heading: 'Outfit', system-ui, sans-serif;
   --font-body: 'Nunito', system-ui, sans-serif;
 
   --radius-sm: 0.75rem;

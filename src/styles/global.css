@@ -1,24 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --color-terracotta: #C67B5C;
-  --color-clay: #B5651D;
-  --color-sand: #D4C4A8;
-  --color-cream: #F5F0E1;
-  --color-amber: #D97706;
-  --color-deep: #2D1A0F;
+  --color-terracotta: #6366F1;
+  --color-clay: #4F46E5;
+  --color-sand: #A5B4FC;
+  --color-cream: #F8F7FF;
+  --color-amber: #6366F1;
+  --color-deep: #0F0E1A;
 
-  --color-primary: #C67B5C;
-  --color-primary-hover: #B5651D;
-  --color-accent: #D97706;
-  --color-accent-hover: #B45309;
-  --color-surface: #FDF8F0;
-  --color-bg: #F5F0E1;
-  --color-fg: #2D1A0F;
-  --color-muted: #E8DFD0;
-  --color-border: #D4C4A8;
-  --color-success: #65A30D;
-  --color-destructive: #DC2626;
+  --color-primary: #6366F1;
+  --color-primary-hover: #4F46E5;
+  --color-accent: #6366F1;
+  --color-accent-hover: #4F46E5;
+  --color-surface: #FFFFFF;
+  --color-bg: #FAFAFA;
+  --color-fg: #18181B;
+  --color-muted: #F4F4F5;
+  --color-border: #E4E4E7;
+  --color-success: #10B981;
+  --color-destructive: #EF4444;
   --color-whatsapp: #25D366;
 
   --font-heading: 'Outfit', system-ui, sans-serif;
@@ -30,10 +30,10 @@
   --radius-xl: 2rem;
   --radius-full: 9999px;
 
-  --shadow-sm: 0 2px 8px rgba(45, 26, 15, 0.06);
-  --shadow-md: 0 8px 24px rgba(45, 26, 15, 0.08);
-  --shadow-lg: 0 16px 48px rgba(45, 26, 15, 0.10);
-  --shadow-glow: 0 0 40px rgba(217, 119, 6, 0.15);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
 
   --max-width: 1200px;
 }

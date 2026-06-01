@@ -1,0 +1,37 @@
+<section class="cta-final" id="cta">
+  <div class="cta-bg" aria-hidden="true"><div class="cta-blob cta-blob-1"></div><div class="cta-blob cta-blob-2"></div><div class="cta-blob cta-blob-3"></div></div>
+  <div class="container cta-final-inner">
+    <span class="section-label" style="color:rgba(255,255,255,0.7)">Sin excusas</span>
+    <h2>Estoy listo para <span class="cta-accent">ayudarte</span></h2>
+    <p>Cuéntanos de tu negocio y en 48 horas tendrás tu web profesional con chatbot. Sin vueltas, sin excusas.</p>
+    <div class="cta-final-actions">
+      <a href="/precios" class="btn-cta-light"><span>Quiero mi página web</span><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="https://wa.me/15559273372" class="btn-cta-whatsapp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>Asesoría personalizada</a>
+    </div>
+  </div>
+</section>
+
+<style>
+.cta-final { position: relative; background: var(--color-deep); overflow: hidden; padding: 5rem 0; }
+.cta-bg { position: absolute; inset: 0; overflow: hidden; }
+.cta-blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15; }
+.cta-blob-1 { width: 400px; height: 400px; background: var(--color-terracotta); top: -150px; right: -100px; }
+.cta-blob-2 { width: 300px; height: 300px; background: var(--color-amber); bottom: -100px; left: -80px; }
+.cta-blob-3 { width: 200px; height: 200px; background: var(--color-sand); top: 40%; left: 30%; opacity: 0.1; }
+.cta-final-inner { position: relative; z-index: 1; text-align: center; max-width: 34rem; padding: 2rem 1.5rem; color: #fff; }
+.cta-final-inner h2 { font-size: clamp(2rem, 5vw, 3rem); color: #fff; margin-bottom: 0.75rem; }
+.cta-accent { color: var(--color-sand); }
+.cta-final-inner p { font-size: 1.0625rem; color: rgba(255,255,255,0.6); margin-bottom: 2rem; }
+.cta-final-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.85rem; }
+.btn-cta-light { display: inline-flex; align-items: center; gap: 0.625rem; font-family: var(--font-body); font-weight: 800; font-size: 1.1rem; padding: 1.1rem 2.5rem; text-decoration: none; border-radius: var(--radius-full); color: var(--color-deep); background: linear-gradient(135deg, #fff, #F5F0E1); box-shadow: 0 8px 32px rgba(0,0,0,0.25); transition: transform 300ms cubic-bezier(.34,1.56,.64,1), box-shadow 300ms; }
+.btn-cta-light:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 14px 40px rgba(0,0,0,0.35); color: var(--color-deep); }
+.btn-cta-light:active { transform: scale(0.97); }
+.btn-cta-light svg { transition: transform 300ms cubic-bezier(.34,1.56,.64,1); }
+.btn-cta-light:hover svg { transform: translateX(4px); }
+.btn-cta-whatsapp { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-body); font-weight: 700; font-size: 0.9375rem; padding: 0.95rem 1.75rem; text-decoration: none; border-radius: var(--radius-full); color: #fff; background: transparent; border: 2px solid rgba(255,255,255,0.2); transition: border-color 250ms, background 250ms, transform 250ms cubic-bezier(.34,1.56,.64,1); }
+.btn-cta-whatsapp:hover { border-color: #25D366; background: rgba(37,211,102,0.15); color: #fff; transform: translateY(-2px); }
+.btn-cta-whatsapp:active { transform: scale(0.97); }
+.btn-cta-whatsapp svg { transition: transform 300ms cubic-bezier(.34,1.56,.64,1); }
+.btn-cta-whatsapp:hover svg { transform: scale(1.12) rotate(-6deg); }
+@media (max-width: 480px) { .btn-cta-light, .btn-cta-whatsapp { width: 100%; justify-content: center; } }
+</style>

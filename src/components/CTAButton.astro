@@ -1,0 +1,93 @@
+---
+export interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'whatsapp' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { href, variant = 'primary', size = 'md', class: extraClass = '' } = Astro.props;
+const classes = ['btn-creative', `btn-${variant}`, `btn-${size}`, extraClass].join(' ');
+---
+
+<a {href} class={classes}>
+  <slot />
+  {variant === 'primary' && (
+    <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  )}
+</a>
+
+<style>
+.btn-creative {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  transition: transform 250ms cubic-bezier(.34,1.56,.64,1), box-shadow 250ms ease, background 250ms ease;
+}
+.btn-creative:active { transform: scale(0.96); }
+
+.btn-primary {
+  background: linear-gradient(135deg, #D97706, #C67B5C);
+  color: #fff;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 20px rgba(217, 119, 6, 0.25), 0 1px 3px rgba(0,0,0,0.08);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(217, 119, 6, 0.35), 0 2px 6px rgba(0,0,0,0.1);
+  color: #fff;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity: 0; transition: opacity 250ms;
+}
+.btn-primary:hover::after { opacity: 1; }
+
+.btn-arrow { transition: transform 250ms cubic-bezier(.34,1.56,.64,1); }
+.btn-primary:hover .btn-arrow { transform: translateX(3px); }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-clay);
+  border: 2px solid var(--color-terracotta);
+  border-radius: var(--radius-full);
+}
+.btn-secondary:hover { background: var(--color-terracotta); color: #fff; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(198, 123, 92, 0.25); }
+
+.btn-whatsapp {
+  background: linear-gradient(135deg, #22C55E, #16A34A);
+  color: #fff;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+}
+.btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34, 197, 94, 0.4); color: #fff; }
+
+.btn-outline {
+  background: transparent; color: var(--color-deep);
+  border: 1.5px solid var(--color-border); border-radius: var(--radius-full);
+}
+.btn-outline:hover { border-color: var(--color-terracotta); color: var(--color-clay); background: rgba(198,123,92,0.04); }
+
+.btn-ghost {
+  background: transparent; color: var(--color-deep);
+  border-radius: var(--radius-full); opacity: 0.7;
+}
+.btn-ghost:hover { opacity: 1; background: rgba(198,123,92,0.06); color: var(--color-clay); }
+
+.btn-sm { padding: 0.5rem 1.25rem; font-size: 0.8125rem; }
+.btn-md { padding: 0.8rem 2rem; font-size: 0.9375rem; }
+.btn-lg { padding: 1rem 2.75rem; font-size: 1.0625rem; }
+</style>

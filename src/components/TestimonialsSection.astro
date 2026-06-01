@@ -1,0 +1,30 @@
+<section class="testimonials section" id="testimonios">
+  <div class="container">
+    <div class="testimonials-header"><span class="section-label">Lo que dicen</span><h2>Negocios reales <span class="accent-text">ya están creciendo</span></h2></div>
+    <div class="testimonials-grid">
+      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--1">MG</div><div><div class="t-stars">★★★★★</div><strong class="t-name">María G.</strong><span class="t-biz">Tienda de ropa, Bogotá</span></div></div><p class="t-text">"No sabía nada de páginas web y en 48 horas ya tenía mi negocio en línea. <strong>Increíble lo fácil que fue.</strong>"</p></article>
+      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--2">CR</div><div><div class="t-stars">★★★★★</div><strong class="t-name">Carlos R.</strong><span class="t-biz">Servicios legales, CDMX</span></div></div><p class="t-text">"El chatbot me cambió el juego. Responde consultas mientras duermo y solo veo clientes <strong>listos para contratar</strong>."</p></article>
+      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--3">LP</div><div><div class="t-stars">★★★★★</div><strong class="t-name">Laura y Pedro</strong><span class="t-biz">Restaurante, Santo Domingo</span></div></div><p class="t-text">"Pensé que tener web era carísimo. <strong>Por $150 USD</strong> mi restaurante ya tiene presencia profesional y reservas por WhatsApp."</p></article>
+    </div>
+    <div class="testimonials-cta"><a href="/portfolio" class="btn-creative btn-secondary btn-md">Ver más historias <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  </div>
+</section>
+
+<style>
+.testimonials-header { text-align: center; max-width: 34rem; margin: 0 auto 3rem; }
+.testimonials-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+.t-card { background: #fff; border: 1.5px solid var(--color-border); border-radius: var(--radius-xl); padding: 1.75rem; transition: transform 250ms, box-shadow 250ms; }
+.t-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.t-card-top { display: flex; align-items: center; gap: 0.875rem; margin-bottom: 1rem; }
+.t-avatar { width: 3rem; height: 3rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-weight: 700; font-size: 0.875rem; color: #fff; flex-shrink: 0; }
+.t-avatar--1 { background: linear-gradient(135deg, #C67B5C, #D97706); }
+.t-avatar--2 { background: linear-gradient(135deg, #92400E, #B5651D); }
+.t-avatar--3 { background: linear-gradient(135deg, #D4C4A8, #C67B5C); }
+.t-stars { color: #F59E0B; font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 0.15rem; }
+.t-name { display: block; font-size: 0.875rem; }
+.t-biz { font-size: 0.75rem; color: rgba(45,26,15,0.4); }
+.t-text { font-size: 0.9375rem; line-height: 1.7; margin: 0; color: rgba(45,26,15,0.8); font-style: italic; }
+.testimonials-cta { text-align: center; margin-top: 2.5rem; }
+@media (min-width: 640px) { .testimonials-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .testimonials-grid { grid-template-columns: repeat(3, 1fr); } }
+</style>

@@ -1,0 +1,143 @@
+---
+const navItems = [
+  { href: '/portfolio', label: 'Casos de Éxito' },
+  { href: '/precios', label: 'Precios' },
+  { href: '/preview', label: 'Prueba tu web' },
+  { href: '/about', label: 'Nuestra Historia' },
+];
+---
+
+<header class="header">
+  <div class="header-inner container">
+    <a href="/" class="logo" aria-label="Konversa — Inicio">
+      <div class="logo-icon">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+          <rect width="34" height="34" rx="9" fill="url(#logoGrad)"/>
+          <circle cx="12.5" cy="13.5" r="3" fill="#fff" opacity="0.95"/>
+          <circle cx="21.5" cy="13.5" r="3" fill="#fff" opacity="0.95"/>
+          <rect x="10" y="18" width="14" height="2.2" rx="1.1" fill="#fff" opacity="0.9"/>
+          <path d="M17 24.5v3.5M12.5 28h9" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/>
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="34" y2="34">
+              <stop stop-color="#D97706"/><stop offset="1" stop-color="#C67B5C"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">Konversa</span>
+    </a>
+
+    <nav class="nav" aria-label="Navegación principal">
+      {navItems.map(item => (
+        <a href={item.href} class="nav-link">{item.label}</a>
+      ))}
+      <a href="/audit" class="nav-link nav-link--accent">Auditoría Gratis</a>
+      <span class="nav-sep" aria-hidden="true"></span>
+      <a href="/auth" class="nav-link nav-link--ghost">Inicia Sesión</a>
+      <a
+        href="https://wa.me/15559273372?text=Hola%2C%20quiero%20asesor%C3%ADa%20para%20elegir%20el%20plan%20ideal%20para%20mi%20negocio."
+        class="btn-header"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+        Asesor
+      </a>
+    </nav>
+
+    <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú" aria-expanded="false">
+      <span class="hamburger"></span>
+    </button>
+  </div>
+</header>
+
+<style>
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(245, 240, 225, 0.8);
+  backdrop-filter: blur(20px) saturate(1.5);
+  border-bottom: 1px solid rgba(212, 196, 168, 0.4);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-deep);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.3rem;
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+.logo:hover { color: var(--color-deep); }
+.logo-icon {
+  filter: drop-shadow(0 2px 6px rgba(214, 119, 6, 0.25));
+  transition: filter 300ms;
+}
+.logo:hover .logo-icon {
+  filter: drop-shadow(0 2px 12px rgba(214, 119, 6, 0.4));
+}
+
+.logo-text { display: none; }
+
+.nav { display: flex; align-items: center; gap: 0.25rem; }
+
+.nav-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-deep);
+  opacity: 0.7;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-full);
+  transition: opacity 200ms, background 200ms;
+  font-family: var(--font-body);
+}
+.nav-link:hover { opacity: 1; background: rgba(198, 123, 92, 0.08); color: var(--color-clay); }
+
+.nav-link--accent { color: var(--color-clay); opacity: 1; background: rgba(217, 119, 6, 0.07); }
+.nav-link--accent:hover { background: rgba(217, 119, 6, 0.14); }
+
+.nav-sep { width: 1px; height: 20px; background: var(--color-border); margin: 0 0.25rem; }
+.nav-link--ghost { opacity: 0.5; }
+
+.btn-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  padding: 0.5rem 1rem;
+  margin-left: 0.25rem;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #22C55E, #16A34A);
+  color: #fff;
+  text-decoration: none;
+  transition: transform 200ms, box-shadow 200ms;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+}
+.btn-header:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(34, 197, 94, 0.4); color: #fff; }
+
+.mobile-toggle { display: none; background: none; border: none; padding: 0.5rem; cursor: pointer; }
+
+.hamburger, .hamburger::before, .hamburger::after {
+  display: block; width: 24px; height: 2.5px;
+  background: var(--color-deep); border-radius: 3px; transition: all 250ms;
+}
+.hamburger::before, .hamburger::after { content: ''; }
+.hamburger::before { transform: translateY(-7px); }
+.hamburger::after { transform: translateY(5px); }
+
+@media (min-width: 480px) { .logo-text { display: inline; } }
+@media (max-width: 880px) { .nav { display: none; } .mobile-toggle { display: block; } }
+</style>

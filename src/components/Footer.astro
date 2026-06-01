@@ -1,0 +1,37 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo"><svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect width="34" height="34" rx="9" fill="url(#flogoGrad)"/><circle cx="12.5" cy="13.5" r="3" fill="#fff" opacity="0.95"/><circle cx="21.5" cy="13.5" r="3" fill="#fff" opacity="0.95"/><rect x="10" y="18" width="14" height="2.2" rx="1.1" fill="#fff" opacity="0.9"/><path d="M17 24.5v3.5M12.5 28h9" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/><defs><linearGradient id="flogoGrad" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#D97706"/><stop offset="1" stop-color="#C67B5C"/></linearGradient></defs></svg><span>Konversa</span></a>
+        <p class="footer-tagline">Potenciando negocios con soluciones de IA</p>
+        <a href="mailto:info@aikonversa.com" class="footer-email">info@aikonversa.com</a>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col"><h4>Empresa</h4><a href="/about">Sobre Nosotros</a><a href="/precios">Servicios</a><a href="/#como-funciona">Cómo Funciona</a><a href="/portfolio">Testimonios</a></div>
+        <div class="footer-col"><h4>Recursos</h4><a href="/#faq">FAQ</a><a href="/audit">Contacto</a><a href="/preview">Prueba tu web</a></div>
+        <div class="footer-col"><h4>Legal</h4><a href="/privacy">Privacidad</a><a href="/terms">Términos</a></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>&copy; {new Date().getFullYear()} Konversa.</p><p class="footer-credit">Hecho con <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--color-terracotta)" aria-label="amor" style="display:inline;vertical-align:-2px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> por Aikonversa.com</p></div>
+  </div>
+</footer>
+
+<style>
+.footer { background: linear-gradient(180deg, #2D1A0F, #1A0E08); color: rgba(255,255,255,0.7); padding: 4rem 0 1.5rem; }
+.footer-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.footer-brand { display: flex; flex-direction: column; gap: 0.5rem; }
+.footer-logo { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-heading); font-weight: 600; font-size: 1.2rem; color: #fff; }
+.footer-logo:hover { color: #fff; }
+.footer-tagline { margin: 0; font-size: 0.9rem; opacity: 0.6; }
+.footer-email { font-size: 0.85rem; opacity: 0.5; color: rgba(255,255,255,0.5); }
+.footer-email:hover { color: var(--color-sand); opacity: 1; }
+.footer-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+.footer-col { display: flex; flex-direction: column; gap: 0.45rem; }
+.footer-col h4 { color: #fff; font-family: var(--font-heading); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; opacity: 0.8; }
+.footer-col a { font-size: 0.8125rem; color: rgba(255,255,255,0.5); transition: color 200ms; }
+.footer-col a:hover { color: var(--color-sand); }
+.footer-bottom { display: flex; flex-direction: column; gap: 0.25rem; padding-top: 1.5rem; font-size: 0.75rem; opacity: 0.4; }
+.footer-bottom p { margin: 0; }
+@media (min-width: 640px) { .footer-links { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 860px) { .footer-grid { grid-template-columns: 1.5fr 2fr; } .footer-bottom { flex-direction: row; justify-content: space-between; } }
+</style>

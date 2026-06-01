@@ -1,11 +1,23 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import ComparisonSection from '../components/ComparisonSection.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import PricingCards from '../components/PricingCards.astro';
+import TestimonialsSection from '../components/TestimonialsSection.astro';
+import FAQSection from '../components/FAQSection.astro';
+import CTAFinalSection from '../components/CTAFinalSection.astro';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout
+  title="Konversa — Página Web Profesional con Chatbot en 48 Horas"
+  description="Páginas web profesionales con chatbot de WhatsApp en 48 horas. Konversa ayuda a negocios a vender más con sitios modernos desde $100 USD."
+>
+  <HeroSection />
+  <ComparisonSection />
+  <HowItWorks />
+  <PricingCards />
+  <TestimonialsSection />
+  <FAQSection />
+  <CTAFinalSection />
+</BaseLayout>

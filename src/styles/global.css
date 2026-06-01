@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --color-terracotta: #C67B5C;
+  --color-clay: #B5651D;
+  --color-sand: #D4C4A8;
+  --color-cream: #F5F0E1;
+  --color-amber: #D97706;
+  --color-deep: #2D1A0F;
+
+  --color-primary: #C67B5C;
+  --color-primary-hover: #B5651D;
+  --color-accent: #D97706;
+  --color-accent-hover: #B45309;
+  --color-surface: #FDF8F0;
+  --color-bg: #F5F0E1;
+  --color-fg: #2D1A0F;
+  --color-muted: #E8DFD0;
+  --color-border: #D4C4A8;
+  --color-success: #65A30D;
+  --color-destructive: #DC2626;
+  --color-whatsapp: #25D366;
+
+  --font-heading: 'Fredoka', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 8px rgba(45, 26, 15, 0.06);
+  --shadow-md: 0 8px 24px rgba(45, 26, 15, 0.08);
+  --shadow-lg: 0 16px 48px rgba(45, 26, 15, 0.10);
+  --shadow-glow: 0 0 40px rgba(217, 119, 6, 0.15);
+
+  --max-width: 1200px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.15;
+  font-weight: 600;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.02em;
+  color: var(--color-deep);
+}
+
+h1 { font-size: clamp(2.75rem, 7vw, 5rem); }
+h2 { font-size: clamp(2rem, 4.5vw, 3.5rem); }
+h3 { font-size: clamp(1.35rem, 2.5vw, 1.75rem); }
+
+p { margin: 0 0 1em; }
+
+a { color: var(--color-clay); text-decoration: none; transition: color 200ms ease; }
+a:hover { color: var(--color-terracotta); }
+
+img { max-width: 100%; height: auto; display: block; }
+
+.container { width: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+.section { padding: 5rem 0; }
+
+.section-label {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-terracotta);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.75rem;
+}
+
+.accent-text { color: var(--color-terracotta); position: relative; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

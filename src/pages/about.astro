@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Nuestra Historia — Konversa" description="Konversa nació para que cualquier negocio pueda tener presencia digital profesional en 48 horas.">
+  <section class="section"><div class="container about-inner">
+    <div class="about-header"><span class="section-label">Nuestra Historia</span><h1>De la frustración a la solución</h1></div>
+    <div class="about-story">
+      <p>Todo empezó cuando vimos a negocios increíbles perder clientes por no tener presencia en línea. No era falta de ganas: era que las opciones eran caras, lentas y complicadas.</p>
+      <p>Las agencias tradicionales cobraban miles de dólares y tardaban meses. Las plataformas "hágalo usted mismo" dejaban a los dueños frustrados.</p>
+      <p>Así nació <strong>Konversa</strong>: una forma radicalmente simple de tener web profesional. Sin reuniones eternas, sin código, sin mensualidades ocultas.</p>
+      <p>Hoy más de 100 negocios en Colombia, México y República Dominicana confían en nosotros.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat"><span class="stat-number">+100</span><span class="stat-label">Negocios activos</span></div>
+      <div class="stat"><span class="stat-number">48h</span><span class="stat-label">Tiempo de entrega</span></div>
+      <div class="stat"><span class="stat-number">3</span><span class="stat-label">Países</span></div>
+      <div class="stat"><span class="stat-number">$100</span><span class="stat-label">Desde</span></div>
+    </div>
+  </div></section>
+</BaseLayout>
+
+<style>
+.about-inner { max-width: 48rem; }
+.about-header { text-align: center; margin-bottom: 3rem; }
+.about-story p { font-size: 1.0625rem; line-height: 1.8; color: rgba(45,26,15,0.75); margin-bottom: 1.25rem; }
+.about-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--color-border); }
+.stat { text-align: center; background: #fff; border-radius: var(--radius-md); padding: 1.5rem; border: 1px solid var(--color-border); }
+.stat-number { display: block; font-family: var(--font-heading); font-size: 2rem; font-weight: 800; color: var(--color-accent); }
+.stat-label { font-size: 0.8125rem; color: rgba(45,26,15,0.55); }
+@media (min-width: 640px) { .about-stats { grid-template-columns: repeat(4, 1fr); } }
+</style>

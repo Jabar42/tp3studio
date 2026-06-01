@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Prueba tu web — Konversa" description="Vista previa de cómo se verá tu sitio web profesional con chatbot integrado.">
+  <section class="section"><div class="container preview-inner">
+    <div class="preview-header"><span class="section-label">Prueba tu web</span><h1>Así se verá tu negocio en línea</h1><p>Una muestra del diseño profesional, responsive y moderno que recibirás en 48 horas.</p></div>
+    <div class="preview-frame">
+      <div class="preview-browser"><div class="preview-toolbar"><span></span><span></span><span></span></div><div class="preview-content"><div class="prev-nav"><div class="prev-logo"></div><div class="prev-menu"><span></span><span></span><span></span></div></div><div class="prev-hero"><div class="prev-line"></div><div class="prev-line short"></div><div class="prev-btn"></div></div><div class="prev-cards"><div class="prev-card"></div><div class="prev-card"></div><div class="prev-card"></div></div></div></div>
+      <div class="preview-chat"><div class="prev-chat-header"><span></span><span></span></div><div class="prev-chat-body"><div class="prev-msg"></div><div class="prev-msg reply"></div><div class="prev-msg"></div></div></div>
+    </div>
+  </div></section>
+</BaseLayout>
+
+<style>
+.preview-inner { text-align: center; }
+.preview-header { max-width: 32rem; margin: 0 auto 3rem; }
+.preview-header p { font-size: 1.0625rem; color: rgba(45,26,15,0.65); }
+.preview-frame { display: flex; align-items: flex-end; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+.preview-browser { background: #fff; border: 2px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; width: 100%; max-width: 500px; box-shadow: var(--shadow-lg); }
+.preview-toolbar { background: var(--color-muted); padding: 0.75rem 1rem; display: flex; gap: 0.5rem; }
+.preview-toolbar span { width: 10px; height: 10px; border-radius: 50%; background: var(--color-border); }
+.preview-content { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.prev-nav { display: flex; justify-content: space-between; }
+.prev-logo { width: 80px; height: 16px; background: var(--color-muted); border-radius: 8px; }
+.prev-menu { display: flex; gap: 1rem; }
+.prev-menu span { width: 40px; height: 8px; background: var(--color-muted); border-radius: 4px; }
+.prev-hero { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 2rem 0; }
+.prev-line { width: 220px; height: 16px; background: var(--color-fg); border-radius: 8px; opacity: 0.8; }
+.prev-line.short { width: 140px; opacity: 0.5; }
+.prev-btn { width: 140px; height: 36px; background: var(--color-accent); border-radius: var(--radius-full); margin-top: 0.75rem; }
+.prev-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+.prev-card { height: 80px; background: var(--color-muted); border-radius: var(--radius-sm); }
+.preview-chat { background: #fff; border: 2px solid var(--color-terracotta); border-radius: var(--radius-lg); width: 220px; overflow: hidden; box-shadow: var(--shadow-md); }
+.prev-chat-header { background: var(--color-terracotta); padding: 0.625rem 0.875rem; display: flex; gap: 0.375rem; }
+.prev-chat-header span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+.prev-chat-body { padding: 0.875rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.prev-msg { width: 80%; height: 10px; background: var(--color-muted); border-radius: 5px; }
+.prev-msg.reply { width: 55%; background: var(--color-terracotta); opacity: 0.6; margin-left: auto; }
+</style>

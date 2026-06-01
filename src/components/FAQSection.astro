@@ -1,0 +1,29 @@
+<section class="faq section" id="faq">
+  <div class="faq-inner container">
+    <div class="faq-header"><span class="section-label">FAQ</span><h2>Tus dudas, <span class="accent-text">resueltas</span></h2></div>
+    <div class="faq-list">
+      <details class="faq-item" name="faq"><summary>¿Realmente está lista en 48 horas?<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="faq-answer"><p>Sí. Una vez recibida la información, entregamos en 48h máximo. La mayoría en menos de 24h.</p></div></details>
+      <details class="faq-item" name="faq"><summary>¿Necesito saber de tecnología?<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="faq-answer"><p>No. Solo llenás un formulario de 3 minutos. Nosotros nos encargamos de todo lo técnico.</p></div></details>
+      <details class="faq-item" name="faq"><summary>¿Qué pasa después del primer año?<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="faq-answer"><p>El hosting se renueva por $15 USD/año. Infraestructura Cloudflare de alto rendimiento.</p></div></details>
+      <details class="faq-item" name="faq"><summary>¿Puedo hacer cambios después?<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="faq-answer"><p>Sí. Los planes Popular y Completo incluyen revisiones ilimitadas. En el Esencial, $100 USD por revisión.</p></div></details>
+      <details class="faq-item" name="faq"><summary>¿El chatbot funciona con cualquier negocio?<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="faq-answer"><p>Sí. Personalizamos el agente IA según tu tipo de negocio: restaurante, tienda, servicios, consultorio, etc.</p></div></details>
+      <details class="faq-item" name="faq"><summary>¿Qué garantía tengo?<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="faq-answer"><p>Ajustamos hasta que quedes 100% satisfecho. Los planes Popular y Completo tienen revisiones ilimitadas.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<style>
+.faq-inner { max-width: 44rem; }
+.faq-header { text-align: center; max-width: 34rem; margin: 0 auto 3rem; }
+.faq-list { display: flex; flex-direction: column; gap: 0.625rem; }
+.faq-item { background: #fff; border: 1.5px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color 200ms, box-shadow 200ms; }
+.faq-item:hover { border-color: var(--color-sand); }
+.faq-item[open] { border-color: var(--color-terracotta); box-shadow: 0 0 0 4px rgba(198,123,92,0.06); }
+.faq-item summary { padding: 1.25rem 1.5rem; font-weight: 700; font-size: 0.9375rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1rem; list-style: none; transition: color 200ms; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item[open] summary { color: var(--color-clay); }
+.faq-chevron { flex-shrink: 0; transition: transform 300ms cubic-bezier(.34,1.56,.64,1); color: var(--color-terracotta); }
+.faq-item[open] .faq-chevron { transform: rotate(180deg); }
+.faq-answer { padding: 0 1.5rem 1.25rem; }
+.faq-answer p { margin: 0; font-size: 0.9rem; color: rgba(45,26,15,0.65); line-height: 1.7; }
+</style>

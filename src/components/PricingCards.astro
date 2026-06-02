@@ -1,3 +1,7 @@
+---
+import CTAButton from './CTAButton.astro';
+---
+
 <section class="pricing section" id="precios">
   <div class="container">
     <div class="pricing-header">
@@ -12,7 +16,7 @@
         <div class="plan-price"><span class="plan-amount">$100</span><span class="plan-period">USD · pago único</span><span class="plan-monthly">≈ $8/mes</span></div>
         <ul class="plan-features"><li>Diseño responsive personalizado</li><li>SEO optimizado + carga rápida</li><li>Pruebas en todos los dispositivos</li><li>Hosting 1 año incluido</li><li>Dominio: +$10 USD</li><li>Revisiones: $100 c/u</li></ul>
         <div class="plan-hosting">Incluye hosting 1 año</div>
-        <a href="/auth" class="btn-creative btn-outline btn-md plan-cta">Empezar ahora</a>
+        <CTAButton href="/auth" variant="outline" size="md" class="plan-cta">Empezar ahora</CTAButton>
       </div>
       <div class="plan-card plan-card--popular">
         <div class="plan-popular-badge">Más elegido</div>
@@ -20,14 +24,14 @@
         <div class="plan-price"><span class="plan-amount">$150</span><span class="plan-period">USD · pago único</span><span class="plan-monthly">≈ $12/mes</span></div>
         <ul class="plan-features"><li><strong>Todo lo del Plan Esencial</strong></li><li>Seguimiento de clientes por chat</li><li>Soporte 9-5 EST incluido</li><li>Dominio incluido ($10/año)</li><li>Agente virtual incluido</li><li>Integra con WhatsApp Business (+$50)</li></ul>
         <div class="plan-hosting">Hosting 1 año · Renueva $15 USD</div>
-        <a href="/auth" class="btn-creative btn-primary btn-md plan-cta">Comprar Ahora</a>
+        <CTAButton href="/auth" variant="primary" size="md" class="plan-cta">Comprar Ahora</CTAButton>
       </div>
       <div class="plan-card">
         <div class="plan-top"><div class="plan-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></div><span class="plan-tier">Completo</span><h3>Web + Agente + WhatsApp</h3><p class="plan-desc">Chatbot IA, WhatsApp Business y agenda integrada.</p></div>
         <div class="plan-price"><span class="plan-amount">$200</span><span class="plan-period">USD · pago único</span><span class="plan-monthly">≈ $17/mes</span></div>
         <ul class="plan-features"><li><strong>Todo lo del Plan Popular</strong></li><li>WhatsApp Business configurado</li><li>Calendly integrado</li><li>Agente IA personalizado</li><li>Hasta 10 páginas</li><li>Revisiones ilimitadas</li></ul>
         <div class="plan-hosting">Hosting + dominio 1 año gratis</div><p class="plan-note">Las revisiones que necesites para dejarlo perfecto</p>
-        <a href="/auth" class="btn-creative btn-outline btn-md plan-cta">Comprar Ahora</a>
+        <CTAButton href="/auth" variant="outline" size="md" class="plan-cta">Comprar Ahora</CTAButton>
       </div>
     </div>
   </div>

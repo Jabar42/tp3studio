@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PortfolioCard from '../components/PortfolioCard.astro';
 
 const cases = await getCollection('portfolio');
 cases.sort((a, b) => a.data.order - b.data.order);
@@ -20,14 +21,13 @@ cases.sort((a, b) => a.data.order - b.data.order);
 
       <div class="portfolio-grid">
         {cases.map(c => (
-          <article class="portfolio-card">
-            <div class="portfolio-card-tags">
-              {c.data.tags.map(t => <span class="tag">{t}</span>)}
-            </div>
-            <h3>{c.data.name}</h3>
-            <p class="portfolio-location">{c.data.location}</p>
-            <p class="portfolio-desc">{c.data.description}</p>
-          </article>
+          <PortfolioCard
+            name={c.data.name}
+            location={c.data.location}
+            description={c.data.description}
+            tags={c.data.tags}
+            href={`/portfolio/${c.id}`}
+          />
         ))}
       </div>
     </div>
@@ -47,55 +47,6 @@ cases.sort((a, b) => a.data.order - b.data.order);
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
-}
-
-.portfolio-card {
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 1.75rem;
-  transition: border-color 200ms, box-shadow 200ms, transform 200ms;
-}
-.portfolio-card:hover {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.portfolio-card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.tag {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding: 0.25rem 0.625rem;
-  border-radius: var(--radius-full);
-  background: rgba(99, 102, 241, 0.08);
-  color: var(--color-primary);
-}
-
-.portfolio-card h3 {
-  font-size: 1.125rem;
-  margin-bottom: 0.25rem;
-}
-
-.portfolio-location {
-  font-size: 0.8125rem;
-  color: rgba(15, 14, 26, 0.4);
-  margin-bottom: 0.75rem;
-}
-
-.portfolio-desc {
-  font-size: 0.875rem;
-  color: rgba(15, 14, 26, 0.65);
-  margin: 0;
-  line-height: 1.6;
 }
 
 @media (min-width: 640px) {

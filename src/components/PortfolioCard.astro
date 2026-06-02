@@ -6,14 +6,22 @@ export interface Props {
   tags?: string[];
   image?: string;
   href?: string;
+  url?: string;
 }
 
-const { name, location, description, tags = [], image, href } = Astro.props;
+const { name, location, description, tags = [], image, href, url } = Astro.props;
 const Element = href ? 'a' : 'article';
 ---
 
 <Element {href} class:list={['card', { 'card--linked': href }]}>
-  {image && (
+  {url && (
+    <div class="card-preview">
+      <iframe src={url} title={name} loading="lazy" sandbox="allow-scripts allow-same-origin" class="card-iframe"></iframe>
+      <div class="card-preview-overlay" aria-hidden="true"></div>
+    </div>
+  )}
+
+  {!url && image && (
     <div class="card-image">
       <img src={image} alt={name} loading="lazy" decoding="async" />
     </div>
@@ -58,6 +66,28 @@ const Element = href ? 'a' : 'article';
   width: 100%;
   height: 200px;
   object-fit: cover;
+}
+
+.card-preview {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: var(--color-muted);
+}
+
+.card-iframe {
+  width: 200%;
+  height: 200%;
+  border: none;
+  transform: scale(0.5);
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+.card-preview-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
 .card-body {

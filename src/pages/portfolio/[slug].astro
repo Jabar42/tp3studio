@@ -14,7 +14,7 @@ if (!entry) {
   return Astro.redirect('/404');
 }
 
-const { name, location, description, tags } = entry.data;
+const { name, location, description, tags, url } = entry.data;
 ---
 
 <BaseLayout
@@ -36,6 +36,24 @@ const { name, location, description, tags } = entry.data;
 
         <div class="detail-body">
           <p class="detail-desc">{description}</p>
+
+          {url && (
+            <div class="detail-preview">
+              <h2 class="detail-preview-title">Vista previa</h2>
+              <div class="detail-iframe-wrap">
+                <iframe
+                  src={url}
+                  title={`Vista previa de ${name}`}
+                  loading="lazy"
+                  sandbox="allow-scripts allow-same-origin"
+                  class="detail-iframe"
+                ></iframe>
+              </div>
+              <a href={url} target="_blank" rel="noopener noreferrer" class="detail-external-link">
+                Visitar sitio &rarr;
+              </a>
+            </div>
+          )}
         </div>
       </article>
 
@@ -114,6 +132,40 @@ const { name, location, description, tags } = entry.data;
   color: rgba(15, 14, 26, 0.75);
   margin: 0;
 }
+
+.detail-preview {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.detail-preview-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.detail-iframe-wrap {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-muted);
+}
+
+.detail-iframe {
+  width: 100%;
+  height: 500px;
+  border: none;
+  display: block;
+}
+
+.detail-external-link {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.detail-external-link:hover { color: var(--color-primary-hover); }
 
 .detail-cta {
   text-align: center;

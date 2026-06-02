@@ -1,0 +1,44 @@
+---
+// Canonical Server Island pattern following Astro v6 docs
+// https://docs.astro.build/en/guides/server-islands/
+//
+// This is a reference template — copy to your project and adapt.
+// Requires output: 'hybrid' or 'server' in astro.config.
+//
+// Usage:
+// <ServerIslandComponent server:defer>
+//   <div slot="fallback">Loading...</div>
+// </ServerIslandComponent>
+
+// --- Example implementation below ---
+
+// 1. Create the Server Island component (e.g., LiveVisitorCount.astro):
+//
+// ---
+// // This component renders at request time
+// export const prerender = false;
+// const count = await getVisitorCount();
+// ---
+// <span class="live-count">{count} visitors online</span>
+
+// 2. Use it in a static page with server:defer:
+//
+// <LiveVisitorCount server:defer>
+//   <span slot="fallback" class="skeleton">... visitors online</span>
+// </LiveVisitorCount>
+
+// 3. Optionally configure per-island caching:
+//
+// export const config = {
+//   cache: {
+//     visitorCount: 'no-store',
+//     reviews: 'public, max-age=300, stale-while-revalidate=60'
+//   }
+// };
+---
+
+<!-- This file is a reference template. Copy the patterns above. -->
+<p>
+  See the frontmatter comments for usage patterns.
+  Server Islands require <code>output: 'hybrid'</code> or <code>output: 'server'</code>.
+</p>

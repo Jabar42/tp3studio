@@ -1,0 +1,99 @@
+No,Category,Guideline,Description,Do,Don't,Code Good,Code Bad,Severity,Docs URL
+1,ContentLayer,Content Layer API replaces legacy collections,"Legacy content collections (src/content/config.ts, type: content, entry.render(), entry.slug) are fully removed. Must migrate to Content Layer API",Migrate to Content Layer API with defineCollection() and loaders; use legacy.collectionsBackwardsCompat temporarily if needed,Keep using legacy content collections - they will fail to build in v6,"import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({ title: z.string(), date: z.date() })
+});","// Legacy config.ts (removed)
+const blog = defineCollection({ type: 'content', schema: z.object({...}) });",High,https://docs.astro.build/en/guides/upgrade-to/v6/
+2,ContentLayer,Import Zod from astro/zod not astro:content,Zod 4 is included in Astro 6. Import z from astro/zod. The old astro:schema and z from astro:content imports are deprecated,Use import { z } from 'astro/zod',Import z from astro:content or use astro:schema,"import { z } from 'astro/zod';
+
+const schema = z.object({
+  title: z.string(),
+  email: z.email()
+});",import { z } from 'astro:content';,High,https://docs.astro.build/en/guides/upgrade-to/v6/
+3,ContentLayer,Live Content Collections stable,Content collections reload instantly in dev mode without a full page refresh. No rebuild needed for content changes,Use getCollection() and getEntry() as before; live reload works automatically with Content Layer API,Manually restart dev server on every content change,Nothing to change - just use Content Layer API,Restarting astro dev after every .md edit,Low,https://docs.astro.build/en/guides/content-collections/
+4,ServerIslands,Server Islands with server:defer,Defer dynamic sections of a page to render at request time while the rest ships as static HTML from CDN,"Add server:defer to components needing runtime data (pricing, inventory); always provide a fallback slot",Apply server:defer to static components or omit the fallback slot,"<LivePricing server:defer productId={id}>
+  <div slot=fallback class=skeleton>Loading pricing...</div>
+</LivePricing>",<Header server:defer />,Medium,https://docs.astro.build/en/guides/server-islands/
+5,ServerIslands,Per-island cache policies,Configure cache headers per Server Island: pricing may need no-store while reviews can use max-age=300 with stale-while-revalidate,Set cache control headers per island based on data freshness requirements,Use the same cache policy for all islands regardless of data volatility,"// In the server island component:
+export const config = {
+  cache: {
+    pricing: 'no-store',
+    reviews: 'public, max-age=300, stale-while-revalidate=60'
+  }
+};",No cache config - defaults everywhere,Medium,https://docs.astro.build/en/guides/server-islands/
+6,ClientRouter,ClientRouter replaces ViewTransitions,ViewTransitions is fully removed in v6. Use ClientRouter for SPA-like page transitions with prefetch on hover and DOM morphing,Import { ClientRouter } from 'astro:transitions' and add to your head or layout,Keep using ViewTransitions - it no longer exists in v6,"import { ClientRouter } from 'astro:transitions';
+
+<head><ClientRouter /></head>",<head><ViewTransitions /></head>,High,https://docs.astro.build/en/guides/view-transitions/
+7,ClientRouter,Prefetch on hover for instant navigation,"ClientRouter prefetches linked pages on hover or when they enter the viewport, making navigation feel instant",Enable ClientRouter and all internal links get prefetching automatically,Add manual prefetch logic on top of ClientRouter,Nothing extra needed - ClientRouter handles prefetch automatically,Manual link rel=prefetch tags everywhere,Medium,https://docs.astro.build/en/guides/prefetch/
+8,ClientRouter,Fallback for no-JS users,Page transitions must work without JavaScript. ClientRouter enhances navigation but content must be accessible with standard MPA navigation,Ensure all pages work as standard MPA navigation without ClientRouter JavaScript,Build features that only work with ClientRouter JS,"<ClientRouter />
+<!-- All pages still work as normal MPA navigation -->",Relying on transition animations for content to appear,High,
+9,FontsAPI,Self-hosting Google Fonts automatically,"The Fonts API downloads Google Fonts at build time, stores them locally, generates fallback metrics, and adds preload hints",Use Font component from astro:fonts with provider=google,Use link tags to Google Fonts CDN when the built-in API exists,"import { Font } from 'astro:fonts';
+<Font provider=google family=Inter weights={[400, 600, 700]} />",<link href=https://fonts.googleapis.com/css2?family=Inter rel=stylesheet>,Medium,https://docs.astro.build/en/guides/fonts/
+10,FontsAPI,Local font files with automatic optimization,"The Fonts API handles local font files: detects formats (woff2, ttf), generates fallback metrics, and creates optimized subsets",Use provider=local for custom fonts stored in your project,Load local fonts with raw @font-face declarations when the API exists,<Font provider=local src=./fonts/custom.woff2 family=CustomFont />,@font-face { font-family: 'CustomFont'; src: url('./fonts/custom.woff2'); },Low,https://docs.astro.build/en/guides/fonts/
+11,CSP,Content Security Policy built-in,Astro 6 provides stable CSP configuration via security.csp in astro.config. Auto-hashes all scripts and styles,Configure security.csp in astro.config.mjs with directives object,Add CSP headers manually via middleware or server config,"export default defineConfig({
+  security: {
+    csp: {
+      directives: {
+        'default-src': [""'self'""],
+        'img-src': [""'self'""]
+      }
+    }
+  }
+});",Manual CSP header injection in server middleware,Medium,
+12,Vite7,Vite 7 with Environments API,Astro 6 uses Vite 7. The dev server runs the exact production runtime during development using the Environments API,Update any Vite plugins to be compatible with Vite 7 if they access internal APIs,Assume Vite 4 or 5 plugin compatibility without checking,Check your Vite plugins are Vite 7 compatible,Using outdated Vite plugins without checking compatibility,Medium,
+13,Migration,Zod 3 to Zod 4 breaking changes,z.string().email() is now z.email(); .default() must match output type; error keys use error instead of message,Migrate Zod schemas to Zod 4 syntax; check the Zod migration guide,Fix Zod errors one by one at build time,"// Zod 4:
+const schema = z.object({
+  email: z.email(),
+  name: z.string().default('Anonymous')
+});","// Zod 3 (deprecated):
+const schema = z.object({
+  email: z.string().email(),
+  name: z.string().default('Anonymous')
+});",Medium,
+14,Migration,Node 22.12.0+ required,Astro 6 drops Node 18 and 20 support entirely. Dev and production must run Node 22.12.0 or later,Update package.json engines to node >=22.12.0 and update CI/CD environments,Deploy to platforms still running Node 18 or 20,"{
+  ""engines"": {
+    ""node"": "">=22.12.0""
+  }
+}",Node 18 or 20 in production,High,
+15,Migration,Legacy content collections migration path,Astro 6 provides legacy.collectionsBackwardsCompat as a temporary migration flag. Each collection must be migrated individually to Content Layer API,Use the backwards compat flag as a stopgap while migrating collections one at a time,Stay on the backwards compat flag permanently - it may be removed in a future major version,"export default defineConfig({
+  legacy: {
+    collectionsBackwardsCompat: true
+  }
+});",Permanent use of legacy.collectionsBackwardsCompat,High,
+16,Migration,Deprecated import.meta.env.ASSETS_PREFIX removed,Use build.assetsPrefix from astro:config/server instead of import.meta.env.ASSETS_PREFIX,Import assetsPrefix from astro:config/server,Reference import.meta.env.ASSETS_PREFIX directly,"import { build } from 'astro:config/server';
+const prefix = build.assetsPrefix;",const prefix = import.meta.env.ASSETS_PREFIX;,Low,
+17,Breaking,ESM-only config files,".cjs and .cts config files are no longer supported. Use .mjs, .js, .ts, or .mts for astro.config",Rename any .cjs or .cts config files to .mjs or .ts,Keep CommonJS config files or require() calls,astro.config.mjs or astro.config.ts,astro.config.cjs,Medium,
+18,Breaking,getStaticPaths params must be strings,Number params in getStaticPaths are no longer allowed. Convert all params values to strings explicitly,Use String(id) or template literals to convert params to strings,Return number values in params,"export async function getStaticPaths() {
+  return [{ params: { id: String(product.id) } }];
+}",return [{ params: { id: 42 } }];,Medium,
+19,Breaking,getImage() throws on client,Calling getImage() on the client now throws a runtime error. Image optimization is server-only,Call getImage() only in frontmatter or server-side code; pass results to client components as props,Use getImage() in client-side event handlers or useEffect,"---
+const optimized = await getImage({ src: img, width: 800 });
+---
+<ImageComponent src={optimized.src} />","<script>await getImage({src, width:800})</script>",High,
+20,Breaking,Responsive image styles use data attributes,Astro emits responsive image styles via hash classes and data-* attributes instead of inline styles for CSP compatibility,Update CSS selectors targeting image inline styles to use data-astro-image selector,Target inline style attributes on Astro images with CSS selectors,img[data-astro-image],img[style],Low,
+21,Breaking,i18n redirectToDefaultLocale defaults to false,The redirectToDefaultLocale config option now defaults to false to prevent infinite redirect loops,Explicitly set redirectToDefaultLocale: true if you rely on automatic locale redirects,Assume users get redirected to default locale without explicit config,"i18n: {
+  locales: ['en', 'es'],
+  defaultLocale: 'en',
+  redirectToDefaultLocale: true
+}","i18n: { locales: ['en', 'es'], defaultLocale: 'en' }",Medium,
+22,Experimental,Rust compiler (experimental),A new Rust-based .astro compiler offers faster build times with stronger diagnostics. Enable with rustCompiler flag,Enable for faster builds if you have many .astro files; test thoroughly before production use,Enable in production without testing all pages,"export default defineConfig({
+  experimental: {
+    rustCompiler: true
+  }
+});",Not enabled (Go compiler used by default),Low,
+23,Experimental,Queued Rendering (experimental),A two-pass rendering strategy with up to 2x faster rendering. Planned as default for Astro v7,Try on build-heavy projects; compare build times with and without the flag,Enable without measuring impact,experimental: { queuedRendering: true },,Low,
+24,Experimental,Route Caching (experimental),Platform-agnostic API for caching SSR responses using web-standard cache semantics. Integrates with Live Content Collections for auto-invalidation,Use for SSR pages with cacheable content; configure per-route cache policies,Cache personalized content or pages with user-specific data,"export const config = {
+  cache: {
+    ttl: 3600,
+    scope: 'public'
+  }
+};",Caching user-specific dashboard pages,Low,
+25,Dependency,Shiki 4 for code highlighting,Syntax highlighting upgraded to Shiki 4. Most cases work automatically; check migration guide for custom themes,Test your code blocks render correctly after upgrade,Pin to Shiki 3 or ignore highlighting regressions,Default Shiki config works for most cases,Custom Shiki themes without v4 compatibility check,Low,
+26,Dependency,Sharp for image processing and SVG rasterization,Astro 6 defaults to Sharp and rasterizes SVGs to PNG/WebP automatically. Also never upscales images by default,Let Sharp handle image optimization; pre-upscale manually if needed,Expect SVGs to stay as SVGs when requesting raster formats,Nothing needed for most users,Relying on SVG format when requesting PNG output,Low,
+27,Config,Hybrid rendering for mixed static and SSR,Use output: hybrid to render most pages statically and opt into SSR per-page with export const prerender = false,Default to static; add prerender = false only to pages that need server rendering,Use output: server when most pages could be static,"export default defineConfig({ output: 'hybrid' });
+// In SSR page:
+export const prerender = false;",output: 'server' for a mostly-static marketing site,Medium,https://docs.astro.build/en/guides/server-side-rendering/#hybrid-rendering
+28,Config,prerenderConflictBehavior replaces experimental flag,"The old experimental.failOnPrerenderConflict is removed. Use the stable prerenderConflictBehavior option (error, warn, or ignore)",Set prerenderConflictBehavior: 'error' to catch prerender conflicts during build,Ignore prerender conflicts without any config,prerenderConflictBehavior: 'error',experimental: { failOnPrerenderConflict: true },Medium,

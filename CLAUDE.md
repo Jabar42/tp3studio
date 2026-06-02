@@ -27,7 +27,8 @@ TypeScript config extends `astro/tsconfigs/strict` and includes auto-generated `
 
 Installed skills in `.claude/skills/`:
 
-- **ui-ux-pro-max** — UI/UX design and frontend assistance skill. Contains `data/` and `scripts/` directories (currently empty, may be pending setup or configuration).
+- **astro** — Astro 6 implementation patterns, component templates, integration recommendations, and v6-specific features. Contains `data/` (CSV knowledge base: components, integrations, v6), `scripts/` (Python BM25 search CLI), and `templates/` (reusable `.astro` component snippets derived from official Astro docs). Use `python3 .claude/skills/astro/scripts/search.py "<query>" --domain components|integrations|v6` or `--stack astro` to cross-reference ui-ux-pro-max.
+- **ui-ux-pro-max** — UI/UX design and frontend assistance skill. Contains `data/` and `scripts/` directories with 50+ styles, 161 color palettes, 57 font pairings, and 10 tech stacks including Astro via `stacks/astro.csv`.
 
 ## MCP Servers
 

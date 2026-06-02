@@ -1,0 +1,129 @@
+---
+// Canonical navigation header following Astro docs
+// https://docs.astro.build/en/reference/api-reference/#astrourl
+// ZERO JavaScript — uses CSS details/summary for mobile menu
+
+export interface Props {
+  items: { href: string; label: string }[];
+  logo?: string;
+}
+
+const { items, logo = 'Brand' } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<header class="nav-header">
+  <div class="nav-inner container">
+    <a href="/" class="nav-logo">{logo}</a>
+
+    <!-- Desktop nav: visible on tablet+ -->
+    <nav class="nav-desktop" aria-label="Main navigation">
+      {items.map(item => (
+        <a
+          href={item.href}
+          class={currentPath === item.href ? 'nav-link active' : 'nav-link'}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <!-- Mobile nav: CSS-only details/summary — zero JS -->
+    <details class="nav-mobile">
+      <summary class="nav-toggle" aria-label="Toggle menu">
+        <span class="hamburger"></span>
+      </summary>
+      <nav class="nav-dropdown">
+        {items.map(item => (
+          <a
+            href={item.href}
+            class={currentPath === item.href ? 'nav-link active' : 'nav-link'}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .nav-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+  }
+
+  .nav-logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  .nav-desktop { display: none; gap: 0.25rem; }
+
+  .nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-fg);
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    opacity: 0.7;
+    transition: opacity 150ms, background 150ms;
+  }
+
+  .nav-link:hover { opacity: 1; background: var(--color-muted); }
+  .nav-link.active { opacity: 1; color: var(--color-primary); }
+
+  /* Mobile: details/summary hack — zero JS */
+  .nav-mobile { display: block; position: relative; }
+  .nav-toggle { list-style: none; cursor: pointer; padding: 0.5rem; }
+  .nav-toggle::-webkit-details-marker { display: none; }
+  .nav-toggle::marker { display: none; content: none; }
+
+  .hamburger, .hamburger::before, .hamburger::after {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--color-fg);
+    border-radius: 2px;
+    transition: all 200ms;
+  }
+  .hamburger::before, .hamburger::after { content: ''; }
+  .hamburger::before { transform: translateY(-6px); }
+  .hamburger::after { transform: translateY(4px); }
+
+  .nav-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 200px;
+  }
+
+  [open] .nav-dropdown { display: flex; }
+  .nav-dropdown { display: none; }
+
+  @media (min-width: 768px) {
+    .nav-desktop { display: flex; }
+    .nav-mobile { display: none; }
+  }
+</style>

@@ -1,0 +1,101 @@
+No,Category,Guideline,Description,Do,Don't,Code Good,Code Bad,Severity,Docs URL
+1,Layout,BaseLayout with SEO props,"Pass title and description as props to a base layout that renders the full HTML shell including meta tags, favicons, and OG tags",Define a Props interface in the layout frontmatter and render meta tags from Astro.props,Hardcode title and description in every page or duplicate the HTML shell,"interface Props { title: string; description: string }
+const { title, description } = Astro.props;",<html><head><title>Hardcoded Title</title></head></html>,High,https://docs.astro.build/en/basics/astro-pages/
+2,Layout,Use named slots for flexible layouts,Define multiple slot elements with names so pages can inject content into specific layout regions,Use <slot name=header /> for optional sections,Pass HTML content as string props instead of using slots,"<header><slot name=header /></header>
+<main><slot /></main>
+<footer><slot name=footer /></footer>",<Layout header={<Header />} />,Medium,https://docs.astro.build/en/basics/astro-components/#slots
+3,Layout,Colocate styles in .astro files,Write component styles inside style tags in the same .astro file; Astro scopes them automatically,Use style blocks for component-specific CSS,Use separate CSS files or is:global for component styles,.card { padding: 1rem; border-radius: 0.5rem; },import './Card.css';,Medium,https://docs.astro.build/en/guides/styling/#scoped-styles
+4,SEO,Canonical SEOHead component,"Create a reusable SEOHead component that renders title, meta description, OG tags, twitter cards, and canonical URL",Use Astro.url for canonical and OG URL generation dynamically,Ship pages without meta descriptions or OG tags,"<meta property=og:url content={new URL(Astro.url.pathname, Astro.site)} />",No meta tags at all,High,https://docs.astro.build/en/guides/content-collections/
+5,SEO,Automatic sitemap generation,Use @astrojs/sitemap integration to auto-generate sitemap.xml at build time with zero config,npx astro add sitemap and configure in astro.config,Write sitemap.xml by hand or skip it entirely,"import sitemap from '@astrojs/sitemap';
+export default defineConfig({ integrations: [sitemap()] });",No sitemap at all,Medium,https://docs.astro.build/en/guides/integrations-guide/sitemap/
+6,Navigation,Sticky header with backdrop-blur,Create a position: sticky header with a semi-transparent background and backdrop-filter for a modern glass effect,Use rgba or hsla with backdrop-filter: blur() for the glass effect,Use a fully opaque background that obscures content on scroll,"header {
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}",header { position: fixed; background: white; },Medium,https://docs.astro.build/en/basics/astro-components/
+7,Navigation,Mobile hamburger without JavaScript,Use a CSS-only details/summary or hidden checkbox technique for the mobile menu toggle; no client:load directive needed,Use details element or checkbox hack with CSS :checked to toggle mobile menu,Add client:load just for a mobile menu toggle,"<details>
+  <summary>Menu</summary>
+  <nav>links here</nav>
+</details>","<script>document.querySelector('.hamburger').addEventListener('click', ...)</script>",High,https://docs.astro.build/en/concepts/islands/
+8,Navigation,Active link detection,Use Astro.url.pathname in the frontmatter to detect the current page and apply an active class to nav links,Compare Astro.url.pathname with each link href,Use client-side JavaScript to set active classes on navigation,"const currentPath = Astro.url.pathname;
+<a href=/about class={currentPath === '/about' ? 'active' : ''}>About</a>",<script>document.querySelectorAll('a').forEach(a => { if (a.href === location.pathname) a.classList.add('active') })</script>,Low,https://docs.astro.build/en/reference/api-reference/#astrourl
+9,Hero,Two-column hero with visual,"Split the hero into a text column (headline, subtitle, CTAs) and a visual column (image, mockup, or video) using CSS Grid",Use display: grid with grid-template-columns: 1fr 1fr on tablet and up breakpoints,Stack everything vertically on all screen sizes or use absolute positioning,".hero {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .hero { grid-template-columns: 1.1fr 0.9fr; }
+}",position: absolute for the image column,Medium,https://docs.astro.build/en/basics/astro-components/
+10,Hero,Decorative background blobs,Add large blurred radial gradients behind the hero section using CSS pseudo-elements or a dedicated div to create visual depth without images,Use fixed or absolute positioned divs with filter: blur(80px) and low opacity,Use heavy image files or canvas for decorative backgrounds,".blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.2;
+  background: radial-gradient(circle, var(--color-primary), transparent 70%);
+}",<img src=/hero-bg.png alt= />,Low,
+11,Hero,CTA section with primary and secondary actions,Present a clear primary CTA (filled button) and secondary CTA (outline or WhatsApp-style) side by side with proper visual hierarchy,Make the primary CTA visually dominant through fill and weight; secondary should be lighter,Use two equally-weighted buttons that compete for attention,"<a href=/pricing class=btn-primary>Get Started</a>
+<a href=https://wa.me/ class=btn-outline>Chat with us</a>","<a href=/pricing class=btn-primary>Buy Now</a>
+<a href=/login class=btn-primary>Sign In</a>",Medium,
+12,Cards,Content card component pattern,"Build a reusable Card component with Astro.props for title, description, image, href, tags, and date. Use semantic article element",Define a Props interface with optional fields and render only when present,Use a generic div without semantic structure or skip the props interface,"interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  href?: string;
+  tags?: string[];
+  date?: Date;
+}
+const { title, description, image, href, tags, date } = Astro.props;",<div class=card>{title} {description}</div>,Medium,https://docs.astro.build/en/basics/astro-components/#component-props
+13,Cards,Pricing card with popular badge,"Display three pricing tiers in a CSS Grid with the middle card visually elevated using a larger border, shadow, and a Most Popular badge",Use a positioned badge element and stronger border and shadow on the featured card,Style all three cards identically with no visual hierarchy,".plan--popular {
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 0 0 6px rgba(99,102,241,0.05);
+  position: relative;
+}
+.plan-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary);
+  color: white;
+  padding: 0.3rem 1.1rem;
+  border-radius: 999px;
+}",.plan { border: 1px solid #eee; },Medium,
+14,Cards,Testimonial card with avatar,"Use a card with star rating, quoted text, and author avatar (CSS-only gradient circle with initials) for social proof sections",Generate avatar colors with CSS gradients; use font-weight for name hierarchy,Use images for avatars when CSS gradients suffice,"<div class=avatar style=background: linear-gradient(135deg, #6366F1, #818CF8)>MG</div>",<img src=/avatars/maria.jpg alt=Maria />,Low,
+15,Forms,Frontmatter data fetching,Fetch data in the component frontmatter using top-level await; this runs at build time and produces static HTML,Use fetch() with await in the frontmatter section to load data at build time,Use useEffect or client-side fetch for data that is available at build time,"const response = await fetch('https://api.example.com/data');
+const data = await response.json();","<script>
+  fetch('/api/data').then(r => r.json()).then(data => render(data))
+</script>",High,https://docs.astro.build/en/guides/data-fetching/
+16,Forms,Form with API route endpoint,Create a POST API route in pages/api/ that handles form submissions server-side. Use the Request object to parse form data,Name the exported function POST in pages/api/contact.ts,Handle form submissions entirely on the client with JavaScript,"// pages/api/contact.ts
+export const POST = async ({ request }) => {
+  const data = await request.formData();
+  const name = data.get('name');
+  return new Response(JSON.stringify({ ok: true }));
+};",<form onsubmit=handleSubmit(event)>form fields</form>,Medium,https://docs.astro.build/en/guides/endpoints/
+17,Forms,Accessible form inputs,Every form input must have a visible label with a for attribute matching the input id. Use placeholder as supplementary text only,Pair label for=id with input id=id,Use placeholder as the only label or omit labels entirely,"<label for=email>Email</label>
+<input type=email id=email name=email required />",<input type=email placeholder=Email />,High,https://docs.astro.build/en/guides/forms/
+18,Footer,Multi-column footer with links,"Create a responsive footer with 3-4 columns of links (product, company, legal) and a brand column using CSS Grid","Use grid-template-columns: repeat(3, 1fr) on tablet and up; stack on mobile",Hardcode all links in a single flat list without grouping,".footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 640px) {
+  .footer-grid { grid-template-columns: repeat(3, 1fr); }
+}",<footer><a>Link 1</a><a>Link 2</a>...</footer>,Medium,
+19,DataDisplay,FAQ accordion with details/summary,Use the native details name=faq element for an accordion that requires zero JavaScript. The name attribute groups items so only one stays open,Use details name=faq-group to create exclusive accordions without JS,Use a JavaScript library or custom component for a simple accordion,"<details name=faq>
+  <summary>How long does it take?</summary>
+  <p>48 hours maximum.</p>
+</details>","<Accordion client:load>
+  <AccordionItem>content</AccordionItem>
+</Accordion>",High,https://docs.astro.build/en/concepts/islands/
+20,DataDisplay,Comparison table with static data,Render a static comparison table using semantic table HTML or CSS Grid. Data lives in the frontmatter as a const array,Define comparison data as const in the frontmatter; map over it to render rows,Use a client-side framework just to render a static table,"const rows = [
+  { feature: 'Web Hosting', basic: true, pro: true },
+  { feature: 'Custom Domain', basic: false, pro: true }
+];",<ComparisonTable client:load />,Medium,
+21,Media,Image optimization with astro:assets,"Use the built-in Image component from astro:assets for automatic format conversion (WebP/AVIF), resizing, and lazy loading","Import Image from astro:assets and provide alt, width, and height",Use bare img tags for local images that could be optimized,"import { Image } from 'astro:assets';
+import heroImage from '../assets/hero.jpg';
+<Image src={heroImage} alt=Hero width={800} height={600} loading=lazy />",<img src=./hero.jpg alt= />,High,https://docs.astro.build/en/guides/images/
+22,Server,ServerIsland pattern with fallback,Wrap dynamic content in a Server Island with server:defer directive and provide a fallback slot for the static placeholder shown during load,Use server:defer only on components that genuinely need runtime data; always provide a skeleton fallback,Apply server:defer to every component or omit the fallback slot,"<PricingPanel server:defer productId={id}>
+  <div slot=fallback class=skeleton>Loading pricing...</div>
+</PricingPanel>",<PricingPanel server:defer />,High,https://docs.astro.build/en/guides/server-islands/

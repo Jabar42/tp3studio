@@ -1,0 +1,80 @@
+No,Category,Guideline,Description,Do,Don't,Code Good,Code Bad,Severity,Docs URL
+1,Styling,Tailwind CSS v4 with @astrojs/tailwind,"Use the official Tailwind integration for automatic setup: PostCSS config, class scanning, and v4 support",Run npx astro add tailwind for zero-config setup,Manually configure PostCSS and Tailwind when the official integration exists,"npx astro add tailwind
+import tailwind from '@astrojs/tailwind';
+export default defineConfig({ integrations: [tailwind()] });",Manual postcss.config.js + tailwind.config.js,High,https://docs.astro.build/en/guides/integrations-guide/tailwind/
+2,Styling,Vanilla CSS with scoped styles,Use Astro built-in style scoping by writing style blocks directly in .astro components; no integration needed,Write style tags in each component for scoped styles without any CSS framework,Import a global CSS framework just to style one component,"<style>
+  .my-component { color: var(--color-primary); }
+</style>",import './global.css' for everything,Medium,https://docs.astro.build/en/guides/styling/
+3,Styling,CSS variables for design tokens,"Define semantic design tokens as CSS custom properties in :root for consistent colors, spacing, and typography across all components",Use :root variables in a global CSS file or BaseLayout is:global style block,Hardcode color hex values and spacing numbers in every component,"<style is:global>
+  :root {
+    --color-primary: #6366F1;
+    --radius-md: 0.75rem;
+  }
+</style>",color: #6366F1; padding: 12px;,High,
+4,Content,MDX with @astrojs/mdx,Use the MDX integration to write pages and components that mix Markdown and Astro components,Add @astrojs/mdx for blog posts or docs that need embedded components,Use plain .md files when you need interactive components inside your content,"npx astro add mdx
+// In .mdx file:
+import PricingCard from '../components/PricingCard.astro';
+
+## Pricing
+<PricingCard />",Plain markdown with HTML tables instead of components,Medium,https://docs.astro.build/en/guides/integrations-guide/mdx/
+5,Content,Content Layer API with loaders,"Use the Content Layer API to define collections with custom loaders that pull from local files, CMS, databases, or APIs",Define collections in src/content.config.ts with a loader and Zod schema,Hard-code content as const arrays inside .astro component frontmatter,"import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date()
+  })
+});
+export const collections = { blog };","const posts = [{title:'Post 1', date: new Date()}, ...];",High,https://docs.astro.build/en/guides/content-collections/
+6,Content,Content collections for structured data,Use getCollection() with filtering and sorting to query content at build time. Results are fully typed based on your Zod schemas,Call getCollection with filter function for draft filtering and sort by date,Use import.meta.glob() for structured content that should use content collections,"const posts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+posts.sort((a, b) => b.data.date - a.data.date);",const posts = await Astro.glob('./blog/*.md');,High,https://docs.astro.build/en/guides/content-collections/
+7,SEO,@astrojs/sitemap for auto-sitemap,Generates a sitemap.xml at build time automatically from all static routes,npx astro add sitemap and configure customPages for dynamic routes,Forget to add a sitemap or write one manually,"import sitemap from '@astrojs/sitemap';
+export default defineConfig({
+  site: 'https://example.com',
+  integrations: [sitemap({ changefreq: 'weekly', priority: 0.7 })]
+});",No sitemap at all,High,https://docs.astro.build/en/guides/integrations-guide/sitemap/
+8,SEO,@astrojs/rss for RSS feeds,"Generate RSS, Atom, or JSON feeds for blog or content sites using the rss() helper",Create a pages/rss.xml.ts endpoint that calls rss() with your content collection,Have a blog without an RSS feed,"import rss from '@astrojs/rss';
+import { getCollection } from 'astro:content';
+
+export const GET = async () => {
+  const posts = await getCollection('blog');
+  return rss({
+    title: 'My Blog',
+    site: Astro.site,
+    items: posts.map(p => ({
+      title: p.data.title,
+      pubDate: p.data.date,
+      link: `/blog/${p.id}`
+    }))
+  });
+};",No RSS endpoint,Medium,https://docs.astro.build/en/guides/rss/
+9,Performance,@astrojs/partytown for third-party scripts,Offload third-party scripts like Google Analytics to a web worker so they do not block the main thread,npx astro add partytown and add type=text/partytown to third-party scripts,Load analytics and tracking scripts synchronously in head,"npx astro add partytown
+<script type=text/partytown>
+  // Google Analytics tracking code
+</script>",<script src=https://www.googletagmanager.com/gtag/js async></script>,Medium,https://docs.astro.build/en/guides/integrations-guide/partytown/
+10,Performance,astro-compress for build optimization,"Use astro-compress to minify HTML, CSS, JS and compress images during build",Add astro-compress to integrations in astro.config,Deploy unminified HTML with comments and whitespace,"npm install astro-compress
+import compress from 'astro-compress';
+integrations: [compress()]",Uncompressed output with comments,Low,
+11,Framework,React integration,Add React support for interactive components inside Astro pages. Use client directives for hydration control,Use @astrojs/react and add client:load only to components that need interactivity,Migrate your entire app to React components or hydrate static components,"npx astro add react
+<InteractiveWidget client:load />",<StaticHeader client:load />,Medium,https://docs.astro.build/en/guides/integrations-guide/react/
+12,Framework,"Vue, Svelte, and SolidJS integrations",Astro supports multiple frameworks simultaneously. Choose the right one for each interactive island,"Use @astrojs/vue, @astrojs/svelte, or @astrojs/solid-js depending on your team and needs",Install every framework just because you can,"npx astro add vue
+npx astro add svelte
+npx astro add solid-js",All 6 renderers installed when only one is needed,Low,https://docs.astro.build/en/guides/integrations-guide/
+13,Deployment,Cloudflare adapter,Deploy to Cloudflare Pages with SSR support. Astro 6 has native Cloudflare adapter integration via @astrojs/cloudflare,Use @astrojs/cloudflare adapter and configure output: server or hybrid,Deploy SSR site to Cloudflare without the adapter,"npx astro add cloudflare
+export default defineConfig({
+  output: 'server',
+  adapter: cloudflare()
+});","No adapter, manual wrangler config",High,https://docs.astro.build/en/guides/integrations-guide/cloudflare/
+14,Deployment,Vercel adapter,Deploy to Vercel with SSR or static output via @astrojs/vercel,npx astro add vercel and configure with appropriate output mode,Commit .vercel directory or use vercel.json when adapter handles it,"npx astro add vercel
+adapter: vercel()",Manual vercel.json with build config,High,https://docs.astro.build/en/guides/integrations-guide/vercel/
+15,Deployment,Node adapter for standalone servers,Build a standalone Node.js server with @astrojs/node for containerized deployment or traditional VPS hosting,Use @astrojs/node with output: server and mode: standalone,Use the Node adapter when deploying to serverless platforms that have their own adapter,"npx astro add node
+adapter: node({ mode: 'standalone' })",Using @astrojs/node on Vercel (use @astrojs/vercel instead),High,https://docs.astro.build/en/guides/integrations-guide/node/
+16,Analytics,Privacy-first analytics with Plausible or Umami,Add lightweight analytics without compromising performance: use a script tag with defer or Partytown,Use a simple script defer tag in your BaseLayout; no integration needed,Load heavy analytics SDKs that block rendering,<script defer data-domain=mysite.com src=https://plausible.io/js/script.js></script>,<script src=https://www.google-analytics.com/analytics.js></script>,Medium,
+17,Fonts,Astro 6 Built-in Fonts API,"Configure fonts from local files or providers (Google, Fontsource). Astro auto-downloads, caches self-hosted copies, generates fallbacks, and adds preload hints",Use the Font component from astro:fonts to apply fonts anywhere,Load fonts from Google Fonts CDN directly without self-hosting when the Fonts API exists,"import { Font } from 'astro:fonts';
+<Font provider=google family=Inter weights={[400, 600, 700]} />",<link href=https://fonts.googleapis.com/css2?family=Inter rel=stylesheet>,Medium,https://docs.astro.build/en/guides/fonts/
+18,Auth,Auth.js Astro integration,"Add authentication with Auth.js for Astro. Supports OAuth, magic links, and credentials",Use @auth/astro for server-side auth with session management,Build custom auth from scratch when a battle-tested library exists,"npm install @auth/astro
+// Configure providers in auth.config.ts",Manual JWT implementation with cookies,Medium,

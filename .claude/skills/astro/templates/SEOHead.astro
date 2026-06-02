@@ -1,0 +1,39 @@
+---
+// Canonical SEO head component following Astro docs pattern
+// https://docs.astro.build/en/guides/content-collections/
+// Usage: <SEOHead title="Page Title" description="Page description" />
+
+export interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalURL?: string | URL;
+}
+
+const {
+  title,
+  description,
+  ogImage = '/social-default.webp',
+  canonicalURL = Astro.url,
+} = Astro.props;
+---
+
+<!-- Primary meta -->
+<title>{title}</title>
+<meta name="description" content={description} />
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content="website" />
+<meta property="og:image" content={ogImage} />
+<meta property="og:url" content={canonicalURL} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<!-- Canonical -->
+<link rel="canonical" href={canonicalURL} />

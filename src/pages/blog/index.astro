@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+
+const posts = await getCollection('blog', ({ data }) => data.draft !== true);
+posts.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+---
+
+<BaseLayout
+  title="Blog — Tp3studio"
+  description="Automatización, chatbots y páginas web para pequeños negocios en Latinoamérica. Ideas, guías y reflexiones."
+>
+  <section class="section">
+    <div class="container">
+      <div class="blog-header">
+        <span class="section-label">Blog</span>
+        <h1>Ideas para hacer crecer tu negocio</h1>
+        <p>Automatización, chatbots, páginas web y todo lo que un pequeño negocio necesita para vender más sin complicarse.</p>
+      </div>
+
+      <div class="blog-grid">
+        {posts.map(post => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.publishedAt.toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' })}
+            tags={post.data.tags}
+            href={`/blog/${post.id}`}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+.blog-header {
+  text-align: center;
+  max-width: 36rem;
+  margin: 0 auto 3rem;
+}
+.blog-header h1 { margin-bottom: 0.75rem; }
+.blog-header p { font-size: 1.0625rem; color: rgba(15, 14, 26, 0.6); }
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .blog-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 900px) {
+  .blog-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>

@@ -27,8 +27,22 @@ TypeScript config extends `astro/tsconfigs/strict` and includes auto-generated `
 
 Installed skills in `.claude/skills/`:
 
-- **astro** — Astro 6 implementation patterns, component templates, integration recommendations, and v6-specific features. Contains `data/` (CSV knowledge base: components, integrations, v6), `scripts/` (Python BM25 search CLI), and `templates/` (reusable `.astro` component snippets derived from official Astro docs). Use `python3 .claude/skills/astro/scripts/search.py "<query>" --domain components|integrations|v6` or `--stack astro` to cross-reference ui-ux-pro-max.
 - **ui-ux-pro-max** — UI/UX design and frontend assistance skill. Contains `data/` and `scripts/` directories with 50+ styles, 161 color palettes, 57 font pairings, and 10 tech stacks including Astro via `stacks/astro.csv`.
+- **astro** — Astro 6 implementation patterns, component templates, integration recommendations, and v6-specific features. Contains `data/` (CSV knowledge base), `scripts/` (Python BM25 search CLI), and `templates/` (reusable `.astro` component snippets). Use `python3 .claude/skills/astro/scripts/search.py "<query>" --domain components|integrations|v6` or `--stack astro` to cross-reference ui-ux-pro-max.
+
+### Copy & Marketing (`copy/`)
+
+Skills from `coreyhaines31/marketingskills` (v2.0.0) for copywriting and marketing strategy:
+
+- **copywriting** — Persuasive copy across formats: headlines, landing pages, CTAs, value proposition, voice and tone
+- **copy-editing** — Line-by-line copy review: jargon removal, passive voice, buzzwords, clarity checks
+- **cro** — Conversion rate optimization: value proposition analysis, CTA placement, trust signals, friction points, A/B test ideas
+- **marketing-psychology** — 50+ behavioral principles applied to marketing: anchoring, loss aversion, social proof, scarcity, decoy effect, BJ Fogg, framing
+- **pricing** — Pricing psychology: plan structure, anchoring, charm pricing, mental accounting, good-better-best
+- **content-strategy** — Content planning, editorial calendars, topic clusters, SEO briefs
+- **seo-audit** — Technical and on-page SEO audit with prioritized action plan
+- **emails** — Multi-touch email sequences with narrative arc and personalization
+- **portfolio-copy-strategy** — Estrategia de comunicacion para items del portfolio: audiencia (dueños de negocio pequeño LatAm), plantilla de descripcion (quien era + que hizo Tp3studio + que gano), voz y tono, checklist previo a publicar. Usar siempre antes de crear o editar un item de portfolio.
 
 ## MCP Servers
 

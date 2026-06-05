@@ -20,6 +20,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# captured leads (local only)
+leads/
+
 # macOS-specific files
 .DS_Store
 

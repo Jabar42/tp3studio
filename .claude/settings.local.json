@@ -1,0 +1,8 @@
+{
+  "enabledMcpjsonServers": [
+    "supabase"
+  ],
+  "disabledMcpjsonServers": [
+    "playwright"
+  ]
+}

@@ -21,3 +21,51 @@ import CTAFinalSection from '../components/CTAFinalSection.astro';
   <FAQSection />
   <CTAFinalSection />
 </BaseLayout>
+
+<script is:inline>
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Tp3studio",
+  "description": "Páginas web profesionales con chatbot de WhatsApp en 48 horas. Desde $100 USD.",
+  "url": "https://tp3studio.com",
+  "telephone": "+15559273372",
+  "email": "info@aitp3studio.com",
+  "image": "https://tp3studio.com/og-image.jpg",
+  "areaServed": ["Colombia", "México", "República Dominicana"],
+  "priceRange": "$100-$200 USD",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Planes Tp3studio",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Web Moderna"
+        },
+        "price": "100",
+        "priceCurrency": "USD"
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Web + Agente Virtual"
+        },
+        "price": "150",
+        "priceCurrency": "USD"
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Web + Agente + WhatsApp Business"
+        },
+        "price": "200",
+        "priceCurrency": "USD"
+      }
+    ]
+  }
+}
+</script>

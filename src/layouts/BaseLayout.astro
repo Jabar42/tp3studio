@@ -12,7 +12,7 @@ export interface Props {
 const {
   title,
   description,
-  ogImage = 'https://storage.googleapis.com/gpt-engineer-file-uploads/eZF0MhvotcaYyaF4Zh5sPmvzYkN2/social-images/social-1772065504480-Untitled_design.webp',
+  ogImage = 'https://tp3studio.com/og-image.jpg',
 } = Astro.props;
 ---
 
@@ -28,6 +28,8 @@ const {
     <meta name="description" content={description} />
     <meta name="author" content="Tp3studio" />
     <meta name="keywords" content="soluciones IA negocios, chatbot, WhatsApp business, sitios web modernos, automatización empresarial, Colombia" />
+
+    <link rel="canonical" href={new URL(Astro.url.pathname, 'https://tp3studio.com').href} />
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

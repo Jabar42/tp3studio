@@ -1,52 +1,138 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) and Hermes Agent when working with code in this repository.
 
 ## Commands
 
+```bash
+npm run dev             # Start dev server at localhost:4321
+npm run build           # Build to dist/ (server + client)
+npm run preview         # npm run build && wrangler dev
+npm run deploy          # npm run build && wrangler deploy
+npm run astro           # Run Astro CLI (check, add, etc.)
+npm run generate-types  # wrangler types
 ```
-npm run dev      # Start dev server at localhost:4321
-npm run build    # Build to dist/
-npm run preview  # Preview the production build locally
-npm run astro    # Run Astro CLI (e.g., npm run astro -- check, npm run astro -- add <integration>)
+
+## Arquitectura real
+
+**Astro 6** (v6.4.2) con **@astrojs/cloudflare** en **modo server** (NO static/híbrido) — el endpoint `/api/lead` es server-side (`export const prerender = false`). El sitio se despliega como **Cloudflare Worker**.
+
+### Stack
+
+| Capa | Tecnología |
+|------|-----------|
+| Framework | Astro 6 (v6.4.2) |
+| Hosting | Cloudflare Workers (via @astrojs/cloudflare `^13.6.1`) |
+| Output mode | `server` (SSR con rutas prerenderizadas estáticas) |
+| Estilos | CSS vanilla con custom properties — paleta indigo/violet (#6366F1) |
+| Fuentes | Outfit (headings) + Nunito (body) |
+| SEO | Sitemap automático (`@astrojs/sitemap`), canonical tags, Schema.org @graph, OG image |
+| RSS | `@astrojs/rss` feed del blog en `/rss.xml` |
+| KV Storage | Cloudflare KV namespace `SESSION` para sesiones |
+| Observability | Cloudflare Workers observability enabled |
+| Dev tooling | Wrangler `^4.97.0`, Vite 7 (overrides) |
+
+### Estructura de directorios
+
+```
+/
+├── public/                      # Archivos estáticos servidos en /
+│   ├── favicon.svg
+│   ├── favicon.ico
+│   ├── og-image.jpg
+│   └── robots.txt
+├── src/
+│   ├── components/              # 12 componentes .astro reutilizables
+│   │   ├── Header.astro         # Nav sticky con menú mobile (zero JS runtime)
+│   │   ├── Footer.astro
+│   │   ├── HeroSection.astro
+│   │   ├── ComparisonSection.astro
+│   │   ├── HowItWorks.astro
+│   │   ├── PricingCards.astro
+│   │   ├── TestimonialsSection.astro
+│   │   ├── FAQSection.astro
+│   │   ├── CTAFinalSection.astro
+│   │   ├── CTAButton.astro
+│   │   ├── BlogCard.astro
+│   │   └── PortfolioCard.astro
+│   ├── content/                 # Content Collections
+│   │   ├── config.ts            # (auto-generado por Astro en .astro/)
+│   │   ├── blog/                # 5 artículos publicados
+│   │   └── portfolio/           # 4 casos de éxito
+│   ├── layouts/
+│   │   └── BaseLayout.astro     # Layout único con SEO, OG, canonical, grain overlay
+│   ├── pages/
+│   │   ├── index.astro          # Hero, Comparison, HowItWorks, Pricing, Testimonials, FAQ, CTA
+│   │   ├── precios.astro
+│   │   ├── about.astro
+│   │   ├── portfolio.astro
+│   │   ├── portfolio/[slug].astro
+│   │   ├── blog/index.astro
+│   │   ├── blog/[slug].astro
+│   │   ├── audit.astro          # Formulario de auditoría gratuita
+│   │   ├── auth.astro           # Login de clientes (placeholder)
+│   │   ├── preview.astro        # Preview visual del producto
+│   │   ├── 404.astro            # Página 404 personalizada
+│   │   ├── rss.xml.ts           # RSS feed
+│   │   └── api/
+│   │       └── lead.ts          # Endpoint SSR de captura de leads
+│   └── styles/
+│       └── global.css           # Variables CSS, reset, utilidades
+├── wrangler.jsonc               # Config CF Workers (KV, observability)
+├── astro.config.mjs
+├── package.json
+└── tsconfig.json                # Extiende astro/tsconfigs/strict
 ```
 
-## Architecture
+### Páginas del sitio (19 rutas)
 
-This is an **Astro 6** project (v6.4+) using zero-JS static output by default. The template follows Astro's standard directory convention:
+- `/` — Homepage con Schema.org LocalBusiness + FAQPage (@graph)
+- `/precios` — Planes Esencial $100 / Popular $150 / Completo $200 USD
+- `/portfolio` — Grid de 4 casos de éxito: Varsana, Vanta, Outkast, LovelyPet
+- `/portfolio/[slug]` — Detalle de cada caso
+- `/about` — Historia y stats del proyecto
+- `/preview` — Demo visual
+- `/audit` — Formulario de auditoría gratuita → POST a `/api/lead`
+- `/blog` — 5 artículos publicados
+- `/blog/[slug]` — Artículo individual
+- `/auth` — Login placeholder
+- `/404` — Error personalizado
+- `/rss.xml` — Feed RSS
 
-- `src/pages/` — file-based routing; each `.astro` file becomes a page
-- `src/layouts/` — page shell components (HTML boilerplate, `<slot />` for content)
-- `src/components/` — reusable `.astro` components
-- `src/assets/` — images, SVGs, and other static assets imported by components
-- `public/` — files served as-is at the root path (favicon, robots.txt, etc.)
+### Schema.org markup
 
-TypeScript config extends `astro/tsconfigs/strict` and includes auto-generated `.astro/types.d.ts`.
+En `src/pages/index.astro` via `<script is:inline>` con `@graph`:
+- **LocalBusiness** — nombre, precios, área de servicio (Colombia, México, RD), 3 planes con USD
+- **FAQPage** — 6 preguntas/respuestas sobre el servicio
 
-## Skills
+## Skills instaladas
 
-Installed skills in `.claude/skills/`:
+En `.claude/skills/`:
 
-- **ui-ux-pro-max** — UI/UX design and frontend assistance skill. Contains `data/` and `scripts/` directories with 50+ styles, 161 color palettes, 57 font pairings, and 10 tech stacks including Astro via `stacks/astro.csv`.
-- **astro** — Astro 6 implementation patterns, component templates, integration recommendations, and v6-specific features. Contains `data/` (CSV knowledge base), `scripts/` (Python BM25 search CLI), and `templates/` (reusable `.astro` component snippets). Use `python3 .claude/skills/astro/scripts/search.py "<query>" --domain components|integrations|v6` or `--stack astro` to cross-reference ui-ux-pro-max.
+### Framework
+- **ui-ux-pro-max** — UI/UX design con 50+ estilos, 161 paletas, 57 fuentes, stacks
+- **astro** — Astro 6 patterns, templates, integraciones. `python3 .claude/skills/astro/scripts/search.py "<query>" --domain <domain>`
 
-### Copy & Marketing (`copy/`)
+### Copy & Marketing (v2.0.0 desde coreyhaines31/marketingskills)
+- **copywriting** — Copy persuasivo: headlines, landing pages, CTAs, value proposition
+- **copy-editing** — Revisión línea por línea: jargon, passive voice, buzzwords
+- **cro** — Conversión: value prop, CTAs, trust signals, friction points, A/B tests
+- **marketing-psychology** — 50+ principios: anchoring, scarcity, social proof, framing
+- **pricing** — Psicología de precios, good-better-best, anchoring
+- **content-strategy** — Planificación editorial, topic clusters, SEO briefs
+- **seo-audit** — Auditoría SEO técnica y on-page
+- **emails** — Secuencias de email multicanal
+- **portfolio-copy-strategy** — Estrategia de copy para items del portfolio (audiencia LatAm, plantilla)
 
-Skills from `coreyhaines31/marketingskills` (v2.0.0) for copywriting and marketing strategy:
+## MCP Servers (`.mcp.json`)
 
-- **copywriting** — Persuasive copy across formats: headlines, landing pages, CTAs, value proposition, voice and tone
-- **copy-editing** — Line-by-line copy review: jargon removal, passive voice, buzzwords, clarity checks
-- **cro** — Conversion rate optimization: value proposition analysis, CTA placement, trust signals, friction points, A/B test ideas
-- **marketing-psychology** — 50+ behavioral principles applied to marketing: anchoring, loss aversion, social proof, scarcity, decoy effect, BJ Fogg, framing
-- **pricing** — Pricing psychology: plan structure, anchoring, charm pricing, mental accounting, good-better-best
-- **content-strategy** — Content planning, editorial calendars, topic clusters, SEO briefs
-- **seo-audit** — Technical and on-page SEO audit with prioritized action plan
-- **emails** — Multi-touch email sequences with narrative arc and personalization
-- **portfolio-copy-strategy** — Estrategia de comunicacion para items del portfolio: audiencia (dueños de negocio pequeño LatAm), plantilla de descripcion (quien era + que hizo Tp3studio + que gano), voz y tono, checklist previo a publicar. Usar siempre antes de crear o editar un item de portfolio.
+- **Supabase** — `https://mcp.supabase.com/mcp`. Database operations si se conecta.
+- **Playwright** — Chromium local. Tests UI y verificación del dev server.
 
-## MCP Servers
+## Notas importantes
 
-Two MCP servers are configured in `.mcp.json`:
-
-- **Supabase** — HTTP-based server at `https://mcp.supabase.com/mcp`. Available for database operations if the project connects to Supabase.
-- **Playwright** — local browser automation using Chromium at `/home/jota/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome`. Use for UI testing and browser-based verification of the dev server.
+- El output **no es estático** — usa `mode: server`. `lead.ts` es SSR.
+- El build produce `dist/client/` (assets estáticos) y `dist/server/` (worker).
+- NO hay analytics instalados aún (pendiente Fase 1).
+- Blog tiene 5 artículos publicados, portfolio 4 casos.
+- No hay ningún TODO.md (no existe o está vacío).

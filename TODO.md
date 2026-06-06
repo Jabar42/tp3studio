@@ -36,7 +36,7 @@
 - [ ] **Artículo: cómo funciona un agente IA para atención al cliente**
 - [ ] **Artículo: guía para elegir entre Wix, WordPress y Tp3studio**
 - [ ] **Artículo: qué es SEO local y por qué lo necesita tu negocio**
-- [ ] **Artículo: mitos sobre páginas web para pequeños negocios**
+- [x] **Artículo: mitos sobre páginas web para pequeños negocios** `f1bc14d`
 - [ ] **Artículo: cómo convertir visitas en clientes con chatbot**
 - [ ] **Artículo: caso de estudio — restaurante que triplicó reservas**
 - [ ] **Lead magnet** — guía descargable "Cómo elegir web para tu negocio"

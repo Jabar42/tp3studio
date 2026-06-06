@@ -2,16 +2,14 @@
 /**
  * Breadcrumbs.astro
  *
- * Breadcrumb navigation con schema.org BreadcrumbList.
+ * Breadcrumb navigation estilo Linear/Vercel con paleta indigo/violet.
+ * Schema.org BreadcrumbList incluido.
  *
- * Uso en páginas estáticas:
+ * Uso:
+ *   <Breadcrumbs pathname={Astro.url.pathname} currentLabel={title} />
  *   <Breadcrumbs pathname={Astro.url.pathname} />
  *
- * Uso en páginas dinámicas (blog/[slug], portfolio/[slug]):
- *   <Breadcrumbs pathname={Astro.url.pathname} currentLabel="Nombre del artículo/caso" />
- *
- * La homepage (/) no muestra breadcrumbs.
- * 404 no debe incluir este componente.
+ * La homepage (/) y 404 no muestran breadcrumbs.
  */
 
 export interface Props {
@@ -37,9 +35,7 @@ const routeLabels: Record<string, string> = {
 const segments = pathname.split('/').filter(Boolean);
 const crumbs: { label: string; href?: string }[] = [];
 
-if (segments.length === 0 || pathname === '/') {
-  // Homepage: no mostrar breadcrumbs
-} else {
+if (segments.length > 0 && pathname !== '/') {
   // Siempre empezar con Inicio
   crumbs.push({ label: 'Inicio', href: '/' });
 
@@ -48,10 +44,9 @@ if (segments.length === 0 || pathname === '/') {
     accumulated += '/' + segments[i];
     const isLast = i === segments.length - 1;
 
-    if (!segments[i]) continue; // fallback
+    if (!segments[i]) continue;
 
     if (isLast && currentLabel) {
-      // Último segmento dinámico con etiqueta personalizada
       crumbs.push({ label: currentLabel });
     } else if (routeLabels[accumulated]) {
       crumbs.push({
@@ -59,7 +54,6 @@ if (segments.length === 0 || pathname === '/') {
         href: isLast ? undefined : accumulated,
       });
     } else if (isLast && !currentLabel) {
-      // Último segmento sin label conocido: mostrar formateado
       crumbs.push({ label: segments[i] });
     }
   }
@@ -96,8 +90,8 @@ const itemListElement = crumbs.map((crumb, i) => ({
               )}
               {i < crumbs.length - 1 && (
                 <span class="breadcrumbs-sep" aria-hidden="true">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M4.5 2.5L7.5 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.25 3.5L8.75 7L5.25 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </span>
               )}
@@ -110,50 +104,81 @@ const itemListElement = crumbs.map((crumb, i) => ({
 }
 
 <style>
-.breadcrumbs {
-  padding: 0.75rem 0 0;
-}
+  .breadcrumbs {
+    padding: 1.25rem 0 0;
+  }
 
-.breadcrumbs-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
+  .breadcrumbs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.125rem;
+  }
 
-.breadcrumbs-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.8125rem;
-  line-height: 1;
-}
+  .breadcrumbs-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.125rem;
+    font-family: var(--font-body, 'Nunito', system-ui, sans-serif);
+    font-size: 0.8125rem;
+    line-height: 1;
+  }
 
-.breadcrumbs-link {
-  color: rgba(15, 14, 26, 0.5);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 200ms;
-  padding: 0.125rem 0.25rem;
-  border-radius: 4px;
-}
+  .breadcrumbs-link {
+    color: #71717A;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
 
-.breadcrumbs-link:hover {
-  color: var(--color-clay);
-  background: rgba(99, 102, 241, 0.06);
-}
+  .breadcrumbs-link:hover {
+    color: var(--color-primary, #6366F1);
+    background: rgba(99, 102, 241, 0.08);
+  }
 
-.breadcrumbs-current {
-  color: var(--color-deep);
-  font-weight: 600;
-}
+  .breadcrumbs-link:active {
+    background: rgba(99, 102, 241, 0.14);
+    transform: scale(0.97);
+  }
 
-.breadcrumbs-sep {
-  display: inline-flex;
-  align-items: center;
-  color: rgba(15, 14, 26, 0.25);
-}
+  .breadcrumbs-current {
+    color: #18181B;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    background: rgba(99, 102, 241, 0.06);
+    font-family: var(--font-heading, 'Outfit', system-ui, sans-serif);
+    letter-spacing: -0.01em;
+  }
+
+  .breadcrumbs-sep {
+    display: inline-flex;
+    align-items: center;
+    color: #A1A1AA;
+    margin: 0 0.125rem;
+    opacity: 0.6;
+  }
+
+  /* Responsive: en mobile más compacto */
+  @media (max-width: 640px) {
+    .breadcrumbs {
+      padding: 0.75rem 0 0;
+    }
+
+    .breadcrumbs-link {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.35rem;
+    }
+
+    .breadcrumbs-current {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.35rem;
+    }
+  }
 </style>

@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 
@@ -7,12 +8,18 @@ export interface Props {
   title: string;
   description: string;
   ogImage?: string;
+  /** Breadcrumb label para la página actual (páginas dinámicas: blog/caso slug) */
+  breadcrumbLabel?: string;
+  /** Ocultar breadcrumbs en esta página (ej: 404, homepage) */
+  hideBreadcrumbs?: boolean;
 }
 
 const {
   title,
   description,
   ogImage = 'https://tp3studio.com/og-image.jpg',
+  breadcrumbLabel,
+  hideBreadcrumbs = false,
 } = Astro.props;
 ---
 
@@ -46,6 +53,11 @@ const {
     <div class="grain-overlay" aria-hidden="true"></div>
     <Header />
     <main>
+      {
+        !hideBreadcrumbs && (
+          <Breadcrumbs pathname={Astro.url.pathname} currentLabel={breadcrumbLabel} />
+        )
+      }
       <slot />
     </main>
     <Footer />

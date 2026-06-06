@@ -22,50 +22,107 @@ import CTAFinalSection from '../components/CTAFinalSection.astro';
   <CTAFinalSection />
 </BaseLayout>
 
-<script is:inline>
+|<script is:inline>
 {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "Tp3studio",
-  "description": "Páginas web profesionales con chatbot de WhatsApp en 48 horas. Desde $100 USD.",
-  "url": "https://tp3studio.com",
-  "telephone": "+15559273372",
-  "email": "info@aitp3studio.com",
-  "image": "https://tp3studio.com/og-image.jpg",
-  "areaServed": ["Colombia", "México", "República Dominicana"],
-  "priceRange": "$100-$200 USD",
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "Planes Tp3studio",
-    "itemListElement": [
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Web Moderna"
-        },
-        "price": "100",
-        "priceCurrency": "USD"
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Web + Agente Virtual"
-        },
-        "price": "150",
-        "priceCurrency": "USD"
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Web + Agente + WhatsApp Business"
-        },
-        "price": "200",
-        "priceCurrency": "USD"
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "name": "Tp3studio",
+      "description": "Páginas web profesionales con chatbot de WhatsApp en 48 horas. Desde $100 USD.",
+      "url": "https://tp3studio.com",
+      "telephone": "+155****3372",
+      "email": "info@aitp3studio.com",
+      "image": "https://tp3studio.com/og-image.jpg",
+      "areaServed": ["Colombia", "México", "República Dominicana"],
+      "priceRange": "$100-$200 USD",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Planes Tp3studio",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Web Moderna"
+            },
+            "price": "100",
+            "priceCurrency": "USD"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Web + Agente Virtual"
+            },
+            "price": "150",
+            "priceCurrency": "USD"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Web + Agente + WhatsApp Business"
+            },
+            "price": "200",
+            "priceCurrency": "USD"
+          }
+        ]
       }
-    ]
-  }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Realmente está lista en 48 horas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Una vez recibida tu información y contenido, entregamos tu página web lista en máximo 48 horas. La mayoría de proyectos los tenemos listos en menos de 24 horas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Necesito saber de tecnología para tener mi página?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, para nada. Solo llenás un formulario de 3 minutos con la información de tu negocio. Nosotros nos encargamos de todo lo técnico: dominio, hosting, diseño, desarrollo y configuración."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué pasa después del primer año de servicio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El hosting se renueva por solo $15 USD al año. Mantenemos tu página en infraestructura Cloudflare de alto rendimiento, con seguridad incluida."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo hacer cambios en mi página después de entregada?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Los planes Popular y Completo incluyen revisiones y cambios ilimitados sin costo adicional. En el plan Esencial, cada revisión tiene un costo de $100 USD."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿El chatbot funciona con cualquier tipo de negocio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Personalizamos el agente de IA según tu tipo de negocio: restaurantes, tiendas en línea, servicios profesionales, consultorios médicos, clínicas dentales, talleres mecánicos, entre otros."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué garantía tengo si no me gusta el resultado?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ajustamos tu página hasta que quedes 100% satisfecho. Los planes Popular y Completo tienen revisiones ilimitadas sin costo. No paramos hasta que te encante el resultado."
+          }
+        }
+      ]
+    }
+  ]
 }
 </script>

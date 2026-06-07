@@ -1,6 +1,7 @@
 ---
 const navItems = [
   { href: '/portfolio', label: 'Casos de Éxito' },
+  { href: '/blog', label: 'Blog' },
   { href: '/precios', label: 'Precios' },
   { href: '/preview', label: 'Prueba tu web' },
   { href: '/about', label: 'Nuestra Historia' },
@@ -38,7 +39,6 @@ const currentPath = Astro.url.pathname;
           {item.label}
         </a>
       ))}
-      <a href="/audit" class="nav-link nav-link--accent">Auditoría Gratis</a>
       <span class="nav-sep" aria-hidden="true"></span>
       <a href="/auth" class="nav-link nav-link--ghost">Inicia Sesión</a>
       <a
@@ -64,7 +64,6 @@ const currentPath = Astro.url.pathname;
             {item.label}
           </a>
         ))}
-        <a href="/audit" class="nav-link nav-link--accent">Auditoría Gratis</a>
         <a href="/auth" class="nav-link">Inicia Sesión</a>
         <a
           href="https://wa.me/15559273372"

@@ -12,6 +12,8 @@ export interface Props {
   breadcrumbLabel?: string;
   /** Ocultar breadcrumbs en esta página (ej: 404, homepage) */
   hideBreadcrumbs?: boolean;
+  /** Schema.org JSON-LD markup para inyectar en <head> */
+  schema?: string;
 }
 
 const {
@@ -20,6 +22,7 @@ const {
   ogImage = 'https://tp3studio.com/og-image.jpg',
   breadcrumbLabel,
   hideBreadcrumbs = false,
+  schema,
 } = Astro.props;
 ---
 
@@ -51,6 +54,9 @@ const {
 
     <!-- Umami Analytics -->
     <script defer src='https://umami-beta-livid.vercel.app/script.js' data-website-id='f896ea6e-7875-45ba-96df-01eec2029191'></script>
+    {
+      schema && <script is:inline type="application/ld+json" set:html={schema} />
+    }
   </head>
   <body>
     <div class="grain-overlay" aria-hidden="true"></div>
@@ -58,7 +64,9 @@ const {
     <main>
       {
         !hideBreadcrumbs && (
-          <Breadcrumbs pathname={Astro.url.pathname} currentLabel={breadcrumbLabel} />
+          <div class="container">
+            <Breadcrumbs pathname={Astro.url.pathname} currentLabel={breadcrumbLabel} />
+          </div>
         )
       }
       <slot />

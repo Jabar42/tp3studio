@@ -7,23 +7,8 @@ import PricingCards from '../components/PricingCards.astro';
 import TestimonialsSection from '../components/TestimonialsSection.astro';
 import FAQSection from '../components/FAQSection.astro';
 import CTAFinalSection from '../components/CTAFinalSection.astro';
----
 
-<BaseLayout
-  title="Página Web Profesional con Chatbot WhatsApp | Tp3studio — Lista en 48h"
-  description="Páginas web profesionales con chatbot de WhatsApp en 48 horas desde $100 USD. Para negocios en Colombia, México y RD que quieren vender más sin complicarse."
->
-  <HeroSection />
-  <ComparisonSection />
-  <HowItWorks />
-  <PricingCards />
-  <TestimonialsSection />
-  <FAQSection />
-  <CTAFinalSection />
-</BaseLayout>
-
-|<script is:inline>
-{
+const schema = {
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -40,33 +25,9 @@ import CTAFinalSection from '../components/CTAFinalSection.astro';
         "@type": "OfferCatalog",
         "name": "Planes Tp3studio",
         "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Web Moderna"
-            },
-            "price": "100",
-            "priceCurrency": "USD"
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Web + Agente Virtual"
-            },
-            "price": "150",
-            "priceCurrency": "USD"
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Web + Agente + WhatsApp Business"
-            },
-            "price": "200",
-            "priceCurrency": "USD"
-          }
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web Moderna" }, "price": "100", "priceCurrency": "USD" },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web + Agente Virtual" }, "price": "150", "priceCurrency": "USD" },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web + Agente + WhatsApp Business" }, "price": "200", "priceCurrency": "USD" }
         ]
       }
     },
@@ -124,5 +85,19 @@ import CTAFinalSection from '../components/CTAFinalSection.astro';
       ]
     }
   ]
-}
-</script>
+};
+---
+
+<BaseLayout
+  title="Página Web Profesional con Chatbot WhatsApp | Tp3studio — Lista en 48h"
+  description="Páginas web profesionales con chatbot de WhatsApp en 48 horas desde $100 USD. Para negocios en Colombia, México y RD que quieren vender más sin complicarse."
+  schema={JSON.stringify(schema)}
+>
+  <HeroSection />
+  <ComparisonSection />
+  <HowItWorks />
+  <PricingCards />
+  <TestimonialsSection />
+  <FAQSection />
+  <CTAFinalSection />
+</BaseLayout>

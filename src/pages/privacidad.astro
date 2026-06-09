@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getTranslations } from '../i18n';
+
+const locale = Astro.currentLocale ?? 'es';
+const t = getTranslations(locale);
+const p = t.privacidad;
+---
+<BaseLayout title={p.title} description={p.desc} locale={locale} breadcrumbLabel={p.label}>
+  <section class="section legal-page">
+    <div class="container legal-inner">
+      <span class="section-label">{p.label}</span>
+      <h1>{p.title}</h1>
+      <p class="legal-update">{p.lastUpdate}</p>
+
+      <section class="legal-section">
+        <h2>{p.s1Title}</h2>
+        <p>{p.s1Body}</p>
+        <ul>
+          {p.s1Items.map(item => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>{p.s2Title}</h2>
+        <p>{p.s2Body}</p>
+      </section>
+
+      <section class="legal-section">
+        <h2>{p.s3Title}</h2>
+        <p>{p.s3Body}</p>
+      </section>
+
+      <section class="legal-section">
+        <h2>{p.s4Title}</h2>
+        <p>{p.s4Body}</p>
+      </section>
+
+      <section class="legal-section">
+        <h2>{p.s5Title}</h2>
+        <p>{p.s5Body}</p>
+        <ul>
+          {p.s5Items.map(item => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>{p.s6Title}</h2>
+        <p>{p.s6Body}</p>
+        <p>
+          <a href={locale === 'en' ? '/en/audit' : '/audit'}>{t.audit.heroLabel}</a>
+        </p>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+.legal-inner { max-width: 48rem; }
+.legal-page { padding-top: 0.5rem; }
+.legal-inner h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+.legal-update { font-size: 0.8125rem; color: rgba(45,26,15,0.5); margin-bottom: 2.5rem; font-style: italic; }
+.legal-section { margin-bottom: 2rem; }
+.legal-section h2 { font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--color-deep); }
+.legal-section p { font-size: 1rem; line-height: 1.7; color: rgba(45,26,15,0.7); margin-bottom: 0.75rem; }
+.legal-section ul { padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.legal-section li { font-size: 0.95rem; line-height: 1.6; color: rgba(45,26,15,0.7); margin-bottom: 0.25rem; }
+.legal-section a { color: var(--color-primary); text-decoration: underline; }
+.legal-section a:hover { color: var(--color-accent); }
+</style>

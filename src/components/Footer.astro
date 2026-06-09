@@ -32,8 +32,8 @@ const { lang = 'es' } = Astro.props;
         </div>
         <div class="footer-col">
           <h4>{lang === 'en' ? 'Legal' : 'Legal'}</h4>
-          <a href="/privacy">{lang === 'en' ? 'Privacy' : 'Privacidad'}</a>
-          <a href="/terms">{lang === 'en' ? 'Terms' : 'Términos'}</a>
+          <a href={lang === 'en' ? '/en/privacy' : '/privacidad'}>{lang === 'en' ? 'Privacy' : 'Privacidad'}</a>
+          <a href={lang === 'en' ? '/en/terms' : '/terminos'}>{lang === 'en' ? 'Terms' : 'Términos'}</a>
         </div>
       </div>
     </div>

@@ -1,5 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getTranslations } from '../i18n';
+
+const locale = Astro.currentLocale ?? 'es';
+const t = getTranslations(locale);
+const p = t.whiteLabel;
 
 const schema = JSON.stringify({
   "@context": "https://schema.org",
@@ -62,8 +67,7 @@ const schema = JSON.stringify({
   description="Revende páginas web con agente IA, pagos y WhatsApp. Todo con tu marca. Pagas $150 por proyecto — tú pones el precio. 48h de entrega. Sin código."
   breadcrumbLabel="White Label"
   schema={schema}
-  lang="es"
->
+  locale={locale}>
   <!-- ════════════════════════════════════════════ -->
   <!-- SECTION 1: HERO                            -->
   <!-- ════════════════════════════════════════════ -->

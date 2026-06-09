@@ -1,6 +1,12 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getTranslations } from '../../i18n';
+
+const locale = Astro.currentLocale ?? 'es';
+const t = getTranslations(locale);
+const filterLocale = locale === 'en' ? 'en' : 'es';
+const prefix = locale === 'en' ? '/en' : '';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => data.draft !== true);
@@ -10,24 +16,25 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const post = await getEntry('blog', slug!);
 
-if (!post) return Astro.redirect('/404');
+if (!post) return Astro.redirect(locale === 'en' ? '/en/404' : '/404');
 
 const { title, description, publishedAt, tags, author } = post.data;
 const { Content } = await render(post);
 
-const formattedDate = publishedAt.toLocaleDateString('es-CO', {
+const dateLocale = locale === 'en' ? 'en-US' : 'es-CO';
+const formattedDate = publishedAt.toLocaleDateString(dateLocale, {
   day: 'numeric', month: 'long', year: 'numeric'
 });
 ---
 
-<BaseLayout title={`${title} — Tp3studio Blog`} description={description} breadcrumbLabel={title}>
+<BaseLayout title={`${title} — Tp3studio Blog`} description={description} breadcrumbLabel={title} locale={locale}>
   <article class="section">
     <div class="post-inner container">
-      <a href="/blog" class="back-link">&larr; Blog</a>
+      <a href={`${prefix}/blog`} class="back-link">&larr; {t.blog.backLink}</a>
 
       <header class="post-header">
         <div class="post-tags">
-          {tags.map(t => <span class="tag">{t}</span>)}
+          {tags.map(tag => <span class="tag">{tag}</span>)}
         </div>
         <h1>{title}</h1>
         <div class="post-meta">
@@ -44,8 +51,8 @@ const formattedDate = publishedAt.toLocaleDateString('es-CO', {
       <hr class="post-divider" />
 
       <div class="post-cta">
-        <p>¿Quieres tu propia web con chatbot? Hablemos.</p>
-        <a href="/precios" class="btn-creative btn-primary btn-md">Ver planes desde $100 USD</a>
+        <p>{locale === 'en' ? 'Want your own website with chatbot? Let\'s talk.' : '¿Quieres tu propia web con chatbot? Hablemos.'}</p>
+        <a href={`${prefix}/precios`} class="btn-creative btn-primary btn-md">{locale === 'en' ? 'See plans from $100 USD' : 'Ver planes desde $100 USD'}</a>
       </div>
     </div>
   </article>

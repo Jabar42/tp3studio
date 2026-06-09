@@ -2,31 +2,38 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PortfolioCard from '../components/PortfolioCard.astro';
+import { getTranslations } from '../i18n';
 
-const cases = await getCollection('portfolio');
+const locale = Astro.currentLocale ?? 'es';
+const t = getTranslations(locale);
+const filterLocale = locale === 'en' ? 'en' : 'es';
+
+const cases = await getCollection('portfolio', ({ data }) => data.locale === filterLocale || !data.locale);
 cases.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout
-  title="Casos de Éxito — Tp3studio"
-  description="Descubre cómo negocios reales están creciendo con su web y chatbot de Tp3studio."
+  title={t.portfolio.title}
+  description={t.portfolio.desc}
+  locale={locale}
 >
   <section class="section">
     <div class="container">
       <div class="page-header">
-        <span class="section-label">Casos de Éxito</span>
-        <h1>Negocios reales, resultados reales</h1>
-        <p>Cada uno de estos negocios dio el salto digital con Tp3studio.</p>
+        <span class="section-label">{t.portfolio.label}</span>
+        <h1>{locale === 'en' ? 'Real businesses, real results' : 'Negocios reales, resultados reales'}</h1>
+        <p>{locale === 'en' ? 'Each of these businesses made the digital leap with Tp3studio.' : 'Cada uno de estos negocios dio el salto digital con Tp3studio.'}</p>
       </div>
 
       <div class="portfolio-grid">
+        {cases.length === 0 && <p class="portfolio-empty">{t.portfolio.empty}</p>}
         {cases.map(c => (
           <PortfolioCard
             name={c.data.name}
             location={c.data.location}
             description={c.data.description}
             tags={c.data.tags}
-            href={`/portfolio/${c.id}`}
+            href={`/${locale === 'en' ? 'en/' : ''}portfolio/${c.id}`}
             url={c.data.url}
           />
         ))}
@@ -48,6 +55,11 @@ cases.sort((a, b) => a.data.order - b.data.order);
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
+}
+.portfolio-empty {
+  text-align: center;
+  color: rgba(15, 14, 26, 0.4);
+  padding: 3rem 0;
 }
 
 @media (min-width: 640px) {

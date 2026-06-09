@@ -1,20 +1,47 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getTranslations } from '../i18n';
+
+const locale = Astro.currentLocale ?? 'es';
+const t = getTranslations(locale);
+const p = t.about;
 ---
-<BaseLayout title="Nuestra Historia — Tp3studio" description="Tp3studio nació para que cualquier negocio pueda tener presencia digital profesional en 48 horas.">
+<BaseLayout title={p.title} description={p.desc} locale={locale}>
   <section class="section"><div class="container about-inner">
-    <div class="about-header"><span class="section-label">Nuestra Historia</span><h1>De la frustración a la solución</h1></div>
+    <div class="about-header">
+      <span class="section-label">{p.introLabel}</span>
+      <h1>{p.introTitle} <span class="accent-text">{p.introTitleHighlight}</span></h1>
+      <p>{p.introDesc}</p>
+    </div>
     <div class="about-story">
-      <p>Todo empezó cuando vimos a negocios increíbles perder clientes por no tener presencia en línea. No era falta de ganas: era que las opciones eran caras, lentas y complicadas.</p>
-      <p>Las agencias tradicionales cobraban miles de dólares y tardaban meses. Las plataformas "hágalo usted mismo" dejaban a los dueños frustrados.</p>
-      <p>Así nació <strong>Tp3studio</strong>: una forma radicalmente simple de tener web profesional. Sin reuniones eternas, sin código, sin mensualidades ocultas.</p>
-      <p>Hoy más de 100 negocios en Colombia, México y República Dominicana confían en nosotros.</p>
+      <h2>{p.storyTitle}</h2>
+      <p>{p.storyDesc1}</p>
+      <p>{p.storyDesc2}</p>
     </div>
     <div class="about-stats">
-      <div class="stat"><span class="stat-number">+100</span><span class="stat-label">Negocios activos</span></div>
-      <div class="stat"><span class="stat-number">48h</span><span class="stat-label">Tiempo de entrega</span></div>
-      <div class="stat"><span class="stat-number">3</span><span class="stat-label">Países</span></div>
-      <div class="stat"><span class="stat-number">$100</span><span class="stat-label">Desde</span></div>
+      {p.stats.map(stat => (
+        <div class="stat">
+          <span class="stat-number">{stat.number}</span>
+          <span class="stat-label">{stat.label}</span>
+        </div>
+      ))}
+    </div>
+    <div class="about-values">
+      <h2>{p.valuesTitle}</h2>
+      <div class="values-grid">
+        {p.values.map(v => (
+          <div class="value-card">
+            <span class="value-icon">{v.icon}</span>
+            <h3>{v.title}</h3>
+            <p>{v.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div class="about-cta">
+      <a href={locale === 'en' ? '/en/precios' : '/precios'} class="btn-creative btn-primary btn-md">
+        {p.cta} <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
     </div>
   </div></section>
 </BaseLayout>
@@ -22,10 +49,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <style>
 .about-inner { max-width: 48rem; }
 .about-header { text-align: center; margin-bottom: 3rem; }
+.about-header p { font-size: 1.0625rem; color: rgba(45,26,15,0.6); max-width: 32rem; margin: 1rem auto 0; }
+.about-story h2 { font-size: 1.5rem; margin-bottom: 1rem; }
 .about-story p { font-size: 1.0625rem; line-height: 1.8; color: rgba(45,26,15,0.75); margin-bottom: 1.25rem; }
 .about-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--color-border); }
 .stat { text-align: center; background: #fff; border-radius: var(--radius-md); padding: 1.5rem; border: 1px solid var(--color-border); }
 .stat-number { display: block; font-family: var(--font-heading); font-size: 2rem; font-weight: 800; color: var(--color-accent); }
 .stat-label { font-size: 0.8125rem; color: rgba(45,26,15,0.55); }
+.about-values h2 { text-align: center; margin: 3rem 0 2rem; }
+.values-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+.value-card { background: #fff; border: 1.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.5rem; transition: transform 200ms; }
+.value-card:hover { transform: translateY(-2px); }
+.value-icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+.value-card h3 { font-size: 1.1rem; margin-bottom: 0.35rem; }
+.value-card p { font-size: 0.875rem; color: rgba(45,26,15,0.55); margin: 0; }
+.about-cta { text-align: center; margin-top: 3rem; }
 @media (min-width: 640px) { .about-stats { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 768px) { .values-grid { grid-template-columns: repeat(4, 1fr); } }
 </style>

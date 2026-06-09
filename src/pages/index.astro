@@ -7,14 +7,20 @@ import PricingCards from '../components/PricingCards.astro';
 import TestimonialsSection from '../components/TestimonialsSection.astro';
 import FAQSection from '../components/FAQSection.astro';
 import CTAFinalSection from '../components/CTAFinalSection.astro';
+import { getTranslations } from '../i18n';
+
+const locale = Astro.currentLocale ?? 'es';
+const t = getTranslations(locale);
 
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "LocalBusiness",
-      "name": "Tp3studio",
-      "description": "Páginas web profesionales con chatbot de WhatsApp en 48 horas. Desde $100 USD.",
+      "name": t.schema.businessName,
+      "description": locale === 'en'
+        ? "Professional websites with WhatsApp chatbot in 48 hours. From $100 USD."
+        : "Páginas web profesionales con chatbot de WhatsApp en 48 horas. Desde $100 USD.",
       "url": "https://tp3studio.com",
       "telephone": "+155****3372",
       "email": "info@aitp3studio.com",
@@ -23,81 +29,40 @@ const schema = {
       "priceRange": "$100-$200 USD",
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
-        "name": "Planes Tp3studio",
+        "name": locale === 'en' ? 'Tp3studio Plans' : 'Planes Tp3studio',
         "itemListElement": [
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web Moderna" }, "price": "100", "priceCurrency": "USD" },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web + Agente Virtual" }, "price": "150", "priceCurrency": "USD" },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web + Agente + WhatsApp Business" }, "price": "200", "priceCurrency": "USD" }
-        ]
-      }
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": locale === 'en' ? 'Modern Website' : 'Web Moderna' }, "price": "100", "priceCurrency": "USD" },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": locale === 'en' ? 'Website + AI Agent' : 'Web + Agente Virtual' }, "price": "150", "priceCurrency": "USD" },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": locale === 'en' ? 'Website + Agent + WhatsApp' : 'Web + Agente + WhatsApp Business' }, "price": "200", "priceCurrency": "USD" },
+        ],
+      },
     },
     {
       "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "¿Realmente está lista en 48 horas?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sí. Una vez recibida tu información y contenido, entregamos tu página web lista en máximo 48 horas. La mayoría de proyectos los tenemos listos en menos de 24 horas."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Necesito saber de tecnología para tener mi página?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No, para nada. Solo llenás un formulario de 3 minutos con la información de tu negocio. Nosotros nos encargamos de todo lo técnico: dominio, hosting, diseño, desarrollo y configuración."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Qué pasa después del primer año de servicio?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "El hosting se renueva por solo $15 USD al año. Mantenemos tu página en infraestructura Cloudflare de alto rendimiento, con seguridad incluida."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Puedo hacer cambios en mi página después de entregada?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sí. Los planes Popular y Completo incluyen revisiones y cambios ilimitados sin costo adicional. En el plan Esencial, cada revisión tiene un costo de $100 USD."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿El chatbot funciona con cualquier tipo de negocio?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sí. Personalizamos el agente de IA según tu tipo de negocio: restaurantes, tiendas en línea, servicios profesionales, consultorios médicos, clínicas dentales, talleres mecánicos, entre otros."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Qué garantía tengo si no me gusta el resultado?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Ajustamos tu página hasta que quedes 100% satisfecho. Los planes Popular y Completo tienen revisiones ilimitadas sin costo. No paramos hasta que te encante el resultado."
-          }
-        }
-      ]
-    }
-  ]
+      "name": t.schema.faqLabel,
+      "mainEntity": t.faq.items.map((item: { q: string; a: string }) => ({
+        "@type": "Question",
+        "name": item.q,
+        "acceptedAnswer": { "@type": "Answer", "text": item.a },
+      })),
+    },
+  ],
 };
 ---
 
 <BaseLayout
-  title="Página Web Profesional con Chatbot WhatsApp | Tp3studio — Lista en 48h"
-  description="Páginas web profesionales con chatbot de WhatsApp en 48 horas desde $100 USD. Para negocios en Colombia, México y RD que quieren vender más sin complicarse."
+  title={locale === 'en' ? t.siteTitle : t.siteTitle}
+  description={locale === 'en'
+    ? 'Professional website with WhatsApp chatbot. Ready in 48 hours from $100 USD. For businesses in Colombia, Mexico and DR.'
+    : 'Páginas web profesionales con chatbot de WhatsApp en 48 horas desde $100 USD. Para negocios en Colombia, México y RD que quieren vender más sin complicarse.'}
   schema={JSON.stringify(schema)}
+  locale={locale}
 >
-  <HeroSection />
-  <ComparisonSection />
-  <HowItWorks />
-  <PricingCards />
-  <TestimonialsSection />
-  <FAQSection />
-  <CTAFinalSection />
+  <HeroSection lang={locale} />
+  <ComparisonSection lang={locale} />
+  <HowItWorks lang={locale} />
+  <PricingCards lang={locale} />
+  <TestimonialsSection lang={locale} />
+  <FAQSection lang={locale} />
+  <CTAFinalSection lang={locale} />
 </BaseLayout>

@@ -1,7 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getTranslations } from '../i18n';
+
+const locale = Astro.currentLocale ?? 'es';
+const t = getTranslations(locale);
 ---
-<BaseLayout title="Prueba tu web — Tp3studio" description="Vista previa de cómo se verá tu sitio web profesional con chatbot integrado.">
+<BaseLayout title={t.preview.title} description={t.preview.desc} locale={locale}>
   <section class="section"><div class="container preview-inner">
     <div class="preview-header"><span class="section-label">Prueba tu web</span><h1>Así se verá tu negocio en línea</h1><p>Una muestra del diseño profesional, responsive y moderno que recibirás en 48 horas.</p></div>
     <div class="preview-frame">

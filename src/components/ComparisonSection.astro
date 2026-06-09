@@ -1,30 +1,42 @@
+---
+export interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props;
+---
+
 <section class="comparison section" id="comparacion">
   <div class="container">
     <div class="comparison-header">
-      <span class="section-label">La comparación incómoda</span>
-      <h2>Mira en qué te gastas tu plata <span class="accent-text">sin pensarlo</span></h2>
+      <span class="section-label">{lang === 'en' ? 'The awkward comparison' : 'La comparación incómoda'}</span>
+      <h2>{lang === 'en' ? 'See what you\'re spending your money on' : 'Mira en qué te gastas tu plata'} <span class="accent-text">{lang === 'en' ? 'without thinking' : 'sin pensarlo'}</span></h2>
     </div>
     <div class="comparison-grid">
       <div class="comp-col comp-col--expenses">
-        <div class="comp-col-header"><span class="comp-icon">💸</span><h3>Tus gastos mensuales</h3></div>
+        <div class="comp-col-header"><span class="comp-icon">💸</span><h3>{lang === 'en' ? 'Your monthly expenses' : 'Tus gastos mensuales'}</h3></div>
         <div class="expense-list">
-          <div class="expense-row"><span class="exp-icon">🛵</span><span class="exp-name">Delivery por mes</span><span class="exp-price">~$50</span></div>
-          <div class="expense-row"><span class="exp-icon">📱</span><span class="exp-name">Plan de datos</span><span class="exp-price">~$15</span></div>
-          <div class="expense-row"><span class="exp-icon">🍺</span><span class="exp-name">Salida un viernes</span><span class="exp-price">~$40</span></div>
-          <div class="expense-row"><span class="exp-icon">💇</span><span class="exp-name">Dos peluquerías</span><span class="exp-price">~$30</span></div>
-          <div class="expense-row expense-row--worst"><span class="exp-icon">👨‍💻</span><span class="exp-name">"Sobrino que sabe de webs"</span><span class="exp-price">$500+ <small>BOTADOS / MES</small></span></div>
+          <div class="expense-row"><span class="exp-icon">🛵</span><span class="exp-name">{lang === 'en' ? 'Delivery per month' : 'Delivery por mes'}</span><span class="exp-price">~$50</span></div>
+          <div class="expense-row"><span class="exp-icon">📱</span><span class="exp-name">{lang === 'en' ? 'Data plan' : 'Plan de datos'}</span><span class="exp-price">~$15</span></div>
+          <div class="expense-row"><span class="exp-icon">🍺</span><span class="exp-name">{lang === 'en' ? 'Friday night out' : 'Salida un viernes'}</span><span class="exp-price">~$40</span></div>
+          <div class="expense-row"><span class="exp-icon">💇</span><span class="exp-name">{lang === 'en' ? 'Two haircuts' : 'Dos peluquerías'}</span><span class="exp-price">~$30</span></div>
+          <div class="expense-row expense-row--worst"><span class="exp-icon">👨‍💻</span><span class="exp-name">{lang === 'en' ? '"Nephew who knows websites"' : '"Sobrino que sabe de webs"'}</span><span class="exp-price">$500+ <small>{lang === 'en' ? 'WASTED / MONTH' : 'BOTADOS / MES'}</small></span></div>
         </div>
-        <div class="expense-total"><span class="total-amount">$635+</span><span class="total-label">cada mes, para siempre</span></div>
+        <div class="expense-total"><span class="total-amount">$635+</span><span class="total-label">{lang === 'en' ? 'every month, forever' : 'cada mes, para siempre'}</span></div>
       </div>
       <div class="comp-vs"><div class="vs-circle"><span>VS</span></div></div>
       <div class="comp-col comp-col--winner">
         <div class="comp-col-header"><span class="comp-icon">🚀</span><h3>Tp3studio</h3></div>
-        <div class="winner-price"><span class="winner-amount">$100</span><span class="winner-note">USD · UNA SOLA VEZ · PARA SIEMPRE</span></div>
+        <div class="winner-price"><span class="winner-amount">$100</span><span class="winner-note">{lang === 'en' ? 'USD · ONE TIME · FOREVER' : 'USD · UNA SOLA VEZ · PARA SIEMPRE'}</span></div>
         <ul class="winner-benefits">
-          <li>Web profesional lista en 48h</li><li>Chatbot IA 24/7 incluido</li><li>Diseño responsive personalizado</li><li>Hosting incluido 1 año</li><li>SEO optimizado + carga rápida</li>
+          <li>{lang === 'en' ? 'Professional website ready in 48h' : 'Web profesional lista en 48h'}</li>
+          <li>{lang === 'en' ? '24/7 AI Chatbot included' : 'Chatbot IA 24/7 incluido'}</li>
+          <li>{lang === 'en' ? 'Custom responsive design' : 'Diseño responsive personalizado'}</li>
+          <li>{lang === 'en' ? '1 year hosting included' : 'Hosting incluido 1 año'}</li>
+          <li>{lang === 'en' ? 'Optimized SEO + fast loading' : 'SEO optimizado + carga rápida'}</li>
         </ul>
-        <div class="winner-tagline"><p>La única diferencia es que esta inversión <strong>te devuelve plata cada día</strong>.</p></div>
-        <div class="winner-testimonial"><p>"En la primera semana ya tenía 12 consultas por el chatbot. La web se pagó sola." — Laura P., Restaurante</p></div>
+        <div class="winner-tagline"><p>{lang === 'en' ? 'The only difference is this investment ' : 'La única diferencia es que esta inversión '}<strong>{lang === 'en' ? 'makes you money every day' : 'te devuelve plata cada día'}</strong>.</p></div>
+        <div class="winner-testimonial"><p>{lang === 'en' ? '"In the first week I already had 12 inquiries through the chatbot. The website paid for itself." — Laura P., Restaurant' : '"En la primera semana ya tenía 12 consultas por el chatbot. La web se pagó sola." — Laura P., Restaurante'}</p></div>
       </div>
     </div>
   </div>

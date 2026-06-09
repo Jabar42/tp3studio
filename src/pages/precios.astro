@@ -1,7 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PricingCards from '../components/PricingCards.astro';
+import { getTranslations } from '../i18n';
+
+const locale = Astro.currentLocale ?? 'es';
+const t = getTranslations(locale);
 ---
-<BaseLayout title="Precios — Tp3studio" description="Planes desde $100 USD. Web moderna, agente virtual, WhatsApp Business y más. Pago único, sin mensualidades.">
-  <PricingCards />
+<BaseLayout title={t.precios.title} description={t.precios.desc} locale={locale}>
+  <PricingCards lang={locale} />
 </BaseLayout>

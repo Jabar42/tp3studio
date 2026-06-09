@@ -2,31 +2,40 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
+import { getTranslations } from '../../i18n';
 
-const posts = await getCollection('blog', ({ data }) => data.draft !== true);
+const locale = Astro.currentLocale ?? 'es';
+const t = getTranslations(locale);
+const filterLocale = locale === 'en' ? 'en' : 'es';
+
+const posts = await getCollection('blog', ({ data }) => data.draft !== true && (data.locale === filterLocale || !data.locale));
 posts.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const dateLocale = locale === 'en' ? 'en-US' : 'es-CO';
 ---
 
 <BaseLayout
-  title="Blog — Tp3studio"
-  description="Automatización, chatbots y páginas web para pequeños negocios en Latinoamérica. Ideas, guías y reflexiones."
+  title={t.blog.title}
+  description={t.blog.desc}
+  locale={locale}
 >
   <section class="section">
     <div class="container">
       <div class="blog-header">
-        <span class="section-label">Blog</span>
-        <h1>Ideas para hacer crecer tu negocio</h1>
-        <p>Automatización, chatbots, páginas web y todo lo que un pequeño negocio necesita para vender más sin complicarse.</p>
+        <span class="section-label">{t.blog.label}</span>
+        <h1>{locale === 'en' ? 'Ideas to grow your business' : 'Ideas para hacer crecer tu negocio'}</h1>
+        <p>{locale === 'en' ? 'Automation, chatbots, websites — everything a small business needs to sell more without the hassle.' : 'Automatización, chatbots, páginas web y todo lo que un pequeño negocio necesita para vender más sin complicarse.'}</p>
       </div>
 
       <div class="blog-grid">
+        {posts.length === 0 && <p class="blog-empty">{t.blog.empty}</p>}
         {posts.map(post => (
           <BlogCard
             title={post.data.title}
             description={post.data.description}
-            date={post.data.publishedAt.toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' })}
+            date={post.data.publishedAt.toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric' })}
             tags={post.data.tags}
-            href={`/blog/${post.id}`}
+            href={`/${locale === 'en' ? 'en/' : ''}blog/${post.id}`}
           />
         ))}
       </div>
@@ -47,6 +56,11 @@ posts.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
+}
+.blog-empty {
+  text-align: center;
+  color: rgba(15, 14, 26, 0.4);
+  padding: 3rem 0;
 }
 
 @media (min-width: 640px) {

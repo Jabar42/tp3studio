@@ -1,38 +1,187 @@
 ---
 import CTAButton from './CTAButton.astro';
+
+export interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props;
+const p = lang === 'en' ? {
+  label: 'Transparent Pricing',
+  title: 'Choose your',
+  highlight: 'starting point',
+  subtitle: 'No fine print. No hidden monthly fees. Pay once and it\'s yours.',
+  guarantee: '✅ If you\'re not satisfied, we adjust until it\'s perfect. At no extra cost.',
+  plans: [
+    {
+      tier: 'Essential',
+      name: 'Modern Website',
+      desc: 'Your professional site with cutting-edge technology.',
+      price: '$100',
+      period: 'USD · one-time payment',
+      monthly: '≈ $8/mo',
+      features: [
+        'Custom responsive design',
+        'Optimized SEO + fast loading',
+        'Testing on all devices',
+        '1 year hosting included',
+        'Domain: +$10 USD',
+        'Revisions: $100 each',
+      ],
+      hosting: 'Includes 1 year hosting',
+      cta: 'Start now',
+      popular: false,
+    },
+    {
+      tier: 'Most Popular',
+      name: 'Website + AI Agent',
+      desc: 'Smart assistant that works 24/7, qualifies leads, and closes sales.',
+      price: '$150',
+      period: 'USD · one-time payment',
+      monthly: '≈ $12/mo',
+      features: [
+        'Everything in Essential Plan',
+        'Client tracking via chat',
+        '9-5 EST support included',
+        'Domain included ($10/yr)',
+        'AI agent included',
+        'WhatsApp Business integration (+$50)',
+      ],
+      hosting: '1 year hosting · Renews at $15 USD',
+      cta: 'Buy Now',
+      popular: true,
+    },
+    {
+      tier: 'Complete',
+      name: 'Website + Agent + WhatsApp',
+      desc: 'AI chatbot, WhatsApp Business, and integrated booking.',
+      price: '$200',
+      period: 'USD · one-time payment',
+      monthly: '≈ $17/mo',
+      features: [
+        'Everything in Popular Plan',
+        'WhatsApp Business configured',
+        'Calendly integrated',
+        'Custom AI agent',
+        'Up to 10 pages',
+        'Unlimited revisions',
+      ],
+      hosting: 'Free hosting + domain 1 year',
+      note: 'As many revisions as you need to make it perfect',
+      cta: 'Buy Now',
+      popular: false,
+    },
+  ],
+} : {
+  label: 'Precios transparentes',
+  title: 'Elige tu',
+  highlight: 'punto de partida',
+  subtitle: 'Sin letra pequeña. Sin mensualidades ocultas. Pagas una vez y es tuyo.',
+  guarantee: '✅ Si no quedas satisfecho, ajustamos hasta que quede perfecto. Sin costo extra.',
+  plans: [
+    {
+      tier: 'Esencial',
+      name: 'Web Moderna',
+      desc: 'Tu sitio profesional con tecnología de última generación.',
+      price: '$100',
+      period: 'USD · pago único',
+      monthly: '≈ $8/mes',
+      features: [
+        'Diseño responsive personalizado',
+        'SEO optimizado + carga rápida',
+        'Pruebas en todos los dispositivos',
+        'Hosting 1 año incluido',
+        'Dominio: +$10 USD',
+        'Revisiones: $100 c/u',
+      ],
+      hosting: 'Incluye hosting 1 año',
+      cta: 'Empezar ahora',
+      popular: false,
+    },
+    {
+      tier: 'Más popular',
+      name: 'Web + Agente Virtual',
+      desc: 'Asistente inteligente que atiende 24/7, califica clientes y cierra ventas.',
+      price: '$150',
+      period: 'USD · pago único',
+      monthly: '≈ $12/mes',
+      features: [
+        'Todo lo del Plan Esencial',
+        'Seguimiento de clientes por chat',
+        'Soporte 9-5 EST incluido',
+        'Dominio incluido ($10/año)',
+        'Agente virtual incluido',
+        'Integra con WhatsApp Business (+$50)',
+      ],
+      hosting: 'Hosting 1 año · Renueva $15 USD',
+      cta: 'Comprar Ahora',
+      popular: true,
+    },
+    {
+      tier: 'Completo',
+      name: 'Web + Agente + WhatsApp',
+      desc: 'Chatbot IA, WhatsApp Business y agenda integrada.',
+      price: '$200',
+      period: 'USD · pago único',
+      monthly: '≈ $17/mes',
+      features: [
+        'Todo lo del Plan Popular',
+        'WhatsApp Business configurado',
+        'Calendly integrado',
+        'Agente IA personalizado',
+        'Hasta 10 páginas',
+        'Revisiones ilimitadas',
+      ],
+      hosting: 'Hosting + dominio 1 año gratis',
+      note: 'Las revisiones que necesites para dejarlo perfecto',
+      cta: 'Comprar Ahora',
+      popular: false,
+    },
+  ],
+};
 ---
 
 <section class="pricing section" id="precios">
   <div class="container">
     <div class="pricing-header">
-      <span class="section-label">Precios transparentes</span>
-      <h2>Elige tu <span class="accent-text">punto de partida</span></h2>
-      <p>Sin letra pequeña. Sin mensualidades ocultas. Pagas una vez y es tuyo.</p>
-      <p class="pricing-guarantee">✅ Si no quedas satisfecho, ajustamos hasta que quede perfecto. Sin costo extra.</p>
+      <span class="section-label">{p.label}</span>
+      <h2>{p.title} <span class="accent-text">{p.highlight}</span></h2>
+      <p>{p.subtitle}</p>
+      <p class="pricing-guarantee">{p.guarantee}</p>
     </div>
     <div class="pricing-grid">
-      <div class="plan-card">
-        <div class="plan-top"><div class="plan-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div><span class="plan-tier">Esencial</span><h3>Web Moderna</h3><p class="plan-desc">Tu sitio profesional con tecnología de última generación.</p></div>
-        <div class="plan-price"><span class="plan-amount">$100</span><span class="plan-period">USD · pago único</span><span class="plan-monthly">≈ $8/mes</span></div>
-        <ul class="plan-features"><li>Diseño responsive personalizado</li><li>SEO optimizado + carga rápida</li><li>Pruebas en todos los dispositivos</li><li>Hosting 1 año incluido</li><li>Dominio: +$10 USD</li><li>Revisiones: $100 c/u</li></ul>
-        <div class="plan-hosting">Incluye hosting 1 año</div>
-        <CTAButton href="/auth" variant="outline" size="md" class="plan-cta">Empezar ahora</CTAButton>
-      </div>
-      <div class="plan-card plan-card--popular">
-        <div class="plan-popular-badge">Más elegido</div>
-        <div class="plan-top"><div class="plan-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M8 12l3 3 5-5"/></svg></div><span class="plan-tier">Más popular</span><h3>Web + Agente Virtual</h3><p class="plan-desc">Asistente inteligente que atiende 24/7, califica clientes y cierra ventas.</p></div>
-        <div class="plan-price"><span class="plan-amount">$150</span><span class="plan-period">USD · pago único</span><span class="plan-monthly">≈ $12/mes</span></div>
-        <ul class="plan-features"><li><strong>Todo lo del Plan Esencial</strong></li><li>Seguimiento de clientes por chat</li><li>Soporte 9-5 EST incluido</li><li>Dominio incluido ($10/año)</li><li>Agente virtual incluido</li><li>Integra con WhatsApp Business (+$50)</li></ul>
-        <div class="plan-hosting">Hosting 1 año · Renueva $15 USD</div>
-        <CTAButton href="/auth" variant="primary" size="md" class="plan-cta">Comprar Ahora</CTAButton>
-      </div>
-      <div class="plan-card">
-        <div class="plan-top"><div class="plan-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></div><span class="plan-tier">Completo</span><h3>Web + Agente + WhatsApp</h3><p class="plan-desc">Chatbot IA, WhatsApp Business y agenda integrada.</p></div>
-        <div class="plan-price"><span class="plan-amount">$200</span><span class="plan-period">USD · pago único</span><span class="plan-monthly">≈ $17/mes</span></div>
-        <ul class="plan-features"><li><strong>Todo lo del Plan Popular</strong></li><li>WhatsApp Business configurado</li><li>Calendly integrado</li><li>Agente IA personalizado</li><li>Hasta 10 páginas</li><li>Revisiones ilimitadas</li></ul>
-        <div class="plan-hosting">Hosting + dominio 1 año gratis</div><p class="plan-note">Las revisiones que necesites para dejarlo perfecto</p>
-        <CTAButton href="/auth" variant="outline" size="md" class="plan-cta">Comprar Ahora</CTAButton>
-      </div>
+      {p.plans.map(plan => (
+        <div class={`plan-card ${plan.popular ? 'plan-card--popular' : ''}`}>
+          {plan.popular && <div class="plan-popular-badge">{plan.tier}</div>}
+          <div class="plan-top">
+            <div class="plan-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                {plan.price === '$100' ? (
+                  <><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></>
+                ) : plan.price === '$150' ? (
+                  <><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M8 12l3 3 5-5"/></>
+                ) : (
+                  <><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></>
+                )}
+              </svg>
+            </div>
+            <span class="plan-tier">{plan.tier}</span>
+            <h3>{plan.name}</h3>
+            <p class="plan-desc">{plan.desc}</p>
+          </div>
+          <div class="plan-price">
+            <span class="plan-amount">{plan.price}</span>
+            <span class="plan-period">{plan.period}</span>
+            <span class="plan-monthly">{plan.monthly}</span>
+          </div>
+          <ul class="plan-features">
+            {plan.features.map(feat => <li>{feat}</li>)}
+          </ul>
+          <div class="plan-hosting">{plan.hosting}</div>
+          {plan.note && <p class="plan-note">{plan.note}</p>}
+          <CTAButton href={lang === 'en' ? '/en/auth' : '/auth'} variant={plan.popular ? 'primary' : 'outline'} size="md" class="plan-cta">{plan.cta}</CTAButton>
+        </div>
+      ))}
     </div>
   </div>
 </section>
@@ -59,8 +208,7 @@ import CTAButton from './CTAButton.astro';
 .plan-monthly { display: block; font-size: 0.75rem; color: var(--color-success); font-weight: 700; margin-top: 0.15rem; }
 .plan-features { list-style: none; padding: 0; margin: 0 0 1.25rem; display: flex; flex-direction: column; gap: 0.55rem; flex: 1; }
 .plan-features li { font-size: 0.875rem; padding-left: 1.6rem; position: relative; color: rgba(45,26,15,0.75); }
-.plan-features li:not(.feat-no)::before { content: '✓'; position: absolute; left: 0; color: var(--color-success); font-weight: 800; font-size: 0.8rem; }
-.plan-features li.feat-no { opacity: 0.35; text-decoration: line-through; }
+.plan-features li::before { content: '✓'; position: absolute; left: 0; color: var(--color-success); font-weight: 800; font-size: 0.8rem; }
 .plan-hosting { font-size: 0.75rem; color: rgba(45,26,15,0.4); text-align: center; margin-bottom: 1.25rem; padding: 0.75rem; background: rgba(245,240,225,0.5); border-radius: var(--radius-sm); }
 .plan-note { font-size: 0.7rem; color: rgba(45,26,15,0.35); text-align: center; margin-bottom: 1rem; }
 .plan-cta { width: 100%; }

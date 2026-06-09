@@ -1,12 +1,28 @@
+---
+export interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props;
+---
+
 <section class="testimonials section" id="testimonios">
   <div class="container">
-    <div class="testimonials-header"><span class="section-label">Lo que dicen</span><h2>Negocios reales <span class="accent-text">ya están creciendo</span></h2></div>
-    <div class="testimonials-grid">
-      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--1">MG</div><div><div class="t-stars">★★★★★</div><strong class="t-name">María G.</strong><span class="t-biz">Tienda de ropa, Bogotá</span></div></div><p class="t-text">"No sabía nada de páginas web y en 48 horas ya tenía mi negocio en línea. <strong>Increíble lo fácil que fue.</strong>"</p></article>
-      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--2">CR</div><div><div class="t-stars">★★★★★</div><strong class="t-name">Carlos R.</strong><span class="t-biz">Servicios legales, CDMX</span></div></div><p class="t-text">"El chatbot me cambió el juego. Responde consultas mientras duermo y solo veo clientes <strong>listos para contratar</strong>."</p></article>
-      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--3">LP</div><div><div class="t-stars">★★★★★</div><strong class="t-name">Laura y Pedro</strong><span class="t-biz">Restaurante, Santo Domingo</span></div></div><p class="t-text">"Pensé que tener web era carísimo. <strong>Por $150 USD</strong> mi restaurante ya tiene presencia profesional y reservas por WhatsApp."</p></article>
+    <div class="testimonials-header">
+      <span class="section-label">{lang === 'en' ? 'What they say' : 'Lo que dicen'}</span>
+      <h2>{lang === 'en' ? 'Real businesses ' : 'Negocios reales '}<span class="accent-text">{lang === 'en' ? 'are already growing' : 'ya están creciendo'}</span></h2>
     </div>
-    <div class="testimonials-cta"><a href="/portfolio" class="btn-creative btn-secondary btn-md">Ver más historias <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+    <div class="testimonials-grid">
+      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--1">MG</div><div><div class="t-stars">★★★★★</div><strong class="t-name">María G.</strong><span class="t-biz">{lang === 'en' ? 'Clothing store, Bogotá' : 'Tienda de ropa, Bogotá'}</span></div></div><p class="t-text">{lang === 'en' ? '"I knew nothing about websites and in 48 hours my business was online. <strong>Incredible how easy it was.</strong>"' : '"No sabía nada de páginas web y en 48 horas ya tenía mi negocio en línea. <strong>Increíble lo fácil que fue.</strong>"'}</p></article>
+      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--2">CR</div><div><div class="t-stars">★★★★★</div><strong class="t-name">Carlos R.</strong><span class="t-biz">{lang === 'en' ? 'Legal services, Mexico City' : 'Servicios legales, CDMX'}</span></div></div><p class="t-text">{lang === 'en' ? '"The chatbot changed the game. It answers inquiries while I sleep and I only see clients <strong>ready to hire</strong>."' : '"El chatbot me cambió el juego. Responde consultas mientras duermo y solo veo clientes <strong>listos para contratar</strong>."'}</p></article>
+      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--3">LP</div><div><div class="t-stars">★★★★★</div><strong class="t-name">{lang === 'en' ? 'Laura & Pedro' : 'Laura y Pedro'}</strong><span class="t-biz">{lang === 'en' ? 'Restaurant, Santo Domingo' : 'Restaurante, Santo Domingo'}</span></div></div><p class="t-text">{lang === 'en' ? '"I thought having a website was super expensive. <strong>For $150 USD</strong> my restaurant now has professional presence and WhatsApp reservations."' : '"Pensé que tener web era carísimo. <strong>Por $150 USD</strong> mi restaurante ya tiene presencia profesional y reservas por WhatsApp."'}</p></article>
+    </div>
+    <div class="testimonials-cta">
+      <a href={lang === 'en' ? '/en/portfolio' : '/portfolio'} class="btn-creative btn-secondary btn-md">
+        {lang === 'en' ? 'See more stories' : 'Ver más historias'}
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
   </div>
 </section>
 

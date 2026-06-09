@@ -3,6 +3,7 @@ import Header from '../components/Header.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+import { getTranslations } from '../i18n';
 
 export interface Props {
   title: string;
@@ -14,6 +15,8 @@ export interface Props {
   hideBreadcrumbs?: boolean;
   /** Schema.org JSON-LD markup para inyectar en <head> */
   schema?: string;
+  /** Locale override (default: Astro.currentLocale) */
+  locale?: string;
 }
 
 const {
@@ -23,11 +26,21 @@ const {
   breadcrumbLabel,
   hideBreadcrumbs = false,
   schema,
+  locale = Astro.currentLocale ?? 'es',
 } = Astro.props;
+
+const t = getTranslations(locale);
+const lang = locale === 'en' ? 'en' : 'es';
+const canonicalUrl = new URL(Astro.url.pathname, 'https://tp3studio.com').href;
+
+const currentPath = Astro.url.pathname;
+// Build hreflang URLs
+const esUrl = lang === 'en' ? currentPath.replace(/^\/en/, '') || '/' : currentPath;
+const enUrl = lang === 'es' ? '/en' + (currentPath === '/' ? '' : currentPath) : currentPath;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -37,15 +50,21 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Tp3studio" />
-    <meta name="keywords" content="soluciones IA negocios, chatbot, WhatsApp business, sitios web modernos, automatización empresarial, Colombia" />
+    <meta name="keywords" content={lang === 'en' ? "AI business solutions, chatbot, WhatsApp Business, modern websites, business automation" : "soluciones IA negocios, chatbot, WhatsApp business, sitios web modernos, automatización empresarial, Colombia"} />
 
-    <link rel="canonical" href={new URL(Astro.url.pathname, 'https://tp3studio.com').href} />
+    <link rel="canonical" href={new URL(currentPath, 'https://tp3studio.com').href} />
+
+    <!-- hreflang -->
+    <link rel="alternate" href={new URL(esUrl, 'https://tp3studio.com').href} hrefLang="es" />
+    <link rel="alternate" href={new URL(enUrl, 'https://tp3studio.com').href} hrefLang="en" />
+    <link rel="alternate" href={new URL(esUrl, 'https://tp3studio.com').href} hrefLang="x-default" />
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:image" content={ogImage} />
     <meta property="og:url" content={Astro.url} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_CO'} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -60,18 +79,18 @@ const {
   </head>
   <body>
     <div class="grain-overlay" aria-hidden="true"></div>
-    <Header />
+    <Header lang={lang} />
     <main>
       {
         !hideBreadcrumbs && (
           <div class="container">
-            <Breadcrumbs pathname={Astro.url.pathname} currentLabel={breadcrumbLabel} />
+            <Breadcrumbs pathname={currentPath} currentLabel={breadcrumbLabel} lang={lang} />
           </div>
         )
       }
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
   </body>
 </html>
 

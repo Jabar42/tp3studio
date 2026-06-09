@@ -11,6 +11,7 @@ const portfolio = defineCollection({
     order: z.number().default(0),
     image: z.string().optional(),
     url: z.string().url().optional(),
+    locale: z.enum(['es', 'en']).default('es'),
   }),
 });
 
@@ -24,6 +25,7 @@ const blog = defineCollection({
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     image: z.string().optional(),
+    locale: z.enum(['es', 'en']).default('es'),
   }),
 });
 

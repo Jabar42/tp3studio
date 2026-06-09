@@ -10,5 +10,24 @@ export default defineConfig({
   adapter: cloudflare({
     mode: 'directory',
   }),
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: 'es',
+        locales: {
+          es: 'es-ES',
+          en: 'en-US',
+        },
+      },
+    }),
+  ],
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    routing: {
+      prefixDefaultLocale: false,
+      strategy: 'subdirectory',
+      redirectToDefaultLocale: false,
+    },
+  },
 });

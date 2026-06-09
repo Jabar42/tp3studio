@@ -1,17 +1,39 @@
 ---
+import { getTranslations } from '../i18n';
+
+export interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getTranslations(lang);
+
+const prefix = lang === 'en' ? '/en' : '';
+
 const navItems = [
-  { href: '/portfolio', label: 'Casos de Éxito' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/precios', label: 'Precios' },
-  { href: '/preview', label: 'Prueba tu web' },
-  { href: '/about', label: 'Nuestra Historia' },
+  { href: `${prefix}/portfolio`, label: t.nav.portfolio },
+  { href: `${prefix}/blog`, label: t.nav.blog },
+  { href: `${prefix}/precios`, label: t.nav.precios },
+  { href: `${prefix}/preview`, label: t.nav.preview },
+  { href: `${prefix}/about`, label: t.nav.about },
 ];
 const currentPath = Astro.url.pathname;
+
+// Language switch URL
+const langSwitchHref = lang === 'en'
+  ? currentPath.replace(/^\/en/, '') || '/'
+  : '/en' + currentPath;
+const langSwitchLabel = lang === 'en' ? 'ES' : 'EN';
+const langSwitchTitle = lang === 'en' ? 'Español' : 'English';
+const logoHref = lang === 'en' ? '/en' : '/';
+const authHref = lang === 'en' ? '/en/auth' : '/auth';
+const asesorLabel = t.nav.asesor;
+const loginLabel = t.nav.login;
 ---
 
 <header class="header">
   <div class="header-inner container">
-    <a href="/" class="logo" aria-label="Tp3studio — Inicio">
+    <a href={logoHref} class="logo" aria-label={t.nav.logoAria}>
       <div class="logo-icon">
         <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
           <rect width="34" height="34" rx="9" fill="url(#logoGrad)"/>
@@ -30,7 +52,7 @@ const currentPath = Astro.url.pathname;
     </a>
 
     <!-- Desktop nav -->
-    <nav class="nav-desktop" aria-label="Navegación principal">
+    <nav class="nav-desktop" aria-label={t.nav.navAria}>
       {navItems.map(item => (
         <a
           href={item.href}
@@ -39,23 +61,26 @@ const currentPath = Astro.url.pathname;
           {item.label}
         </a>
       ))}
+      <a href={langSwitchHref} class="nav-link nav-lang-switch" title={langSwitchTitle} aria-label={langSwitchTitle}>
+        {langSwitchLabel}
+      </a>
       <span class="nav-sep" aria-hidden="true"></span>
-      <a href="/auth" class="nav-link nav-link--ghost">Inicia Sesión</a>
+      <a href={authHref} class="nav-link nav-link--ghost">{loginLabel}</a>
       <a
         href="https://wa.me/15559273372?text=Hola%2C%20quiero%20asesor%C3%ADa%20para%20elegir%20el%20plan%20ideal%20para%20mi%20negocio."
         class="btn-header"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-        Asesor
+        {asesorLabel}
       </a>
     </nav>
 
     <!-- Mobile nav: zero JS via details/summary -->
     <details class="nav-mobile">
-      <summary class="nav-toggle" aria-label="Abrir menú">
+      <summary class="nav-toggle" aria-label={t.nav.toggleAria}>
         <span class="hamburger"></span>
       </summary>
-      <nav class="nav-dropdown" aria-label="Menú principal">
+      <nav class="nav-dropdown" aria-label={t.nav.mobileAria}>
         {navItems.map(item => (
           <a
             href={item.href}
@@ -64,13 +89,16 @@ const currentPath = Astro.url.pathname;
             {item.label}
           </a>
         ))}
-        <a href="/auth" class="nav-link">Inicia Sesión</a>
+        <a href={langSwitchHref} class="nav-link nav-lang-switch" title={langSwitchTitle}>
+          {langSwitchLabel}
+        </a>
+        <a href={authHref} class="nav-link">{loginLabel}</a>
         <a
           href="https://wa.me/15559273372"
           class="btn-header"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-          Asesor
+          {asesorLabel}
         </a>
       </nav>
     </details>
@@ -140,6 +168,16 @@ const currentPath = Astro.url.pathname;
 
 .nav-link--accent { color: var(--color-clay); opacity: 1; background: rgba(99, 102, 241, 0.07); }
 .nav-link--accent:hover { background: rgba(99, 102, 241, 0.14); }
+
+.nav-lang-switch {
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+  border: 1px solid var(--color-border);
+  padding: 0.35rem 0.6rem;
+}
+.nav-lang-switch:hover { opacity: 1; border-color: var(--color-terracotta); }
 
 .nav-sep { width: 1px; height: 20px; background: var(--color-border); margin: 0 0.25rem; }
 .nav-link--ghost { opacity: 0.5; }

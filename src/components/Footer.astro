@@ -1,18 +1,50 @@
+---
+export interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props;
+---
+
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="/" class="footer-logo"><svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect width="34" height="34" rx="9" fill="url(#flogoGrad)"/><circle cx="12.5" cy="13.5" r="3" fill="#fff" opacity="0.95"/><circle cx="21.5" cy="13.5" r="3" fill="#fff" opacity="0.95"/><rect x="10" y="18" width="14" height="2.2" rx="1.1" fill="#fff" opacity="0.9"/><path d="M17 24.5v3.5M12.5 28h9" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/><defs><linearGradient id="flogoGrad" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#4F46E5"/></linearGradient></defs></svg><span>Tp3studio</span></a>
-        <p class="footer-tagline">Potenciando negocios con soluciones de IA</p>
+        <a href={lang === 'en' ? '/en' : '/'} class="footer-logo"><svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect width="34" height="34" rx="9" fill="url(#flogoGrad)"/><circle cx="12.5" cy="13.5" r="3" fill="#fff" opacity="0.95"/><circle cx="21.5" cy="13.5" r="3" fill="#fff" opacity="0.95"/><rect x="10" y="18" width="14" height="2.2" rx="1.1" fill="#fff" opacity="0.9"/><path d="M17 24.5v3.5M12.5 28h9" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/><defs><linearGradient id="flogoGrad" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#4F46E5"/></linearGradient></defs></svg><span>Tp3studio</span></a>
+        <p class="footer-tagline">{lang === 'en' ? 'Empowering businesses with AI solutions' : 'Potenciando negocios con soluciones de IA'}</p>
         <a href="mailto:info@aitp3studio.com" class="footer-email">info@aitp3studio.com</a>
       </div>
       <div class="footer-links">
-        <div class="footer-col"><h4>Empresa</h4><a href="/about">Sobre Nosotros</a><a href="/white-label">White Label</a><a href="/precios">Servicios</a><a href="/#como-funciona">Cómo Funciona</a><a href="/portfolio">Testimonios</a></div>
-        <div class="footer-col"><h4>Recursos</h4><a href="/#faq">FAQ</a><a href="/audit">Contacto</a><a href="/preview">Prueba tu web</a><a href="https://wa.me/15559273372" class="footer-wa">WhatsApp</a></div>
-        <div class="footer-col"><h4>Legal</h4><a href="/privacy">Privacidad</a><a href="/terms">Términos</a></div>
+        <div class="footer-col">
+          <h4>{lang === 'en' ? 'Company' : 'Empresa'}</h4>
+          <a href={lang === 'en' ? '/en/about' : '/about'}>{lang === 'en' ? 'About Us' : 'Sobre Nosotros'}</a>
+          <a href="/white-label">{lang === 'en' ? 'White Label' : 'White Label'}</a>
+          <a href={lang === 'en' ? '/en/precios' : '/precios'}>{lang === 'en' ? 'Services' : 'Servicios'}</a>
+          <a href={lang === 'en' ? '/en/#como-funciona' : '/#como-funciona'}>{lang === 'en' ? 'How It Works' : 'Cómo Funciona'}</a>
+          <a href={lang === 'en' ? '/en/portfolio' : '/portfolio'}>{lang === 'en' ? 'Testimonials' : 'Testimonios'}</a>
+        </div>
+        <div class="footer-col">
+          <h4>{lang === 'en' ? 'Resources' : 'Recursos'}</h4>
+          <a href={lang === 'en' ? '/en/#faq' : '/#faq'}>FAQ</a>
+          <a href={lang === 'en' ? '/en/audit' : '/audit'}>{lang === 'en' ? 'Contact' : 'Contacto'}</a>
+          <a href={lang === 'en' ? '/en/preview' : '/preview'}>{lang === 'en' ? 'Preview your site' : 'Prueba tu web'}</a>
+          <a href="https://wa.me/15559273372" class="footer-wa">WhatsApp</a>
+        </div>
+        <div class="footer-col">
+          <h4>{lang === 'en' ? 'Legal' : 'Legal'}</h4>
+          <a href="/privacy">{lang === 'en' ? 'Privacy' : 'Privacidad'}</a>
+          <a href="/terms">{lang === 'en' ? 'Terms' : 'Términos'}</a>
+        </div>
       </div>
     </div>
-    <div class="footer-bottom"><p>&copy; {new Date().getFullYear()} Tp3studio.</p><p class="footer-credit">Hecho con <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--color-terracotta)" aria-label="amor" style="display:inline;vertical-align:-2px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> por Aitp3studio.com</p></div>
+    <div class="footer-bottom">
+      <p>&copy; {new Date().getFullYear()} Tp3studio.</p>
+      <p class="footer-credit">
+        {lang === 'en' ? 'Made with' : 'Hecho con'}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--color-terracotta)" aria-label="love" style="display:inline;vertical-align:-2px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        {lang === 'en' ? 'by Aitp3studio.com' : 'por Aitp3studio.com'}
+      </p>
+    </div>
   </div>
 </footer>
 

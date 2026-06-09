@@ -16,46 +16,52 @@ export interface Props {
   pathname: string;
   /** Label para la página actual (dinámica) — ej: título del artículo o caso */
   currentLabel?: string;
+  /** Idioma */
+  lang?: 'es' | 'en';
 }
 
-const { pathname, currentLabel } = Astro.props;
+const { pathname, currentLabel, lang = 'es' } = Astro.props;
 
 // Mapa de rutas estáticas → etiquetas
-const routeLabels: Record<string, string> = {
-  '/blog': 'Blog',
-  '/portfolio': 'Casos de Éxito',
-  '/precios': 'Precios',
-  '/audit': 'Auditoría Gratis',
-  '/white-label': 'White Label',
-  '/about': 'Nuestra Historia',
-  '/preview': 'Prueba tu web',
-  '/auth': 'Inicia Sesión',
+const routeLabels: Record<string, Record<string, string>> = {
+  '/blog': { es: 'Blog', en: 'Blog' },
+  '/portfolio': { es: 'Casos de Éxito', en: 'Case Studies' },
+  '/precios': { es: 'Precios', en: 'Pricing' },
+  '/audit': { es: 'Auditoría Gratis', en: 'Free Audit' },
+  '/white-label': { es: 'White Label', en: 'White Label' },
+  '/about': { es: 'Nuestra Historia', en: 'Our Story' },
+  '/preview': { es: 'Prueba tu web', en: 'Preview your site' },
+  '/auth': { es: 'Inicia Sesión', en: 'Sign In' },
 };
 
 // Construir la lista de breadcrumbs
 const segments = pathname.split('/').filter(Boolean);
 const crumbs: { label: string; href?: string }[] = [];
 
-if (segments.length > 0 && pathname !== '/') {
+if (segments.length > 0 && pathname !== '/' && pathname !== '/en') {
   // Siempre empezar con Inicio
-  crumbs.push({ label: 'Inicio', href: '/' });
+  crumbs.push({ label: lang === 'en' ? 'Home' : 'Inicio', href: lang === 'en' ? '/en' : '/' });
 
   let accumulated = '';
   for (let i = 0; i < segments.length; i++) {
-    accumulated += '/' + segments[i];
+    const seg = segments[i];
+    accumulated += '/' + seg;
     const isLast = i === segments.length - 1;
 
-    if (!segments[i]) continue;
+    if (!seg) continue;
+
+    // Skip locale segment in path matching
+    if (seg === 'en' && i === 0) continue;
 
     if (isLast && currentLabel) {
       crumbs.push({ label: currentLabel });
     } else if (routeLabels[accumulated]) {
       crumbs.push({
-        label: routeLabels[accumulated],
+        label: routeLabels[accumulated][lang] || routeLabels[accumulated]['es'],
         href: isLast ? undefined : accumulated,
       });
     } else if (isLast && !currentLabel) {
-      crumbs.push({ label: segments[i] });
+      crumbs.push({ label: seg });
     }
   }
 }

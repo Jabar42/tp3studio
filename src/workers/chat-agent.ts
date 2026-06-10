@@ -7,8 +7,6 @@ import { AIChatAgent } from "@cloudflare/ai-chat";
 
 export interface ChatState {
   messages: { role: "user" | "assistant"; content: string }[];
-  name?: string;
-  email?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -16,11 +14,8 @@ export interface ChatState {
 // ---------------------------------------------------------------------------
 
 export class Tp3ChatAgent extends AIChatAgent<Env, ChatState> {
-  // Default state for brand-new sessions
   initialState: ChatState = { messages: [] };
 
-  // System prompt — the agent's persona
-  // Injected once per connection, cached by the SDK
   systemPrompt = `Eres el asistente virtual de **Tp3studio**, una agencia de soluciones IA para negocios.
 
 ## Información del negocio
@@ -44,6 +39,43 @@ export class Tp3ChatAgent extends AIChatAgent<Env, ChatState> {
 - Responder preguntas frecuentes
 - Agendar una llamada con el equipo
 - Escalar consultas complejas a un humano`;
+
+  async onChatMessage(_onFinish: any, _options: any): Promise<Response | undefined> {
+    const lastMsg = this.messages[this.messages.length - 1];
+    if (!lastMsg || lastMsg.role !== "user") return;
+
+    const msgs = [
+      { role: "system", content: this.systemPrompt },
+      ...this.messages.slice(-20).map((m: any) => ({
+        role: m.role,
+        content: m.content,
+      })),
+    ];
+
+    const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.env.DEEPSEEK_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "deepseek-chat",
+        messages: msgs,
+        stream: true,
+        max_tokens: 1024,
+        temperature: 0.7,
+      }),
+    });
+
+    // Forward the streaming response to the client
+    return new Response(response.body, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
+    });
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -54,7 +86,6 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    // Handle CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, {
         headers: {
@@ -66,12 +97,10 @@ export default {
       });
     }
 
-    // Health check
     if (url.pathname === "/health") {
       return Response.json({ status: "ok", agent: "tp3studio-chat" });
     }
 
-    // Route to agent
     const resp = await routeAgentRequest(request, env);
     return resp ?? new Response("Agent not found", { status: 404 });
   },

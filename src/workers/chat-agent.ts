@@ -1,79 +1,64 @@
-import { routeAgentRequest } from "agents";
-import { AIChatAgent } from "@cloudflare/ai-chat";
+import { Agent, routeAgentRequest } from "agents";
 
 // ---------------------------------------------------------------------------
-// State persisted per session (Durable Object)
+// Agent — handles WebSocket chat sessions with DeepSeek
 // ---------------------------------------------------------------------------
 
-export interface ChatState {
-  messages: { role: "user" | "assistant"; content: string }[];
-}
+const SYSTEM_PROMPT = `Eres el asistente virtual de **Tp3studio**, una agencia de soluciones IA para negocios.`;
 
-// ---------------------------------------------------------------------------
-// Agent — one Durable Object instance per chat session
-// ---------------------------------------------------------------------------
+export class Tp3ChatAgent extends Agent<Env> {
+  async onConnect(connection: any, ctx: any) {
+    let history: { role: string; content: string }[] = [];
 
-export class Tp3ChatAgent extends AIChatAgent<Env, ChatState> {
-  initialState: ChatState = { messages: [] };
+    connection.addEventListener("message", async (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data.toString());
+        if (data.type === "chat" && data.message) {
+          // Add user message to history
+          history.push({ role: "user", content: data.message });
 
-  systemPrompt = `Eres el asistente virtual de **Tp3studio**, una agencia de soluciones IA para negocios.
+          // Build messages array
+          const msgs = [
+            { role: "system", content: SYSTEM_PROMPT },
+            ...history.slice(-20),
+          ];
 
-## Información del negocio
-- **Nombre:** Tp3studio
-- **Servicios:** chatbots IA, páginas web modernas, automatización WhatsApp Business, soluciones multi-tenant con Hermes Agent
-- **Precios:** Plan Esencial ($100 USD), Plan Popular ($150 USD), Plan Completo ($200 USD)
-- **Ubicación:** Colombia, con servicio en Latinoamérica
-- **Web:** https://tp3studio.com
-- **Email:** hola@tp3studio.com
+          // Call DeepSeek
+          const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.env.DEEPSEEK_API_KEY}`,
+            },
+            body: JSON.stringify({
+              model: "deepseek-chat",
+              messages: msgs,
+              max_tokens: 1024,
+              temperature: 0.7,
+              stream: false,
+            }),
+          });
 
-## Reglas
-1. Responde siempre en el idioma del cliente (español o inglés)
-2. Sé amable, profesional y resolutivo
-3. Si no sabes algo, no inventes — ofrece escalar a un humano
-4. NO guardes datos personales de clientes en memoria
-5. NO asumas que conoces al cliente aunque tengas session_id — cada conversación empieza desde cero
+          if (!response.ok) {
+            const errText = await response.text();
+            connection.send(JSON.stringify({ type: "error", message: "Error del asistente" }));
+            return;
+          }
 
-## Lo que puedes hacer
-- Informar sobre servicios y precios
-- Ayudar a elegir el plan adecuado
-- Responder preguntas frecuentes
-- Agendar una llamada con el equipo
-- Escalar consultas complejas a un humano`;
+          const result: any = await response.json();
+          const reply = result.choices?.[0]?.message?.content || "Lo siento, no pude procesar tu mensaje.";
 
-  async onChatMessage(_onFinish: any, _options: any): Promise<Response | undefined> {
-    const lastMsg = this.messages[this.messages.length - 1];
-    if (!lastMsg || lastMsg.role !== "user") return;
+          history.push({ role: "assistant", content: reply });
 
-    const msgs = [
-      { role: "system", content: this.systemPrompt },
-      ...this.messages.slice(-20).map((m: any) => ({
-        role: m.role,
-        content: m.content,
-      })),
-    ];
-
-    const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.env.DEEPSEEK_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "deepseek-chat",
-        messages: msgs,
-        stream: true,
-        max_tokens: 1024,
-        temperature: 0.7,
-      }),
-    });
-
-    // Forward the streaming response to the client
-    return new Response(response.body, {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
+          // Send response
+          connection.send(JSON.stringify({
+            type: "chat-response",
+            message: reply,
+          }));
+        }
+      } catch {
+        connection.send(JSON.stringify({ type: "error", message: "Error al procesar el mensaje." }));
+      }
     });
   }
 }

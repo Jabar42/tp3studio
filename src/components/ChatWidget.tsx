@@ -32,15 +32,18 @@ export default function ChatWidget() {
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.type === "state" && data.state?.messages) {
+        if (data.type === "chat-response" && data.message) {
+          setMessages(prev => [...prev, {role:"bot",text:data.message}]);
+          setLoading(false);
+        } else if (data.type === "state" && data.state?.messages) {
           setMessages(data.state.messages.map((m:any) => ({
             role: m.role === "assistant" ? "bot" : "user",
             text: m.content,
           })));
         }
       } catch {
-        // raw text
         setMessages(prev => [...prev, {role:"bot",text:event.data}]);
+        setLoading(false);
       }
     };
     socket.onerror = () => {

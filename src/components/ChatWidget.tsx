@@ -1,87 +1,49 @@
-import { useState, useRef, useEffect, type KeyboardEvent } from "react";
+import { useState, useRef, useEffect } from "react";
 
-const AGENT_HOST = "tp3studio-chat.iaforchange.workers.dev";
-const AGENT_NAME = "tp3-chat-agent";
-const STORAGE_KEY = "tp3chat-session";
+const CHAT_API = "https://tp3studio-chat.iaforchange.workers.dev";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{role:string;text:string}[]>([]);
+  const [messages, setMessages] = useState<{role:string;text:string}[]>([
+    {role:"bot",text:"👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?"}
+  ]);
   const [loading, setLoading] = useState(false);
-  const [ws, setWs] = useState<WebSocket | null>(null);
-  const [sessionId, setSessionId] = useState<string>("");
   const messagesEnd = useRef<HTMLDivElement>(null);
 
-  // Connect WebSocket when opened
-  useEffect(() => {
-    if (!open) return;
-    const sid = crypto.randomUUID().slice(0, 8);
-    setSessionId(sid);
-    try { localStorage.setItem(STORAGE_KEY, sid); } catch {}
-
-    const protocol = location.protocol === "https:" ? "wss:" : "ws:";
-    const url = `${protocol}//${AGENT_HOST}/agents/${AGENT_NAME}/${sid}`;
-    const socket = new WebSocket(url);
-    setWs(socket);
-
-    socket.onopen = () => {
-      setMessages([{role:"bot",text:"👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?"}]);
-    };
-    socket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.type === "chat-response" && data.message) {
-          setMessages(prev => [...prev, {role:"bot",text:data.message}]);
-          setLoading(false);
-        } else if (data.type === "state" && data.state?.messages) {
-          setMessages(data.state.messages.map((m:any) => ({
-            role: m.role === "assistant" ? "bot" : "user",
-            text: m.content,
-          })));
-        }
-      } catch {
-        setMessages(prev => [...prev, {role:"bot",text:event.data}]);
-        setLoading(false);
-      }
-    };
-    socket.onerror = () => {
-      setMessages(prev => [...prev, {role:"error",text:"⚠ No se pudo conectar con el asistente."}]);
-    };
-
-    return () => { socket.close(); setWs(null); };
-  }, [open]);
-
-  // Auto-scroll
-  useEffect(() => {
-    messagesEnd.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  // Lock body scroll
+  useEffect(() => { messagesEnd.current?.scrollIntoView({behavior:"smooth"}); }, [messages]);
   useEffect(() => {
     if (open && !closing) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
     return () => { document.body.style.overflow = ""; };
   }, [open, closing]);
 
-  function send() {
+  async function send() {
     const text = input.trim();
-    if (!text || loading || !ws) return;
+    if (!text || loading) return;
     setInput("");
     setMessages(prev => [...prev, {role:"user",text}]);
     setLoading(true);
-    ws.send(JSON.stringify({ type: "chat", message: text }));
-    // The onmessage handler will clear loading when response arrives
-    const onMsg = (e: MessageEvent) => {
-      setLoading(false);
-      ws.removeEventListener("message", onMsg);
-    };
-    ws.addEventListener("message", onMsg);
-  }
 
-  function handleKeyDown(e: KeyboardEvent) {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+    // Build context from current conversation
+    const history = messages.map(m => ({role: m.role === "bot" ? "assistant" : "user", content: m.text}));
+    history.push({role: "user", content: text});
+
+    try {
+      const res = await fetch(`${CHAT_API}/api/chat`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ messages: history })
+      });
+      if (!res.ok) throw new Error("Error");
+      const data = await res.json();
+      setMessages(prev => [...prev, {role:"bot",text: data.reply}]);
+    } catch {
+      setMessages(prev => [...prev, {role:"bot",text:"⚠ Error al conectar. Intenta de nuevo."}]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -89,57 +51,56 @@ export default function ChatWidget() {
       <style>{`
         @keyframes slide-up { from { opacity:0; transform:translateY(100%); } to { opacity:1; transform:translateY(0); } }
         @keyframes slide-down { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(100%); } }
-        .animate-slide-up { animation:slide-up .4s ease-out forwards; }
-        .animate-slide-down { animation:slide-down .3s ease-in forwards; }
-        .chat-btn { position:fixed; bottom:24px; right:24px; z-index:9999; width:56px; height:56px; border-radius:16px; background:#6366F1; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,.12); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .3s; border:none; }
-        .chat-btn:hover { filter:brightness(1.1); transform:scale(1.05); }
-        .chat-btn:active { transform:scale(.95); }
-        .chat-panel { position:fixed; bottom:0; right:0; z-index:9998; width:100%; height:100%; background:#fff; display:flex; flex-direction:column; box-shadow:0 8px 32px rgba(0,0,0,.12); }
-        @media (min-width:640px) { .chat-panel { bottom:24px; right:24px; width:360px; height:520px; max-height:520px; border-radius:24px; border:1px solid #E4E4E7; } }
+        .anim-up { animation:slide-up .4s ease-out forwards; }
+        .anim-down { animation:slide-down .3s ease-in forwards; }
       `}</style>
 
       {!open && (
-        <button className="chat-btn" onClick={() => setOpen(true)} aria-label="Abrir chat">
+        <button onClick={() => setOpen(true)}
+          style={{position:"fixed",bottom:24,right:24,zIndex:9999,width:56,height:56,borderRadius:16,background:"#6366F1",color:"#fff",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 8px 24px rgba(0,0,0,.12)"}}
+          aria-label="Abrir chat">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
           </svg>
         </button>
       )}
 
       {open && (
-        <div className={`chat-panel ${closing ? "animate-slide-down" : "animate-slide-up"}`}>
-          <div style={{background:"#6366F1",color:"#fff",padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",borderRadius:"24px 24px 0 0"}}>
+        <div className={closing ? "anim-down" : "anim-up"}
+          style={{position:"fixed",bottom:0,right:0,zIndex:9998,width:"100%",height:"100%",background:"#fff",display:"flex",flexDirection:"column",boxShadow:"0 8px 32px rgba(0,0,0,.12)"}}>
+          <div style={{background:"#6366F1",color:"#fff",padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
             <div>
-              <div style={{fontFamily:"Outfit,sans-serif",fontWeight:600,fontSize:"16px"}}>Tp3studio</div>
-              <div style={{fontSize:"12px",opacity:.75,marginTop:"1px"}}>Asistente virtual</div>
+              <div style={{fontFamily:"Outfit,sans-serif",fontWeight:600,fontSize:16}}>Tp3studio</div>
+              <div style={{fontSize:12,opacity:.75,marginTop:1}}>Asistente virtual</div>
             </div>
-            <button onClick={()=>{setClosing(true);setTimeout(()=>{setOpen(false);setClosing(false)},300)}} style={{width:32,height:32,borderRadius:12,background:"rgba(255,255,255,.1)",border:"none",color:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}} aria-label="Cerrar chat">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+            <button onClick={()=>{setClosing(true);setTimeout(()=>{setOpen(false);setClosing(false)},300)}}
+              style={{width:32,height:32,borderRadius:12,background:"rgba(255,255,255,.1)",border:"none",color:"#fff",cursor:"pointer"}} aria-label="Cerrar chat">
+              ✕
             </button>
           </div>
 
-          <div style={{flex:1,overflowY:"auto",padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+          <div style={{flex:1,overflowY:"auto",padding:"12px 16px",display:"flex",flexDirection:"column",gap:10,fontFamily:"Nunito,sans-serif"}}>
             {messages.map((m,i) => (
-              <div key={i} style={{maxWidth:"85%",padding:"10px 14px",borderRadius:16,fontSize:"14px",lineHeight:1.4,fontFamily:"Nunito,sans-serif",alignSelf:m.role==="user"?"flex-end":"flex-start",background:m.role==="user"?"#6366F1":"#F4F4F5",color:m.role==="user"?"#fff":"#18181B",borderBottomRightRadius:m.role==="user"?4:16,borderBottomLeftRadius:m.role==="user"?16:4}}>
-                {m.role==="error"?<span style={{color:"#dc2626"}}>{m.text}</span>:m.text}
+              <div key={i} style={{maxWidth:"85%",padding:"10px 14px",borderRadius:16,fontSize:14,lineHeight:1.4,
+                alignSelf:m.role==="user"?"flex-end":"flex-start",
+                background:m.role==="user"?"#6366F1":"#F4F4F5",
+                color:m.role==="user"?"#fff":"#18181B",
+                borderBottomRightRadius:m.role==="user"?4:16,
+                borderBottomLeftRadius:m.role==="user"?16:4}}>
+                {m.text}
               </div>
             ))}
-            {loading && <div style={{alignSelf:"flex-start",background:"#F4F4F5",color:"#999",padding:"10px 14px",borderRadius:16,fontSize:"14px"}}>Escribiendo...</div>}
-            <div ref={messagesEnd} />
+            {loading && <div style={{alignSelf:"flex-start",background:"#F4F4F5",color:"#999",padding:"10px 14px",borderRadius:16,fontSize:14}}>Escribiendo...</div>}
+            <div ref={messagesEnd}/>
           </div>
 
-          <form onSubmit={(e)=>{e.preventDefault();send()}} style={{display:"flex",gap:8,padding:"12px 16px",borderTop:"1px solid #E4E4E7",background:"rgba(255,255,255,.6)"}}>
-            <input type="text" value={input} onChange={e=>setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder="Escribe tu mensaje..." disabled={loading}
-              style={{flex:1,padding:"10px 14px",border:"1px solid #E4E4E7",borderRadius:12,fontSize:"14px",outline:"none",color:"#18181B",fontFamily:"Nunito,sans-serif"}}
-            />
+          <form onSubmit={e=>{e.preventDefault();send()}} style={{display:"flex",gap:8,padding:"12px 16px 20px",borderTop:"1px solid #E4E4E7"}}>
+            <input value={input} onChange={e=>setInput(e.target.value)} placeholder="Escribe tu mensaje..." disabled={loading}
+              style={{flex:1,padding:"10px 14px",border:"1px solid #E4E4E7",borderRadius:12,fontSize:14,outline:"none",fontFamily:"Nunito,sans-serif"}}/>
             <button type="submit" disabled={loading||!input.trim()}
-              style={{width:40,height:40,borderRadius:12,background:"#6366F1",color:"#fff",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",opacity:loading||!input.trim()?.4:1,transition:"opacity .2s"}}
-              title="Enviar"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
+              style={{width:40,height:40,borderRadius:12,background:"#6366F1",color:"#fff",border:"none",cursor:"pointer",opacity:loading||!input.trim()?.4:1}} title="Enviar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
               </svg>
             </button>
           </form>

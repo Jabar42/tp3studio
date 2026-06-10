@@ -9,6 +9,7 @@ npm run dev             # Start dev server at localhost:4321
 npm run build           # Build to dist/ (server + client)
 npm run preview         # npm run build && wrangler dev
 npm run deploy          # npm run build && wrangler deploy
+npm run deploy:chat     # wrangler deploy --config wrangler-chat.jsonc src/workers/chat-agent.ts
 npm run astro           # Run Astro CLI (check, add, etc.)
 npm run generate-types  # wrangler types
 ```

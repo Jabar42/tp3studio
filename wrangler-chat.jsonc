@@ -1,0 +1,17 @@
+{
+	"name": "tp3studio-chat",
+	"main": "src/workers/chat-agent.ts",
+	"compatibility_date": "2026-06-03",
+	"compatibility_flags": ["nodejs_compat"],
+	"durable_objects": {
+		"bindings": [
+			{ "name": "Tp3ChatAgent", "class_name": "Tp3ChatAgent" }
+		]
+	},
+	"migrations": [
+		{ "tag": "v1", "new_sqlite_classes": ["Tp3ChatAgent"] }
+	],
+	"observability": {
+		"enabled": true
+	}
+}

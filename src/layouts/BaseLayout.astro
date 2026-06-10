@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Footer from '../components/Footer.astro';
+import ChatWidget from '../components/ChatWidget';
 import '../styles/global.css';
 import { getTranslations } from '../i18n';
 
@@ -91,6 +92,7 @@ const enUrl = lang === 'es' ? '/en' + (currentPath === '/' ? '' : currentPath) :
       <slot />
     </main>
     <Footer lang={lang} />
+    <ChatWidget client:load />
   </body>
 </html>
 

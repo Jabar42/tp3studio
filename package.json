@@ -17,6 +17,9 @@
     "@astrojs/cloudflare": "^13.6.1",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.3",
+    "@cloudflare/ai-chat": "^0.8.4",
+    "agents": "^0.15.0",
+    "ai": "^6.0.199",
     "astro": "^6.4.2"
   },
   "devDependencies": {

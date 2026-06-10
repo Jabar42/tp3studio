@@ -1,15 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 
-const CHAT_API = "https://tp3studio-chat.iaforchange.workers.dev";
+const AGENT_HOST = "tp3studio-chat.iaforchange.workers.dev";
+const AGENT_NAME = "tp3-chat-agent";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{role:string;text:string}[]>([
-    {role:"bot",text:"👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?"}
-  ]);
+  const [messages, setMessages] = useState<{role:string;text:string}[]>([]);
   const [loading, setLoading] = useState(false);
+  const wsRef = useRef<WebSocket | null>(null);
   const messagesEnd = useRef<HTMLDivElement>(null);
 
   useEffect(() => { messagesEnd.current?.scrollIntoView({behavior:"smooth"}); }, [messages]);
@@ -19,31 +19,88 @@ export default function ChatWidget() {
     return () => { document.body.style.overflow = ""; };
   }, [open, closing]);
 
-  async function send() {
+  function connectWs() {
+    if (wsRef.current?.readyState === WebSocket.OPEN) return;
+    const sid = crypto.randomUUID().slice(0, 8);
+    const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+    const ws = new WebSocket(`${protocol}//${AGENT_HOST}/agents/${AGENT_NAME}/${sid}`);
+    wsRef.current = ws;
+
+    let currentBotMsg = "";
+
+    ws.onopen = () => {
+      setMessages([{role:"bot",text:"👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?"}]);
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "chat-response") {
+          // Non-streaming response (welcome / error)
+          if (data.message === "👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?") {
+            // Skip welcome from WS — already shown
+            setLoading(false);
+            return;
+          }
+          setMessages(prev => [...prev, {role:"bot",text:data.message}]);
+          setLoading(false);
+        } else if (data.type === "chat-chunk") {
+          if (data.done) {
+            setMessages(prev => {
+              const next = [...prev];
+              if (next.length > 0 && next[next.length - 1].role === "bot") {
+                next[next.length - 1] = {role:"bot",text: data.full || currentBotMsg};
+              }
+              return next;
+            });
+            currentBotMsg = "";
+            setLoading(false);
+          } else if (data.text) {
+            currentBotMsg += data.text;
+            setMessages(prev => {
+              const next = [...prev];
+              const last = next[next.length - 1];
+              if (last && last.role === "bot") {
+                next[next.length - 1] = {role:"bot",text: currentBotMsg};
+              } else {
+                next.push({role:"bot",text: currentBotMsg});
+              }
+              return next;
+            });
+          }
+        }
+      } catch {}
+    };
+
+    ws.onerror = () => {
+      setMessages(prev => [...prev, {role:"bot",text:"⚠ Error al conectar con el asistente."}]);
+      setLoading(false);
+    };
+
+    ws.onclose = () => {
+      wsRef.current = null;
+    };
+  }
+
+  function send() {
     const text = input.trim();
     if (!text || loading) return;
     setInput("");
     setMessages(prev => [...prev, {role:"user",text}]);
     setLoading(true);
 
-    // Build context from current conversation
-    const history = messages.map(m => ({role: m.role === "bot" ? "assistant" : "user", content: m.text}));
-    history.push({role: "user", content: text});
-
-    try {
-      const res = await fetch(`${CHAT_API}/api/chat`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ messages: history })
-      });
-      if (!res.ok) throw new Error("Error");
-      const data = await res.json();
-      setMessages(prev => [...prev, {role:"bot",text: data.reply}]);
-    } catch {
-      setMessages(prev => [...prev, {role:"bot",text:"⚠ Error al conectar. Intenta de nuevo."}]);
-    } finally {
-      setLoading(false);
-    }
+    const trySend = () => {
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        const history = messages
+          .filter(m => m.role !== "error")
+          .slice(-20)
+          .map(m => ({role: m.role === "bot" ? "assistant" : "user", content: m.text}));
+        wsRef.current.send(JSON.stringify({ type: "chat", message: text, history }));
+      } else {
+        setTimeout(trySend, 200);
+      }
+    };
+    trySend();
   }
 
   return (
@@ -56,7 +113,7 @@ export default function ChatWidget() {
       `}</style>
 
       {!open && (
-        <button onClick={() => setOpen(true)}
+        <button onClick={() => {connectWs(); setOpen(true);}}
           style={{position:"fixed",bottom:24,right:24,zIndex:9999,width:56,height:56,borderRadius:16,background:"#6366F1",color:"#fff",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 8px 24px rgba(0,0,0,.12)"}}
           aria-label="Abrir chat">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -73,10 +130,8 @@ export default function ChatWidget() {
               <div style={{fontFamily:"Outfit,sans-serif",fontWeight:600,fontSize:16}}>Tp3studio</div>
               <div style={{fontSize:12,opacity:.75,marginTop:1}}>Asistente virtual</div>
             </div>
-            <button onClick={()=>{setClosing(true);setTimeout(()=>{setOpen(false);setClosing(false)},300)}}
-              style={{width:32,height:32,borderRadius:12,background:"rgba(255,255,255,.1)",border:"none",color:"#fff",cursor:"pointer"}} aria-label="Cerrar chat">
-              ✕
-            </button>
+            <button onClick={()=>{wsRef.current?.close(); setClosing(true);setTimeout(()=>{setOpen(false);setClosing(false)},300)}}
+              style={{width:32,height:32,borderRadius:12,background:"rgba(255,255,255,.1)",border:"none",color:"#fff",cursor:"pointer"}} aria-label="Cerrar chat">✕</button>
           </div>
 
           <div style={{flex:1,overflowY:"auto",padding:"12px 16px",display:"flex",flexDirection:"column",gap:10,fontFamily:"Nunito,sans-serif"}}>

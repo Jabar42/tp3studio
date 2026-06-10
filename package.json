@@ -11,10 +11,12 @@
     "preview": "npm run build && wrangler dev",
     "astro": "astro",
     "generate-types": "wrangler types",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:chat": "wrangler deploy --config wrangler-chat.jsonc src/workers/chat-agent.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.6.1",
+    "@astrojs/react": "^5.0.7",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.3",
     "@cloudflare/ai-chat": "^0.8.4",

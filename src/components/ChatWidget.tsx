@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect, type FormEvent, type KeyboardEvent } from "react";
+import { useState, useRef, useEffect, type KeyboardEvent } from "react";
 import { useAgent } from "agents/react";
+import { useAgentChat } from "@cloudflare/ai-chat/react";
 
 // ---------------------------------------------------------------------------
 // Config
@@ -7,6 +8,7 @@ import { useAgent } from "agents/react";
 
 const AGENT_NAME = "Tp3ChatAgent";
 const STORAGE_KEY = "tp3chat-session";
+const AGENT_HOST = import.meta.env.PUBLIC_CHAT_AGENT_HOST ?? "localhost:8788";
 
 // ---------------------------------------------------------------------------
 // Component
@@ -14,58 +16,49 @@ const STORAGE_KEY = "tp3chat-session";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState<{ role: string; text: string }[]>([]);
-  const [sessionReady, setSessionReady] = useState(false);
-  const [sessionId, setSessionId] = useState<string | null>(() => {
-    try {
-      return localStorage.getItem(STORAGE_KEY);
-    } catch {
-      return null;
-    }
-  });
-  const messagesEnd = useRef<HTMLDivElement>(null);
   const [closing, setClosing] = useState(false);
+  const messagesEnd = useRef<HTMLDivElement>(null);
 
   // Agent connection
   const agent = useAgent({
     agent: AGENT_NAME,
-    name: sessionId || crypto.randomUUID().slice(0, 8),
-    onStateUpdate: (state: any) => {
-      if (state?.messages?.length > 0) {
-        setMessages(
-          state.messages.map((m: any) => ({
-            role: m.role === "assistant" ? "bot" : "user",
-            text: m.content,
-          }))
-        );
-      }
-    },
-    onConnection: (id: string) => {
-      setSessionId(id);
+    host: AGENT_HOST,
+    name: crypto.randomUUID().slice(0, 8),
+    onStateUpdate: () => {},
+  });
+
+  // Chat hook
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    error,
+    setMessages,
+  } = useAgentChat({
+    agent,
+    getInitialMessages: async ({ name }) => {
       try {
-        localStorage.setItem(STORAGE_KEY, id);
-      } catch {}
-      setSessionReady(true);
-    },
-    onError: () => {
-      setMessages((prev) => [
-        ...prev,
-        { role: "error", text: "⚠ No se pudo conectar con el asistente." },
-      ]);
+        return await getAgentMessages({
+          host: AGENT_HOST,
+          agent: AGENT_NAME,
+          name,
+        });
+      } catch {
+        return [];
+      }
     },
   });
 
-  // Save session ID when it changes
+  // Save session ID to localStorage
   useEffect(() => {
-    if (sessionId) {
+    if (agent.name) {
       try {
-        localStorage.setItem(STORAGE_KEY, sessionId);
+        localStorage.setItem(STORAGE_KEY, agent.name);
       } catch {}
-      setSessionReady(true);
     }
-  }, [sessionId]);
+  }, [agent.name]);
 
   // Auto-scroll
   useEffect(() => {
@@ -84,49 +77,11 @@ export default function ChatWidget() {
     };
   }, [open, closing]);
 
-  // Welcome message
-  useEffect(() => {
-    if (sessionReady && messages.length === 0) {
-      setMessages([
-        {
-          role: "bot",
-          text: "👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?",
-        },
-      ]);
-    }
-  }, [sessionReady, messages.length]);
-
-  async function handleSend(e?: FormEvent) {
-    e?.preventDefault();
-    const text = input.trim();
-    if (!text || loading) return;
-
-    setInput("");
-    setMessages((prev) => [...prev, { role: "user", text }]);
-    setLoading(true);
-
-    try {
-      // Send via Agent SDK
-      if (agent?.sendMessage) {
-        await agent.sendMessage(text);
-      }
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "error",
-          text: "⚠ Error al enviar mensaje. Intenta de nuevo.",
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
+  // Send on Enter
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      handleSubmit();
     }
   }
 
@@ -145,22 +100,14 @@ export default function ChatWidget() {
         .animate-slide-down { animation: slide-down 0.3s ease-in forwards; }
       `}</style>
 
-      {/* Floating button — only opens */}
+      {/* Floating button */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
           className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl bg-[#6366F1] text-white shadow-lg flex items-center justify-center transition-all duration-300 hover:brightness-110 hover:scale-105 active:scale-95"
           aria-label="Abrir chat"
         >
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
         </button>
@@ -190,15 +137,7 @@ export default function ChatWidget() {
               aria-label="Cerrar chat"
               className="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
@@ -207,21 +146,29 @@ export default function ChatWidget() {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-2.5">
-            {messages.map((m, i) => (
+            {error && (
+              <div className="self-start bg-red-50 text-red-700 text-sm px-3.5 py-2.5 rounded-2xl rounded-bl-md max-w-[85%]">
+                ⚠ No se pudo conectar con el asistente.
+              </div>
+            )}
+            {messages.length === 0 && !isLoading && (
+              <div className="self-start bg-[#F4F4F5] text-[#18181B] px-3.5 py-2.5 rounded-2xl rounded-bl-md text-sm leading-relaxed font-nunito max-w-[85%]">
+                👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?
+              </div>
+            )}
+            {messages.map((m: any, i: number) => (
               <div
                 key={i}
                 className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed font-nunito ${
                   m.role === "user"
                     ? "self-end bg-[#6366F1] text-white rounded-br-md"
-                    : m.role === "error"
-                      ? "self-start bg-red-50 text-red-700 rounded-bl-md"
-                      : "self-start bg-[#F4F4F5] text-[#18181B] rounded-bl-md"
+                    : "self-start bg-[#F4F4F5] text-[#18181B] rounded-bl-md"
                 }`}
               >
-                {m.text}
+                {m.content}
               </div>
             ))}
-            {loading && (
+            {isLoading && (
               <div className="self-start bg-[#F4F4F5] text-gray-400 text-sm px-3.5 py-2.5 rounded-2xl rounded-bl-md">
                 Escribiendo...
               </div>
@@ -231,7 +178,7 @@ export default function ChatWidget() {
 
           {/* Input */}
           <form
-            onSubmit={handleSend}
+            onSubmit={(e) => { e.preventDefault(); handleSubmit(e); }}
             className="shrink-0 flex gap-2 px-4 py-3 border-t border-[#E4E4E7] bg-white/60"
           >
             <input
@@ -246,28 +193,19 @@ export default function ChatWidget() {
               autoCapitalize="off"
               spellCheck={false}
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder="Escribe tu mensaje..."
-              disabled={loading}
+              disabled={isLoading}
               className="flex-1 px-3.5 py-2.5 bg-white border border-[#E4E4E7] rounded-xl text-sm text-[#18181B] placeholder-gray-400 focus:outline-none focus:border-[#6366F1] disabled:opacity-50 transition-colors font-nunito"
             />
             <button
               type="submit"
-              disabled={loading || !input.trim()}
+              disabled={isLoading || !input.trim()}
               title="Enviar"
               className="shrink-0 w-10 h-10 bg-[#6366F1] text-white rounded-xl hover:brightness-110 disabled:opacity-40 transition-all flex items-center justify-center"
             >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13" />
                 <polygon points="22 2 15 22 11 13 2 9 22 2" />
               </svg>

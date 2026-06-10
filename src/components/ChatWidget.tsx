@@ -17,9 +17,10 @@ const AGENT_HOST = import.meta.env.PUBLIC_CHAT_AGENT_HOST ?? "localhost:8788";
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [input, setInput] = useState("");
   const messagesEnd = useRef<HTMLDivElement>(null);
+  const openOnce = useRef(false);
 
-  // Agent connection
   const agent = useAgent({
     agent: AGENT_NAME,
     host: AGENT_HOST,
@@ -27,31 +28,21 @@ export default function ChatWidget() {
     onStateUpdate: () => {},
   });
 
-  // Chat hook
-  const {
-    messages,
-    input,
-    handleInputChange,
-    handleSubmit,
-    isLoading,
-    error,
-    setMessages,
-  } = useAgentChat({
-    agent,
-    getInitialMessages: async ({ name }) => {
-      try {
-        return await getAgentMessages({
-          host: AGENT_HOST,
-          agent: AGENT_NAME,
-          name,
-        });
-      } catch {
-        return [];
-      }
-    },
-  });
+  const chat = useAgentChat({ agent });
 
-  // Save session ID to localStorage
+  // Restore session ID — only once
+  useEffect(() => {
+    if (openOnce.current) return;
+    openOnce.current = true;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        // session restored — agent reconnects automatically
+      }
+    } catch {}
+  }, []);
+
+  // Save session
   useEffect(() => {
     if (agent.name) {
       try {
@@ -63,7 +54,7 @@ export default function ChatWidget() {
   // Auto-scroll
   useEffect(() => {
     messagesEnd.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [chat.messages]);
 
   // Lock body scroll
   useEffect(() => {
@@ -72,16 +63,13 @@ export default function ChatWidget() {
     } else {
       document.body.style.overflow = "";
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [open, closing]);
 
-  // Send on Enter
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit();
+      chat.handleSubmit();
     }
   }
 
@@ -100,7 +88,6 @@ export default function ChatWidget() {
         .animate-slide-down { animation: slide-down 0.3s ease-in forwards; }
       `}</style>
 
-      {/* Floating button */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
@@ -113,14 +100,12 @@ export default function ChatWidget() {
         </button>
       )}
 
-      {/* Chat panel */}
       {open && (
         <div
           className={`fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[360px] h-full sm:max-h-[520px] sm:h-[520px] sm:rounded-3xl bg-white shadow-lg border border-[#E4E4E7] flex flex-col ${
             closing ? "animate-slide-down" : "animate-slide-up"
           }`}
         >
-          {/* Header */}
           <div className="bg-[#6366F1] text-white px-5 py-3.5 shrink-0 flex items-center justify-between sm:rounded-t-3xl">
             <div>
               <h3 className="font-outfit font-semibold text-base">Tp3studio</h3>
@@ -129,10 +114,7 @@ export default function ChatWidget() {
             <button
               onClick={() => {
                 setClosing(true);
-                setTimeout(() => {
-                  setOpen(false);
-                  setClosing(false);
-                }, 300);
+                setTimeout(() => { setOpen(false); setClosing(false); }, 300);
               }}
               aria-label="Cerrar chat"
               className="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
@@ -144,19 +126,18 @@ export default function ChatWidget() {
             </button>
           </div>
 
-          {/* Messages */}
           <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-2.5">
-            {error && (
+            {chat.error && (
               <div className="self-start bg-red-50 text-red-700 text-sm px-3.5 py-2.5 rounded-2xl rounded-bl-md max-w-[85%]">
                 ⚠ No se pudo conectar con el asistente.
               </div>
             )}
-            {messages.length === 0 && !isLoading && (
+            {chat.messages.length === 0 && !chat.isLoading && (
               <div className="self-start bg-[#F4F4F5] text-[#18181B] px-3.5 py-2.5 rounded-2xl rounded-bl-md text-sm leading-relaxed font-nunito max-w-[85%]">
                 👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?
               </div>
             )}
-            {messages.map((m: any, i: number) => (
+            {chat.messages.map((m: any, i: number) => (
               <div
                 key={i}
                 className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed font-nunito ${
@@ -168,7 +149,7 @@ export default function ChatWidget() {
                 {m.content}
               </div>
             ))}
-            {isLoading && (
+            {chat.isLoading && (
               <div className="self-start bg-[#F4F4F5] text-gray-400 text-sm px-3.5 py-2.5 rounded-2xl rounded-bl-md">
                 Escribiendo...
               </div>
@@ -176,11 +157,7 @@ export default function ChatWidget() {
             <div ref={messagesEnd} />
           </div>
 
-          {/* Input */}
-          <form
-            onSubmit={(e) => { e.preventDefault(); handleSubmit(e); }}
-            className="shrink-0 flex gap-2 px-4 py-3 border-t border-[#E4E4E7] bg-white/60"
-          >
+          <form onSubmit={(e) => { e.preventDefault(); chat.handleSubmit(e); }} className="shrink-0 flex gap-2 px-4 py-3 border-t border-[#E4E4E7] bg-white/60">
             <input
               type="text"
               inputMode="text"
@@ -192,16 +169,16 @@ export default function ChatWidget() {
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck={false}
-              value={input}
-              onChange={handleInputChange}
+              value={chat.input}
+              onChange={chat.handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder="Escribe tu mensaje..."
-              disabled={isLoading}
+              disabled={chat.isLoading}
               className="flex-1 px-3.5 py-2.5 bg-white border border-[#E4E4E7] rounded-xl text-sm text-[#18181B] placeholder-gray-400 focus:outline-none focus:border-[#6366F1] disabled:opacity-50 transition-colors font-nunito"
             />
             <button
               type="submit"
-              disabled={isLoading || !input.trim()}
+              disabled={chat.isLoading || !chat.input.trim()}
               title="Enviar"
               className="shrink-0 w-10 h-10 bg-[#6366F1] text-white rounded-xl hover:brightness-110 disabled:opacity-40 transition-all flex items-center justify-center"
             >

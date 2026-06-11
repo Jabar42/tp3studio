@@ -13,11 +13,6 @@ export default function ChatWidget() {
   const messagesEnd = useRef<HTMLDivElement>(null);
 
   useEffect(() => { messagesEnd.current?.scrollIntoView({behavior:"smooth"}); }, [messages]);
-  useEffect(() => {
-    if (open && !closing) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
-    return () => { document.body.style.overflow = ""; };
-  }, [open, closing]);
 
   function connectWs() {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
@@ -29,19 +24,15 @@ export default function ChatWidget() {
     let currentBotMsg = "";
 
     ws.onopen = () => {
-      setMessages([{role:"bot",text:"👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?"}]);
+      if (messages.length === 0) {
+        setMessages([{role:"bot",text:"👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?"}]);
+      }
     };
 
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
         if (data.type === "chat-response") {
-          // Non-streaming response (welcome / error)
-          if (data.message === "👋 ¡Hola! Soy el asistente de Tp3studio. ¿En qué puedo ayudarte?") {
-            // Skip welcome from WS — already shown
-            setLoading(false);
-            return;
-          }
           setMessages(prev => [...prev, {role:"bot",text:data.message}]);
           setLoading(false);
         } else if (data.type === "chat-chunk") {
@@ -103,13 +94,29 @@ export default function ChatWidget() {
     trySend();
   }
 
+  const chatWidth = 380;
+  const chatHeight = 540;
+
   return (
     <>
       <style>{`
-        @keyframes slide-up { from { opacity:0; transform:translateY(100%); } to { opacity:1; transform:translateY(0); } }
-        @keyframes slide-down { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(100%); } }
-        .anim-up { animation:slide-up .4s ease-out forwards; }
-        .anim-down { animation:slide-down .3s ease-in forwards; }
+        @keyframes slide-up { from { opacity:0; transform:translateY(16px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+        @keyframes slide-down { from { opacity:1; transform:translateY(0) scale(1); } to { opacity:0; transform:translateY(16px) scale(0.96); } }
+        .chat-window { animation:slide-up .35s cubic-bezier(.16,1,.3,1) forwards; }
+        .chat-window-out { animation:slide-down .25s ease-in forwards; }
+        @keyframes typing-dot { 0%,60% { opacity:.2; transform:translateY(0); } 30% { opacity:1; transform:translateY(-6px); } 100% { opacity:.2; transform:translateY(0); } }
+        .typing-indicator { display:flex; align-items:center; gap:4px; padding:8px 14px; }
+        .typing-indicator span { width:7px; height:7px; border-radius:50%; background:#6366F1; animation:typing-dot 1.4s infinite ease-in-out; }
+        .typing-indicator span:nth-child(2) { animation-delay:.15s; }
+        .typing-indicator span:nth-child(3) { animation-delay:.3s; }
+        @media (max-width: 480px) {
+          .chat-window, .chat-window-out {
+            width: 100% !important; height: 100% !important;
+            max-width: 100% !important; max-height: 100% !important;
+            bottom: 0 !important; right: 0 !important;
+            border-radius: 0 !important;
+          }
+        }
       `}</style>
 
       {!open && (
@@ -123,14 +130,14 @@ export default function ChatWidget() {
       )}
 
       {open && (
-        <div className={closing ? "anim-down" : "anim-up"}
-          style={{position:"fixed",bottom:0,right:0,zIndex:9998,width:"100%",height:"100%",background:"#fff",display:"flex",flexDirection:"column",boxShadow:"0 8px 32px rgba(0,0,0,.12)"}}>
-          <div style={{background:"#6366F1",color:"#fff",padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div className={closing ? "chat-window-out" : "chat-window"}
+          style={{position:"fixed",bottom:24,right:24,zIndex:9998,width:chatWidth,maxWidth:"calc(100vw - 48px)",height:chatHeight,maxHeight:"calc(100vh - 48px)",background:"#fff",display:"flex",flexDirection:"column",borderRadius:16,overflow:"hidden",boxShadow:"0 12px 48px rgba(0,0,0,.18)"}}>
+          <div style={{background:"#6366F1",color:"#fff",padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
             <div>
               <div style={{fontFamily:"Outfit,sans-serif",fontWeight:600,fontSize:16}}>Tp3studio</div>
               <div style={{fontSize:12,opacity:.75,marginTop:1}}>Asistente virtual</div>
             </div>
-            <button onClick={()=>{wsRef.current?.close(); setClosing(true);setTimeout(()=>{setOpen(false);setClosing(false)},300)}}
+            <button onClick={()=>{wsRef.current?.close(); setClosing(true);setTimeout(()=>{setOpen(false);setClosing(false)},250)}}
               style={{width:32,height:32,borderRadius:12,background:"rgba(255,255,255,.1)",border:"none",color:"#fff",cursor:"pointer"}} aria-label="Cerrar chat">✕</button>
           </div>
 
@@ -145,11 +152,11 @@ export default function ChatWidget() {
                 {m.text}
               </div>
             ))}
-            {loading && <div style={{alignSelf:"flex-start",background:"#F4F4F5",color:"#999",padding:"10px 14px",borderRadius:16,fontSize:14}}>Escribiendo...</div>}
+            {loading && <div className="typing-indicator" style={{alignSelf:"flex-start",background:"#F4F4F5",borderRadius:16,borderBottomLeftRadius:4}}><span></span><span></span><span></span></div>}
             <div ref={messagesEnd}/>
           </div>
 
-          <form onSubmit={e=>{e.preventDefault();send()}} style={{display:"flex",gap:8,padding:"12px 16px 20px",borderTop:"1px solid #E4E4E7"}}>
+          <form onSubmit={e=>{e.preventDefault();send()}} style={{display:"flex",gap:8,padding:"12px 16px 16px",borderTop:"1px solid #E4E4E7",flexShrink:0}}>
             <input value={input} onChange={e=>setInput(e.target.value)} placeholder="Escribe tu mensaje..." disabled={loading}
               style={{flex:1,padding:"10px 14px",border:"1px solid #E4E4E7",borderRadius:12,fontSize:14,outline:"none",fontFamily:"Nunito,sans-serif"}}/>
             <button type="submit" disabled={loading||!input.trim()}

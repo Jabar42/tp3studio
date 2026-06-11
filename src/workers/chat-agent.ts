@@ -1,37 +1,62 @@
-import { Agent, routeAgentRequest } from "agents";
+/// <reference types="@cloudflare/workers-types" />
 
-const SYSTEM_PROMPT = `Eres el asistente virtual de **Tp3studio**, una agencia de soluciones IA para negocios.
+import {
+  Agent,
+  routeAgentRequest,
+  type Connection,
+  type ConnectionContext,
+} from "agents";
+
+interface Env {
+  DEEPSEEK_API_KEY: string;
+  Tp3ChatAgent: DurableObjectNamespace;
+}
+
+const SYSTEM_PROMPT = `Eres el asistente virtual de Tp3studio, una agencia de soluciones IA para negocios.
 
 ## Información del negocio
-- **Nombre:** Tp3studio
-- **Servicios:** chatbots IA, páginas web modernas, automatización WhatsApp Business
-- **Precios:** Plan Esencial ($100 USD), Plan Popular ($150 USD), Plan Completo ($200 USD)
-- **Web:** https://tp3studio.com
-- **Email:** hola@tp3studio.com
+- Nombre: Tp3studio
+- Servicios: chatbots IA, páginas web modernas, automatización WhatsApp Business
+- Precios: Plan Esencial ($100 USD), Plan Popular ($150 USD), Plan Completo ($200 USD)
+- Web: https://tp3studio.com
+- Email: hola@tp3studio.com
 
 ## Reglas
 1. Responde siempre en el idioma del cliente
 2. Sé amable, profesional y resolutivo
 3. Si no sabes algo, no inventes — ofrece escalar a un humano
 4. NO guardes datos personales de clientes
-5. NO asumas que conoces al cliente — cada conversación empieza desde cero`;
+5. NO asumas que conoces al cliente — cada conversación empieza desde cero
+6. No uses asteriscos (*) en tus respuestas`;
 
 const DEEPSEEK_TIMEOUT_MS = 25000;
 
-async function chatWithDeepSeek(apiKey: string, messages: {role:string;content:string}[]): Promise<string|null> {
+async function chatWithDeepSeek(
+  apiKey: string,
+  messages: { role: string; content: string }[],
+): Promise<string | null> {
   try {
-    const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        model: "deepseek-chat",
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages.slice(-20)],
-        max_tokens: 1024,
-        temperature: 0.7,
-        stream: false,
-      }),
-      signal: AbortSignal.timeout(DEEPSEEK_TIMEOUT_MS),
-    });
+    const response = await fetch(
+      "https://api.deepseek.com/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            ...messages.slice(-20),
+          ],
+          max_tokens: 1024,
+          temperature: 0.7,
+          stream: false,
+        }),
+        signal: AbortSignal.timeout(DEEPSEEK_TIMEOUT_MS),
+      },
+    );
     if (!response.ok) return null;
     const result: any = await response.json();
     return result.choices?.[0]?.message?.content || null;
@@ -41,24 +66,34 @@ async function chatWithDeepSeek(apiKey: string, messages: {role:string;content:s
 }
 
 export class Tp3ChatAgent extends Agent<Env> {
-  async onConnect(connection: any) {
-    connection.addEventListener("message", async (event: MessageEvent) => {
-      try {
-        const data = JSON.parse(typeof event.data === "string" ? event.data : new TextDecoder().decode(event.data));
-        if (data.type !== "chat" || !data.message) return;
+  async onConnect(connection: Connection, ctx: ConnectionContext) {
+    // Connection established. The widget shows its own welcome message,
+    // so we just wait for the first user message via onMessage().
+  }
 
-        const history = (data.history || []).slice(-20).map((m: any) => ({ role: m.role, content: m.content }));
-        history.push({ role: "user", content: data.message });
+  async onMessage(connection: Connection, message: string) {
+    try {
+      const data = JSON.parse(message);
+      if (data.type !== "chat" || !data.message) return;
 
-        const reply = await chatWithDeepSeek(this.env.DEEPSEEK_API_KEY, history);
-        connection.send(JSON.stringify({
+      const history = (data.history || []).slice(-20).map((m: any) => ({
+        role: m.role === "bot" ? "assistant" : m.role,
+        content: m.content,
+      }));
+      history.push({ role: "user", content: data.message });
+
+      const reply = await chatWithDeepSeek(this.env.DEEPSEEK_API_KEY, history);
+      connection.send(
+        JSON.stringify({
           type: "chat-response",
           message: reply ?? "Lo siento, tuve un problema. Intenta de nuevo.",
-        }));
-      } catch {
-        connection.send(JSON.stringify({ type: "chat-response", message: "Ocurrió un error." }));
-      }
-    });
+        }),
+      );
+    } catch {
+      connection.send(
+        JSON.stringify({ type: "chat-response", message: "Ocurrió un error." }),
+      );
+    }
   }
 }
 
@@ -73,28 +108,45 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
-    if (url.pathname === "/health") return Response.json({ status: "ok", agent: "tp3studio-chat" }, { headers: corsHeaders });
+    if (request.method === "OPTIONS")
+      return new Response(null, { headers: corsHeaders });
+    if (url.pathname === "/health")
+      return Response.json(
+        { status: "ok", agent: "tp3studio-chat" },
+        { headers: corsHeaders },
+      );
 
     if (url.pathname === "/api/chat" && request.method === "POST") {
       try {
         const body: any = await request.json();
         const messages = (body.messages || []).slice(-20);
         const apiKey = env.DEEPSEEK_API_KEY;
-        if (!apiKey) return Response.json({ reply: "Error de configuración." }, { status: 500, headers: corsHeaders });
+        if (!apiKey)
+          return Response.json(
+            { reply: "Error de configuración." },
+            { status: 500, headers: corsHeaders },
+          );
 
         const reply = await chatWithDeepSeek(apiKey, messages);
-        if (!reply) return Response.json({ reply: "Error del asistente." }, { status: 500, headers: corsHeaders });
+        if (!reply)
+          return Response.json(
+            { reply: "Error del asistente." },
+            { status: 500, headers: corsHeaders },
+          );
         return Response.json({ reply }, { headers: corsHeaders });
       } catch {
-        return Response.json({ reply: "Error al procesar el mensaje." }, { status: 500, headers: corsHeaders });
+        return Response.json(
+          { reply: "Error al procesar el mensaje." },
+          { status: 500, headers: corsHeaders },
+        );
       }
     }
 
     const resp = await routeAgentRequest(request, env);
     if (resp) {
       const newResp = new Response(resp.body, resp);
-      for (const [k, v] of Object.entries(corsHeaders)) newResp.headers.set(k, v);
+      for (const [k, v] of Object.entries(corsHeaders))
+        newResp.headers.set(k, v);
       return newResp;
     }
     return new Response("Not found", { status: 404, headers: corsHeaders });

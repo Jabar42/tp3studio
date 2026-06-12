@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const AGENT_HOST = "tp3studio-chat.iaforchange.workers.dev";
 const AGENT_NAME = "tp3-chat-agent";
@@ -52,8 +52,16 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const messagesEnd = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { messagesEnd.current?.scrollIntoView({behavior:"smooth"}); }, [messages]);
+
+  // Auto-focus input when loading completes (response arrived)
+  useEffect(() => {
+    if (!loading && open) {
+      inputRef.current?.focus();
+    }
+  }, [loading, open]);
 
   function connectWs() {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
@@ -207,7 +215,7 @@ export default function ChatWidget() {
           </div>
 
           <form onSubmit={e=>{e.preventDefault();send()}} style={{display:"flex",gap:8,padding:"12px 16px 16px",borderTop:"1px solid #E4E4E7",flexShrink:0}}>
-            <input value={input} onChange={e=>setInput(e.target.value)} placeholder="Escribe tu mensaje..." disabled={loading}
+            <input ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} placeholder="Escribe tu mensaje..." disabled={loading}
               style={{flex:1,padding:"10px 14px",border:"1px solid #E4E4E7",borderRadius:12,fontSize:14,outline:"none",fontFamily:"Nunito,sans-serif"}}/>
             <button type="submit" disabled={loading||!input.trim()}
               style={{width:40,height:40,borderRadius:12,background:"#6366F1",color:"#fff",border:"none",cursor:"pointer",opacity:loading||!input.trim()?.4:1}} title="Enviar">

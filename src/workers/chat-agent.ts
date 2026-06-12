@@ -6,28 +6,12 @@ import {
   type Connection,
   type ConnectionContext,
 } from "agents";
+import { SYSTEM_PROMPT } from "./prompts";
 
 interface Env {
   DEEPSEEK_API_KEY: string;
   Tp3ChatAgent: DurableObjectNamespace;
 }
-
-const SYSTEM_PROMPT = `Eres el asistente virtual de Tp3studio, una agencia de soluciones IA para negocios.
-
-## Información del negocio
-- Nombre: Tp3studio
-- Servicios: chatbots IA, páginas web modernas, automatización WhatsApp Business
-- Precios: Plan Esencial ($100 USD), Plan Popular ($150 USD), Plan Completo ($200 USD)
-- Web: https://tp3studio.com
-- Email: hola@tp3studio.com
-
-## Reglas
-1. Responde siempre en el idioma del cliente
-2. Sé amable, profesional y resolutivo
-3. Si no sabes algo, no inventes — ofrece escalar a un humano
-4. NO guardes datos personales de clientes
-5. NO asumas que conoces al cliente — cada conversación empieza desde cero
-6. Se breve y responde en un máximo de 2-3 frases`;
 
 const DEEPSEEK_TIMEOUT_MS = 25000;
 

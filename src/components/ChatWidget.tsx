@@ -71,7 +71,7 @@ export default function ChatWidget() {
 
   // Typewriter: chunks are queued and released at a steady pace.
   // The streamDone flag prevents the burst when the WebSocket closes the stream.
-  const TYPEWRITER_MS = 40; // ms between each token
+  const TYPEWRITER_MS = 180; // ms between each token
   const streamDone = useRef(false);
 
   function startTypewriter() {

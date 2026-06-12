@@ -1,7 +1,48 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 
 const AGENT_HOST = "tp3studio-chat.iaforchange.workers.dev";
 const AGENT_NAME = "tp3-chat-agent";
+
+/**
+ * Minimal markdown → HTML for LLM-generated text.
+ * Escapes HTML first (safe), then applies formatting rules.
+ * Covers the 95% case of what DeepSeek / GPT produce.
+ */
+function renderMarkdown(text: string): string {
+  // 1. Escape HTML entities (safety first)
+  let html = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // 2. Inline code: `text` — must run before other rules
+  html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+  // 3. Bold: **text** or __text__
+  html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  html = html.replace(/__(.+?)__/g, "<strong>$1</strong>");
+
+  // 4. Italic: *text* (single * not part of list/item)
+  html = html.replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, "<em>$1</em>");
+
+  // 5. Links: [label](url)
+  html = html.replace(
+    /\[([^\]]+)\]\(([^)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener">$1</a>',
+  );
+
+  // 6. Headers: ### Text → <strong>Text</strong> (inline header in chat bubble)
+  html = html.replace(/^#{1,4}\s+(.+)$/gm, "<strong>$1</strong>");
+
+  // 7. Unordered list items: - or * at line start → bullet
+  html = html.replace(/^[\t ]*[-*]\s+(.+)$/gm, "• $1");
+
+  // 8. Double newlines → paragraph break, single newline → <br>
+  html = html.replace(/\n\n/g, "<br><br>");
+  html = html.replace(/\n/g, "<br>");
+
+  return html;
+}
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -109,6 +150,11 @@ export default function ChatWidget() {
         .typing-indicator span { width:7px; height:7px; border-radius:50%; background:#6366F1; animation:typing-dot 1.4s infinite ease-in-out; }
         .typing-indicator span:nth-child(2) { animation-delay:.15s; }
         .typing-indicator span:nth-child(3) { animation-delay:.3s; }
+        .bot-msg a { color:#6366F1; text-decoration:underline; }
+        .bot-msg a:hover { color:#4F46E5; }
+        .bot-msg code { background:rgba(99,102,241,.12); color:#6366F1; padding:1px 5px; border-radius:4px; font-size:.9em; font-family:monospace; }
+        .bot-msg strong { font-weight:600; color:#18181B; }
+        .bot-msg em { font-style:italic; }
         @media (max-width: 480px) {
           .chat-window, .chat-window-out {
             width: 100% !important; height: 100% !important;
@@ -143,13 +189,17 @@ export default function ChatWidget() {
 
           <div style={{flex:1,overflowY:"auto",padding:"12px 16px",display:"flex",flexDirection:"column",gap:10,fontFamily:"Nunito,sans-serif"}}>
             {messages.map((m,i) => (
-              <div key={i} style={{maxWidth:"85%",padding:"10px 14px",borderRadius:16,fontSize:14,lineHeight:1.4,
+              <div key={i} className={m.role === "bot" ? "bot-msg" : ""}
+                style={{maxWidth:"85%",padding:"10px 14px",borderRadius:16,fontSize:14,lineHeight:1.45,
                 alignSelf:m.role==="user"?"flex-end":"flex-start",
                 background:m.role==="user"?"#6366F1":"#F4F4F5",
                 color:m.role==="user"?"#fff":"#18181B",
                 borderBottomRightRadius:m.role==="user"?4:16,
                 borderBottomLeftRadius:m.role==="user"?16:4}}>
-                {m.text}
+                {m.role === "bot"
+                  ? <span dangerouslySetInnerHTML={{__html: renderMarkdown(m.text)}} />
+                  : m.text
+                }
               </div>
             ))}
             {loading && <div className="typing-indicator" style={{alignSelf:"flex-start",background:"#F4F4F5",borderRadius:16,borderBottomLeftRadius:4}}><span></span><span></span><span></span></div>}

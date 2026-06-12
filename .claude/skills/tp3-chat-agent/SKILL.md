@@ -80,6 +80,25 @@ export class Tp3ChatAgent extends Agent<Env> {
 }
 ```
 
+### Formato markdown en respuestas
+
+El agente responde con markdown natural (bold, listas, links). El widget lo renderiza a HTML con la función `renderMarkdown()` en `ChatWidget.tsx`:
+
+```typescript
+function renderMarkdown(text: string): string {
+  // 1. Escapa HTML (&, <, >) — seguro contra XSS
+  // 2. `code` → <code>
+  // 3. **bold** → <strong>
+  // 4. *italic* → <em>
+  // 5. [label](url) → <a>
+  // 6. ### Header → <strong> (inline)
+  // 7. - item / * item → bullet
+  // 8. \n\n → <br><br>, \n → <br>
+}
+```
+
+Los mensajes del bot usan `dangerouslySetInnerHTML`; los del usuario se muestran como texto plano. **No se debe pedir al LLM que evite markdown** — el widget lo convierte automáticamente.
+
 ### Otras methods disponibles
 
 | Method | Cuándo se llama |

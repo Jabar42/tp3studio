@@ -30,6 +30,9 @@ const SYSTEM_PROMPT = `Eres el asistente virtual de Tp3studio, una agencia de so
 
 const DEEPSEEK_TIMEOUT_MS = 25000;
 
+/**
+ * Non-streaming call to DeepSeek. Used by the HTTP /api/chat fallback.
+ */
 async function chatWithDeepSeek(
   apiKey: string,
   messages: { role: string; content: string }[],
@@ -64,6 +67,86 @@ async function chatWithDeepSeek(
   }
 }
 
+/**
+ * Streaming call to DeepSeek via SSE.
+ * Calls `onToken` for each content delta, then `onDone(fullText)` at the end.
+ * Returns the full text, or null on failure.
+ */
+async function streamDeepSeek(
+  apiKey: string,
+  messages: { role: string; content: string }[],
+  onToken: (delta: string) => void,
+  onDone: (fullText: string) => void,
+): Promise<string | null> {
+  try {
+    const response = await fetch(
+      "https://api.deepseek.com/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            ...messages.slice(-20),
+          ],
+          max_tokens: 1024,
+          temperature: 0.7,
+          stream: true,
+        }),
+        signal: AbortSignal.timeout(DEEPSEEK_TIMEOUT_MS),
+      },
+    );
+
+    if (!response.ok || !response.body) return null;
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = "";
+    let buffer = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      // Keep the last (possibly incomplete) line in the buffer
+      buffer = lines.pop() || "";
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || !trimmed.startsWith("data:")) continue;
+
+        const data = trimmed.slice(5).trim();
+        if (data === "[DONE]") continue;
+
+        try {
+          const parsed = JSON.parse(data);
+          const delta = parsed.choices?.[0]?.delta?.content;
+          if (delta) {
+            fullText += delta;
+            onToken(delta);
+          }
+        } catch {
+          // Skip unparseable lines
+        }
+      }
+    }
+
+    if (fullText) {
+      onDone(fullText);
+      return fullText;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export class Tp3ChatAgent extends Agent<Env> {
   async onConnect(connection: Connection, ctx: ConnectionContext) {
     // Connection established. The widget shows its own welcome message,
@@ -81,13 +164,32 @@ export class Tp3ChatAgent extends Agent<Env> {
       }));
       history.push({ role: "user", content: data.message });
 
-      const reply = await chatWithDeepSeek(this.env.DEEPSEEK_API_KEY, history);
-      connection.send(
-        JSON.stringify({
-          type: "chat-response",
-          message: reply ?? "Lo siento, tuve un problema. Intenta de nuevo.",
-        }),
+      const reply = await streamDeepSeek(
+        this.env.DEEPSEEK_API_KEY,
+        history,
+        // onToken: send each chunk immediately
+        (delta) => {
+          connection.send(
+            JSON.stringify({ type: "chat-chunk", text: delta, done: false }),
+          );
+        },
+        // onDone: send final chunk with full text
+        (fullText) => {
+          connection.send(
+            JSON.stringify({ type: "chat-chunk", full: fullText, done: true }),
+          );
+        },
       );
+
+      // Fallback if streaming failed entirely
+      if (reply === null) {
+        connection.send(
+          JSON.stringify({
+            type: "chat-response",
+            message: "Lo siento, tuve un problema. Intenta de nuevo.",
+          }),
+        );
+      }
     } catch {
       connection.send(
         JSON.stringify({ type: "chat-response", message: "Ocurrió un error." }),

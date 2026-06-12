@@ -53,6 +53,8 @@ export default function ChatWidget() {
   const wsRef = useRef<WebSocket | null>(null);
   const messagesEnd = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const typewriterQueue = useRef<string[]>([]);
+  const typewriterTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => { messagesEnd.current?.scrollIntoView({behavior:"smooth"}); }, [messages]);
 
@@ -63,6 +65,57 @@ export default function ChatWidget() {
     }
   }, [loading, open]);
 
+  // Typewriter drain interval: releases queued chunks at TYPEWRITER_MS pace
+  const TYPEWRITER_MS = 35; // ms between each token — adjust for faster/slower typing
+
+  function startTypewriter(onFinal: (full: string) => void) {
+    let fullText = "";
+
+    typewriterTimer.current = setInterval(() => {
+      const queue = typewriterQueue.current;
+      if (queue.length === 0) return; // wait for more chunks
+
+      const chunk = queue.shift()!;
+      fullText += chunk;
+
+      setMessages(prev => {
+        const next = [...prev];
+        const last = next[next.length - 1];
+        if (last && last.role === "bot") {
+          next[next.length - 1] = { role: "bot", text: fullText };
+        } else {
+          next.push({ role: "bot", text: fullText });
+        }
+        return next;
+      });
+    }, TYPEWRITER_MS);
+
+    // Return a function to finalize: drain remaining queue + call onFinal
+    return () => {
+      // Drain any remaining chunks immediately
+      const remaining = typewriterQueue.current.splice(0);
+      for (const chunk of remaining) {
+        fullText += chunk;
+      }
+      // Final update with complete text
+      setMessages(prev => {
+        const next = [...prev];
+        const last = next[next.length - 1];
+        if (last && last.role === "bot") {
+          next[next.length - 1] = { role: "bot", text: fullText };
+        }
+        return next;
+      });
+      // Stop the interval
+      if (typewriterTimer.current) {
+        clearInterval(typewriterTimer.current);
+        typewriterTimer.current = null;
+      }
+      setLoading(false);
+      onFinal(fullText);
+    };
+  }
+
   function connectWs() {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
     const sid = crypto.randomUUID().slice(0, 8);
@@ -70,7 +123,7 @@ export default function ChatWidget() {
     const ws = new WebSocket(`${protocol}//${AGENT_HOST}/agents/${AGENT_NAME}/${sid}`);
     wsRef.current = ws;
 
-    let currentBotMsg = "";
+    let finalizeTypewriter: (() => void) | null = null;
 
     ws.onopen = () => {
       if (messages.length === 0) {
@@ -82,42 +135,56 @@ export default function ChatWidget() {
       try {
         const data = JSON.parse(event.data);
         if (data.type === "chat-response") {
+          // Non-streaming response (error fallback)
+          if (finalizeTypewriter) finalizeTypewriter();
           setMessages(prev => [...prev, {role:"bot",text:data.message}]);
           setLoading(false);
         } else if (data.type === "chat-chunk") {
-          if (data.done) {
-            setMessages(prev => {
-              const next = [...prev];
-              if (next.length > 0 && next[next.length - 1].role === "bot") {
-                next[next.length - 1] = {role:"bot",text: data.full || currentBotMsg};
-              }
-              return next;
-            });
-            currentBotMsg = "";
-            setLoading(false);
-          } else if (data.text) {
-            currentBotMsg += data.text;
+          if (!data.done) {
+            // First chunk: start the typewriter
+            if (!typewriterTimer.current) {
+              finalizeTypewriter = startTypewriter(() => {});
+            }
+            typewriterQueue.current.push(data.text || "");
+          } else {
+            // Final chunk: queue full text minus what was already sent
+            const full = data.full || "";
+            // The typewriter finalizer will drain remaining queue
+            if (finalizeTypewriter) {
+              finalizeTypewriter();
+              finalizeTypewriter = null;
+            }
+            // Final update with the complete text, bypassing queue
             setMessages(prev => {
               const next = [...prev];
               const last = next[next.length - 1];
               if (last && last.role === "bot") {
-                next[next.length - 1] = {role:"bot",text: currentBotMsg};
+                next[next.length - 1] = { role: "bot", text: full };
               } else {
-                next.push({role:"bot",text: currentBotMsg});
+                next.push({ role: "bot", text: full });
               }
               return next;
             });
+            setLoading(false);
           }
         }
       } catch {}
     };
 
     ws.onerror = () => {
+      if (typewriterTimer.current) {
+        clearInterval(typewriterTimer.current);
+        typewriterTimer.current = null;
+      }
       setMessages(prev => [...prev, {role:"bot",text:"⚠ Error al conectar con el asistente."}]);
       setLoading(false);
     };
 
     ws.onclose = () => {
+      if (typewriterTimer.current) {
+        clearInterval(typewriterTimer.current);
+        typewriterTimer.current = null;
+      }
       wsRef.current = null;
     };
   }

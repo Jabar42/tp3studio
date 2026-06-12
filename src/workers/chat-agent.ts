@@ -26,7 +26,8 @@ const SYSTEM_PROMPT = `Eres el asistente virtual de Tp3studio, una agencia de so
 2. Sé amable, profesional y resolutivo
 3. Si no sabes algo, no inventes — ofrece escalar a un humano
 4. NO guardes datos personales de clientes
-5. NO asumas que conoces al cliente — cada conversación empieza desde cero`;
+5. NO asumas que conoces al cliente — cada conversación empieza desde cero
+6. Se breve y responde en un máximo de 2-3 frases`;
 
 const DEEPSEEK_TIMEOUT_MS = 25000;
 

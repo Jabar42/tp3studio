@@ -1,17 +1,20 @@
 # Tp3ChatAgent — Skill para editar el agente de chat de Tp3studio
 
-Skill de mantenimiento del agente de servicio al cliente de Tp3studio: un Cloudflare Worker con Agents SDK que corre un chat IA vía DeepSeek y se integra con un widget React en el sitio Astro.
+Skill de mantenimiento del agente de servicio al cliente de Tp3studio: un Cloudflare Worker con Agents SDK que corre un chat IA vía DeepSeek y se integra con el widget React `@tp3/chat-widget` en el sitio Astro.
+
+> **Nota:** El código del agente ahora vive en el repo independiente [`agente-core-tp3`](https://github.com/Jabar42/agente-core-tp3) (`packages/agent`). El widget se publica como [`@tp3/chat-widget`](https://www.npmjs.com/package/@tp3/chat-widget) (`packages/widget`). Esta skill documenta la arquitectura y patrones internos; la skill `agente-core-tp3` en el otro repo cubre los workflows operativos (deploy, agregar clientes, publicar widget).
 
 ## Prerrequisitos
 
 - Node.js >= 22.12.0
 - Wrangler >= 4.97.0 autenticado (cuenta `jaimebarbudomier@gmail.com`)
-- El repo de tp3studio clonado en `~/Documents/tp3studio`
+- Repo `agente-core-tp3` en `~/Documents/agente-core-tp3` (código del agente)
+- Repo `tp3studio` en `~/Documents/tp3studio` (sitio Astro que consume el widget)
 
 ## Arquitectura
 
 ```
-Navegador (ChatWidget.tsx)         Cloudflare Worker (chat-agent.ts)
+Navegador (@tp3/chat-widget)         Cloudflare Worker (agente-core-tp3)
 ┌─────────────────────────┐       ┌──────────────────────────────┐
 │  WebSocket:              │       │  fetch() handler:            │
 │  wss://<host>/agents/    │──────▶│  ├─ OPTIONS → CORS          │
@@ -31,10 +34,11 @@ Navegador (ChatWidget.tsx)         Cloudflare Worker (chat-agent.ts)
 
 | Archivo | Rol |
 |---------|-----|
-| `src/workers/chat-agent.ts` | Worker: Agent SDK + fetch handler + DeepSeek |
-| `src/components/ChatWidget.tsx` | Widget React: WebSocket + UI del chat |
-| `wrangler-chat.jsonc` | Config de Wrangler para este worker (DO, observability) |
-| `wrangler.jsonc` | Config del worker principal del sitio Astro |
+| `packages/agent/src/index.ts` | Worker: Agent SDK + fetch handler + DeepSeek (en repo `agente-core-tp3`) |
+| `packages/agent/src/prompts/` | Prompts modulares por cliente (SOUL, SKILLS, RULES, CONTEXT) |
+| `packages/widget/src/ChatWidget.tsx` | Widget React: WebSocket + UI del chat (publicado como `@tp3/chat-widget`) |
+| `packages/agent/wrangler-tp3studio.jsonc` | Config de Wrangler para este worker (DO, observability, vars) |
+| `wrangler.jsonc` | Config del worker principal del sitio Astro (en repo `tp3studio`) |
 
 ### Stack
 
@@ -82,7 +86,7 @@ export class Tp3ChatAgent extends Agent<Env> {
 
 ### Formato markdown en respuestas
 
-El agente responde con markdown natural (bold, listas, links). El widget lo renderiza a HTML con la función `renderMarkdown()` en `ChatWidget.tsx`:
+El agente responde con markdown natural (bold, listas, links). El widget lo renderiza a HTML con la función `renderMarkdown()` en `@tp3/chat-widget`:
 
 ```typescript
 function renderMarkdown(text: string): string {

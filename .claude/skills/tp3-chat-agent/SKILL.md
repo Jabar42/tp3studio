@@ -1,44 +1,52 @@
 # Tp3ChatAgent — Skill para editar el agente de chat de Tp3studio
 
-Skill de mantenimiento del agente de servicio al cliente de Tp3studio: un Cloudflare Worker con Agents SDK que corre un chat IA vía DeepSeek y se integra con el widget React `@tp3/chat-widget` en el sitio Astro.
-
-> **Nota:** El código del agente ahora vive en el repo independiente [`agente-core-tp3`](https://github.com/Jabar42/agente-core-tp3) (`packages/agent`). El widget se publica como [`@tp3/chat-widget`](https://www.npmjs.com/package/@tp3/chat-widget) (`packages/widget`). Esta skill documenta la arquitectura y patrones internos; la skill `agente-core-tp3` en el otro repo cubre los workflows operativos (deploy, agregar clientes, publicar widget).
+Skill de mantenimiento del agente de servicio al cliente de Tp3studio: un Cloudflare Worker con Agents SDK que corre un chat IA vía DeepSeek y se integra con un widget React en el sitio Astro.
 
 ## Prerrequisitos
 
 - Node.js >= 22.12.0
 - Wrangler >= 4.97.0 autenticado (cuenta `jaimebarbudomier@gmail.com`)
-- Repo `agente-core-tp3` en `~/Documents/agente-core-tp3` (código del agente)
+- **Workers Paid** ($5/mes) — Durable Objects + tool-calling requieren CPU >10ms
+- Repo `agente-core-tp3` en `~/Documents/agente-core-tp3` (codigo del agente)
 - Repo `tp3studio` en `~/Documents/tp3studio` (sitio Astro que consume el widget)
+
+## Ecosistema de workers
+
+| Worker | URL | Agente |
+|--------|-----|--------|
+| `tp3studio-chat` | `tp3studio-chat.iaforchange.workers.dev` | Sofia (indigo) |
+| `varsana-chat` | `varsana-chat.iaforchange.workers.dev` | Ananda (rausch) |
+| `varsana-mcp` | `varsana-mcp.iaforchange.workers.dev` | MCP server (exp.) |
+
+Mismo codigo en `agente-core-tp3/packages/agent/src/index.ts`. Cada cliente tiene su `wrangler-<cliente>.jsonc` con `CLIENT_ID` y `MCP_URL`.
 
 ## Arquitectura
 
 ```
-Navegador (@tp3/chat-widget)         Cloudflare Worker (agente-core-tp3)
-┌─────────────────────────┐       ┌──────────────────────────────┐
+Navegador (ChatWidget.tsx)         Cloudflare Worker (chat-agent.ts)
+┌─────────────────────── ──┐       ┌──────────────────────────────┐
 │  WebSocket:              │       │  fetch() handler:            │
-│  wss://<host>/agents/    │──────▶│  ├─ OPTIONS → CORS          │
-│    tp3-chat-agent/<sid>  │       │  ├─ /health → status        │
+│  wss://<host>/agents/    │─────▶│  ├─ OPTIONS → CORS           │
+│    tp3-chat-agent/<sid>  │       │  ├─ /health → status         │
 │                          │       │  ├─ POST /api/chat → DeepSeek│
 │  Mensajes:               │       │  └─ resto → routeAgentRequest│
 │  {type:"chat",           │       │       │                      │
 │   message, history}      │       │       ▼                      │
 │                          │       │  Tp3ChatAgent (Durable Obj)  │
 │  Recibe:                 │       │  ├─ onConnect()              │
-│  {type:"chat-response"   │◀──────│  └─ onMessage() → DeepSeek   │
-│   , message}              │       │                              │
-└─────────────────────────┘       └──────────────────────────────┘
+│  {type:"chat-response"   │◀─────│  └─ onMessage() → DeepSeek   │
+│   , message}             │       │                              │
+└──────────────────────── ─┘       └──────────────────────────────┘
 ```
 
 ### Archivos clave
 
 | Archivo | Rol |
 |---------|-----|
-| `packages/agent/src/index.ts` | Worker: Agent SDK + fetch handler + DeepSeek (en repo `agente-core-tp3`) |
-| `packages/agent/src/prompts/` | Prompts modulares por cliente (SOUL, SKILLS, RULES, CONTEXT) |
-| `packages/widget/src/ChatWidget.tsx` | Widget React: WebSocket + UI del chat (publicado como `@tp3/chat-widget`) |
-| `packages/agent/wrangler-tp3studio.jsonc` | Config de Wrangler para este worker (DO, observability, vars) |
-| `wrangler.jsonc` | Config del worker principal del sitio Astro (en repo `tp3studio`) |
+| `packages/agent/src/index.ts` | Worker: Agent SDK + fetch handler + tool-calling (repo agente-core-tp3) |
+| `packages/agent/src/prompts.ts` | Mapa PROMPTS por cliente |
+| `packages/agent/wrangler-<cliente>.jsonc` | Config Wrangler por cliente (DO, vars, MCP_URL) |
+| `packages/widget/src/ChatWidget.tsx` | Widget React (publicado como `@tp3/chat-widget`) |
 
 ### Stack
 
@@ -83,25 +91,6 @@ export class Tp3ChatAgent extends Agent<Env> {
   }
 }
 ```
-
-### Formato markdown en respuestas
-
-El agente responde con markdown natural (bold, listas, links). El widget lo renderiza a HTML con la función `renderMarkdown()` en `@tp3/chat-widget`:
-
-```typescript
-function renderMarkdown(text: string): string {
-  // 1. Escapa HTML (&, <, >) — seguro contra XSS
-  // 2. `code` → <code>
-  // 3. **bold** → <strong>
-  // 4. *italic* → <em>
-  // 5. [label](url) → <a>
-  // 6. ### Header → <strong> (inline)
-  // 7. - item / * item → bullet
-  // 8. \n\n → <br><br>, \n → <br>
-}
-```
-
-Los mensajes del bot usan `dangerouslySetInnerHTML`; los del usuario se muestran como texto plano. **No se debe pedir al LLM que evite markdown** — el widget lo convierte automáticamente.
 
 ### Otras methods disponibles
 
@@ -282,7 +271,33 @@ El worker usa `this.env.DEEPSEEK_API_KEY` en el Agent (DO) y `env.DEEPSEEK_API_K
 | `Property 'env' does not exist` | Falta `@cloudflare/workers-types` | `/// <reference types="@cloudflare/workers-types" />` |
 | "Not found" en ruta de agentes | `routeAgentRequest` devuelve null | Verificar que `wrangler-chat.jsonc` tenga `durable_objects.bindings` |
 
-## Para habilitar streaming (tarea pendiente)
+## Tool-calling
+
+El agente puede consultar APIs del sitio cliente para obtener datos en tiempo real (eventos, precios, disponibilidad). Usa dos mecanismos:
+
+### REST (produccion)
+```typescript
+// Definido en index.ts: TOOL_DEFINITIONS
+const TOOL_DEFINITIONS = {
+  get_events: {
+    description: "Lista los proximos eventos...",
+    parameters: { type: "object", properties: { slug: { type: "string" } } },
+    buildUrl: (args, base) => `${base}/api/events${args.slug ? '?slug='+args.slug : ''}`,
+  },
+  // ...
+};
+```
+Las tools se pasan a DeepSeek via el parametro `tools`. Si DeepSeek devuelve `tool_calls`, se ejecutan via `executeToolCall()` → fetch a la API.
+
+### MCP (experimental)
+Worker `varsana-mcp` con `McpAgent` + `@modelcontextprotocol/sdk`. El agente se conecta via `addMcpServer()` + `listTools()` + `callTool()`. **No funciona en produccion** (error 1101, requiere debug).
+
+### Para agregar tools a un cliente nuevo
+1. Agregar entry en `TOOL_DEFINITIONS` en `index.ts`
+2. Crear el endpoint API en el sitio del cliente (ej. `/api/events`)
+3. Configurar `TOOLS_URL` o `MCP_URL` en `wrangler-<cliente>.jsonc`
+
+## Para habilitar streaming (ya implementado)
 
 1. Cambiar `stream: false` → `stream: true` en `chatWithDeepSeek()`
 2. Leer el body como stream con `response.body.getReader()`

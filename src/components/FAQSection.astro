@@ -1,42 +1,26 @@
 ---
+import type en from '../i18n/en';
+
 export interface Props {
-  lang?: 'es' | 'en';
+  t: typeof en.faq;
 }
 
-const { lang = 'es' } = Astro.props;
+const { t } = Astro.props;
 ---
 
 <section class="faq section" id="faq">
   <div class="faq-inner container">
     <div class="faq-header">
-      <span class="section-label">FAQ</span>
-      <h2>{lang === 'en' ? 'Your questions, ' : 'Tus dudas, '}<span class="accent-text">{lang === 'en' ? 'answered' : 'resueltas'}</span></h2>
+      <span class="section-label">{t.label}</span>
+      <h2>{t.title} <span class="accent-text">{t.titleHighlight}</span></h2>
     </div>
     <div class="faq-list">
-      <details class="faq-item" name="faq">
-        <summary>{lang === 'en' ? 'Is it really ready in 48 hours?' : '¿Realmente está lista en 48 horas?'}<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
-        <div class="faq-answer"><p>{lang === 'en' ? 'Yes. Once we receive your information, we deliver in 48h max. Most projects in less than 24h.' : 'Sí. Una vez recibida la información, entregamos en 48h máximo. La mayoría en menos de 24h.'}</p></div>
-      </details>
-      <details class="faq-item" name="faq">
-        <summary>{lang === 'en' ? 'Do I need to know technology?' : '¿Necesito saber de tecnología?'}<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
-        <div class="faq-answer"><p>{lang === 'en' ? 'No. Just fill out a 3-minute form. We handle everything technical.' : 'No. Solo llenás un formulario de 3 minutos. Nosotros nos encargamos de todo lo técnico.'}</p></div>
-      </details>
-      <details class="faq-item" name="faq">
-        <summary>{lang === 'en' ? 'What happens after the first year?' : '¿Qué pasa después del primer año?'}<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
-        <div class="faq-answer"><p>{lang === 'en' ? 'Hosting renews for $15 USD/year. High-performance Cloudflare infrastructure.' : 'El hosting se renueva por $15 USD/año. Infraestructura Cloudflare de alto rendimiento.'}</p></div>
-      </details>
-      <details class="faq-item" name="faq">
-        <summary>{lang === 'en' ? 'Can I make changes after delivery?' : '¿Puedo hacer cambios después?'}<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
-        <div class="faq-answer"><p>{lang === 'en' ? 'Yes. Popular and Complete plans include unlimited revisions. Essential plan: $100 USD per revision.' : 'Sí. Los planes Popular y Completo incluyen revisiones ilimitadas. En el Esencial, $100 USD por revisión.'}</p></div>
-      </details>
-      <details class="faq-item" name="faq">
-        <summary>{lang === 'en' ? 'Does the chatbot work with any business?' : '¿El chatbot funciona con cualquier negocio?'}<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
-        <div class="faq-answer"><p>{lang === 'en' ? 'Yes. We customize the AI agent for your business type: restaurant, store, services, office, etc.' : 'Sí. Personalizamos el agente IA según tu tipo de negocio: restaurante, tienda, servicios, consultorio, etc.'}</p></div>
-      </details>
-      <details class="faq-item" name="faq">
-        <summary>{lang === 'en' ? 'What guarantee do I have?' : '¿Qué garantía tengo?'}<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
-        <div class="faq-answer"><p>{lang === 'en' ? 'We adjust until you\'re 100% satisfied. Popular and Complete plans have unlimited revisions.' : 'Ajustamos hasta que quedes 100% satisfecho. Los planes Popular y Completo tienen revisiones ilimitadas.'}</p></div>
-      </details>
+      {t.items.map(item => (
+        <details class="faq-item" name="faq">
+          <summary>{item.q}<svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+          <div class="faq-answer"><p>{item.a}</p></div>
+        </details>
+      ))}
     </div>
   </div>
 </section>

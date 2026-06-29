@@ -7,5 +7,5 @@ const locale = Astro.currentLocale ?? 'es';
 const t = getTranslations(locale);
 ---
 <BaseLayout title={t.precios.title} description={t.precios.desc} locale={locale}>
-  <PricingCards lang={locale} />
+  <PricingCards t={t.pricing} />
 </BaseLayout>

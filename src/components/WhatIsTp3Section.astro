@@ -1,0 +1,221 @@
+---
+import type en from '../i18n/en';
+
+export interface Props {
+  t: typeof en.whatIsTp3;
+}
+
+const { t } = Astro.props;
+---
+
+<section class="what-is-tp3 section" id="que-es">
+  <div class="container">
+    <div class="wit-header">
+      <span class="section-label">{t.label}</span>
+      <h2>{t.title} <span class="accent-text">{t.titleHighlight}</span></h2>
+      <p class="wit-subtitle">{t.subtitle}</p>
+    </div>
+
+    <!-- Three pillar cards -->
+    <div class="wit-pillars">
+      {t.pillars.map(pillar => (
+        <div class="wit-pillar">
+          <span class="wit-pillar-icon">{pillar.icon}</span>
+          <h3>{pillar.title} <span class="wit-pillar-sub">{pillar.subtitle}</span></h3>
+          <p>{pillar.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- VS comparison -->
+    <div class="wit-vs">
+      <h3 class="wit-vs-title">{t.vsTitle}</h3>
+      <div class="wit-vs-grid">
+        <div class="wit-vs-col wit-vs-col--left">
+          <div class="wit-vs-col-header">
+            <span class="wit-vs-icon">😰</span>
+            <h4>{t.vsLeft.label}</h4>
+          </div>
+          <ul class="wit-vs-list">
+            {t.vsLeft.items.map(item => (
+              <li><span class="vs-x">✕</span> {item}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="wit-vs-col wit-vs-col--right">
+          <div class="wit-vs-col-header">
+            <span class="wit-vs-icon">🚀</span>
+            <h4>{t.vsRight.label}</h4>
+          </div>
+          <ul class="wit-vs-list">
+            {t.vsRight.items.map(item => (
+              <li><span class="vs-check">✓</span> {item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.what-is-tp3 {
+  background: #fff;
+}
+
+.wit-header {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 3rem;
+}
+
+.wit-subtitle {
+  font-size: 1.0625rem;
+  color: rgba(15, 14, 26, 0.55);
+  margin-top: 0.5rem;
+  line-height: 1.6;
+}
+
+/* Three pillars */
+.wit-pillars {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 960px;
+  margin: 0 auto 4rem;
+}
+
+.wit-pillar {
+  background: #fff;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  transition: transform 200ms, box-shadow 200ms;
+}
+
+.wit-pillar:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.wit-pillar-icon {
+  font-size: 2.25rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.wit-pillar h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-deep);
+  margin: 0 0 0.5rem;
+}
+
+.wit-pillar-sub {
+  font-weight: 400;
+  color: var(--color-primary);
+}
+
+.wit-pillar p {
+  font-size: 0.9rem;
+  color: rgba(15, 14, 26, 0.55);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* VS comparison */
+.wit-vs {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.wit-vs-title {
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-deep);
+  margin-bottom: 2rem;
+}
+
+.wit-vs-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.wit-vs-col {
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+}
+
+.wit-vs-col--left {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+}
+
+.wit-vs-col--right {
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+}
+
+.wit-vs-col-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.wit-vs-icon {
+  font-size: 1.25rem;
+}
+
+.wit-vs-col-header h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-deep);
+}
+
+.wit-vs-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.wit-vs-list li {
+  font-size: 0.875rem;
+  color: rgba(15, 14, 26, 0.7);
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.vs-x {
+  color: #EF4444;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.vs-check {
+  color: #16A34A;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+@media (min-width: 640px) {
+  .wit-pillars {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .wit-vs-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+</style>

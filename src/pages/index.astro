@@ -1,8 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroSection from '../components/HeroSection.astro';
-import ComparisonSection from '../components/ComparisonSection.astro';
+import WhatIsTp3Section from '../components/WhatIsTp3Section.astro';
+import StatsBar from '../components/StatsBar.astro';
+import ChatToAdminSection from '../components/ChatToAdminSection.astro';
 import HowItWorks from '../components/HowItWorks.astro';
+import IndustriesSection from '../components/IndustriesSection.astro';
+import CaseStudiesSection from '../components/CaseStudiesSection.astro';
 import PricingCards from '../components/PricingCards.astro';
 import TestimonialsSection from '../components/TestimonialsSection.astro';
 import FAQSection from '../components/FAQSection.astro';
@@ -12,39 +16,59 @@ import { getTranslations } from '../i18n';
 const locale = Astro.currentLocale ?? 'es';
 const t = getTranslations(locale);
 
+const faqEntities = t.faq.items.map((item: { q: string; a: string }) => ({
+  "@type": "Question",
+  "name": item.q,
+  "acceptedAnswer": { "@type": "Answer", "text": item.a },
+}));
+
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "LocalBusiness",
-      "name": t.schema.businessName,
-      "description": locale === 'en'
-        ? "Professional websites with WhatsApp chatbot in 48 hours. From $100 USD."
-        : "Páginas web profesionales con chatbot de WhatsApp en 48 horas. Desde $100 USD.",
+      "@type": "SoftwareApplication",
+      "name": "Tp3studio",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": t.schema.businessDesc,
       "url": "https://tp3studio.com",
-      "telephone": "+155****3372",
-      "email": "info@aitp3studio.com",
       "image": "https://tp3studio.com/og-image.jpg",
-      "areaServed": ["Colombia", "México", "República Dominicana"],
-      "priceRange": "$100-$200 USD",
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": locale === 'en' ? 'Tp3studio Plans' : 'Planes Tp3studio',
-        "itemListElement": [
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": locale === 'en' ? 'Modern Website' : 'Web Moderna' }, "price": "100", "priceCurrency": "USD" },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": locale === 'en' ? 'Website + AI Agent' : 'Web + Agente Virtual' }, "price": "150", "priceCurrency": "USD" },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": locale === 'en' ? 'Website + Agent + WhatsApp' : 'Web + Agente + WhatsApp Business' }, "price": "200", "priceCurrency": "USD" },
+      "areaServed": ["Colombia", "Mexico", "Dominican Republic"],
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "USD",
+        "lowPrice": "49",
+        "highPrice": "199",
+        "offerCount": "3",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": locale === 'en' ? 'Start' : 'Inicio',
+            "price": "49",
+            "priceCurrency": "USD",
+            "description": locale === 'en' ? 'AI-operated website with chat-to-admin' : 'Sitio web operado por IA con chat-to-admin',
+          },
+          {
+            "@type": "Offer",
+            "name": locale === 'en' ? 'Growth' : 'Crecer',
+            "price": "99",
+            "priceCurrency": "USD",
+            "description": locale === 'en' ? 'AI-operated business with e-commerce' : 'Negocio digital operado por IA con e-commerce',
+          },
+          {
+            "@type": "Offer",
+            "name": locale === 'en' ? 'Scale' : 'Escalar',
+            "price": "199",
+            "priceCurrency": "USD",
+            "description": locale === 'en' ? 'AI-operated business with multi-channel admin' : 'Negocio digital operado por IA con administración multi-canal',
+          },
         ],
       },
     },
     {
       "@type": "FAQPage",
       "name": t.schema.faqLabel,
-      "mainEntity": t.faq.items.map((item: { q: string; a: string }) => ({
-        "@type": "Question",
-        "name": item.q,
-        "acceptedAnswer": { "@type": "Answer", "text": item.a },
-      })),
+      "mainEntity": faqEntities,
     },
   ],
 };
@@ -52,17 +76,19 @@ const schema = {
 
 <BaseLayout
   title={locale === 'en' ? t.siteTitle : t.siteTitle}
-  description={locale === 'en'
-    ? 'Professional website with WhatsApp chatbot. Ready in 48 hours from $100 USD. For businesses in Colombia, Mexico and DR.'
-    : 'Páginas web profesionales con chatbot de WhatsApp en 48 horas desde $100 USD. Para negocios en Colombia, México y RD que quieren vender más sin complicarse.'}
+  description={t.siteDesc}
   schema={JSON.stringify(schema)}
   locale={locale}
 >
-  <HeroSection lang={locale} />
-  <ComparisonSection lang={locale} />
-  <HowItWorks lang={locale} />
-  <PricingCards lang={locale} />
-  <TestimonialsSection lang={locale} />
-  <FAQSection lang={locale} />
-  <CTAFinalSection lang={locale} />
+  <HeroSection t={t.hero} />
+  <WhatIsTp3Section t={t.whatIsTp3} />
+  <StatsBar t={t.statsBar} />
+  <ChatToAdminSection t={t.chatToAdmin} />
+  <IndustriesSection t={t.industries} />
+  <CaseStudiesSection t={t.caseStudies} />
+  <HowItWorks t={t.howItWorks} />
+  <PricingCards t={t.pricing} />
+  <TestimonialsSection t={t.testimonials} />
+  <FAQSection t={t.faq} />
+  <CTAFinalSection t={t.ctaFinal} />
 </BaseLayout>

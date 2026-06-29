@@ -1,0 +1,227 @@
+---
+import type en from '../i18n/en';
+
+export interface Props {
+  t: typeof en.chatToAdmin;
+}
+
+const { t } = Astro.props;
+---
+
+<section class="chat-to-admin section" id="superpoder">
+  <div class="container">
+    <div class="cta-header">
+      <span class="section-label">{t.label}</span>
+      <h2>{t.title} <span class="accent-text">{t.titleHighlight}</span></h2>
+      <p class="cta-subtitle">{t.subtitle}</p>
+    </div>
+
+    <div class="cta-grid">
+      <!-- Left: Without Tp3studio -->
+      <div class="cta-col cta-col--without">
+        <div class="cta-col-header">
+          <span class="cta-icon">😰</span>
+          <h3>{t.withoutTitle}</h3>
+        </div>
+        <ul class="cta-pain-list">
+          {t.withoutItems.map(item => (
+            <li class="cta-pain-item">
+              <span class="pain-x">✕</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Right: With Tp3studio -->
+      <div class="cta-col cta-col--with">
+        <div class="cta-col-header">
+          <span class="cta-icon">🤖</span>
+          <h3>{t.withTitle}</h3>
+        </div>
+        <div class="cta-chat-list">
+          {t.withChats.map((chat, i) => (
+            <div class="cta-chat-bubble">
+              <div class="chat-bubble chat-bubble--user">
+                <span class="bubble-label">Tú</span>
+                <p>{chat.user}</p>
+              </div>
+              <div class="chat-bubble chat-bubble--agent">
+                <span class="bubble-label">Agente</span>
+                <p>{chat.agent}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.chat-to-admin {
+  background: var(--color-cream);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 3rem;
+}
+
+.cta-subtitle {
+  font-size: 1.125rem;
+  color: var(--color-deep);
+  opacity: 0.7;
+  margin-top: 0.75rem;
+  line-height: 1.6;
+}
+
+/* Two-column grid */
+.cta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.cta-col {
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.cta-col--without {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+}
+
+.cta-col--with {
+  background: white;
+  border: 1px solid var(--color-sand);
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.08);
+}
+
+.cta-col-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cta-icon {
+  font-size: 1.5rem;
+}
+
+.cta-col-header h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-deep);
+}
+
+/* Pain list (left side) */
+.cta-pain-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cta-pain-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--color-deep);
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.pain-x {
+  color: #EF4444;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Chat list (right side) */
+.cta-chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cta-chat-bubble {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chat-bubble {
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  position: relative;
+}
+
+.chat-bubble--user {
+  background: #EEF2FF;
+  border: 1px solid #C7D2FE;
+  align-self: flex-end;
+  margin-left: 2rem;
+}
+
+.chat-bubble--agent {
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  align-self: flex-start;
+  margin-right: 1rem;
+}
+
+.bubble-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+  color: var(--color-primary);
+  opacity: 0.7;
+}
+
+.chat-bubble--agent .bubble-label {
+  color: #16A34A;
+}
+
+.chat-bubble p {
+  margin: 0;
+  color: var(--color-deep);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cta-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .cta-col {
+    padding: 1.5rem;
+  }
+
+  .chat-bubble--user {
+    margin-left: 1rem;
+  }
+
+  .chat-bubble--agent {
+    margin-right: 0.5rem;
+  }
+}
+</style>

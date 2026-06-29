@@ -1,25 +1,39 @@
 ---
+import type en from '../i18n/en';
+
 export interface Props {
-  lang?: 'es' | 'en';
+  t: typeof en.testimonials;
 }
 
-const { lang = 'es' } = Astro.props;
+const { t } = Astro.props;
 ---
 
 <section class="testimonials section" id="testimonios">
   <div class="container">
     <div class="testimonials-header">
-      <span class="section-label">{lang === 'en' ? 'What they say' : 'Lo que dicen'}</span>
-      <h2>{lang === 'en' ? 'Real businesses ' : 'Negocios reales '}<span class="accent-text">{lang === 'en' ? 'are already growing' : 'ya están creciendo'}</span></h2>
+      <span class="section-label">{t.label}</span>
+      <h2>{t.title} <span class="accent-text">{t.titleHighlight}</span></h2>
     </div>
     <div class="testimonials-grid">
-      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--1">MG</div><div><div class="t-stars">★★★★★</div><strong class="t-name">María G.</strong><span class="t-biz">{lang === 'en' ? 'Clothing store, Bogotá' : 'Tienda de ropa, Bogotá'}</span></div></div><p class="t-text">{lang === 'en' ? '"I knew nothing about websites and in 48 hours my business was online. <strong>Incredible how easy it was.</strong>"' : '"No sabía nada de páginas web y en 48 horas ya tenía mi negocio en línea. <strong>Increíble lo fácil que fue.</strong>"'}</p></article>
-      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--2">CR</div><div><div class="t-stars">★★★★★</div><strong class="t-name">Carlos R.</strong><span class="t-biz">{lang === 'en' ? 'Legal services, Mexico City' : 'Servicios legales, CDMX'}</span></div></div><p class="t-text">{lang === 'en' ? '"The chatbot changed the game. It answers inquiries while I sleep and I only see clients <strong>ready to hire</strong>."' : '"El chatbot me cambió el juego. Responde consultas mientras duermo y solo veo clientes <strong>listos para contratar</strong>."'}</p></article>
-      <article class="t-card"><div class="t-card-top"><div class="t-avatar t-avatar--3">LP</div><div><div class="t-stars">★★★★★</div><strong class="t-name">{lang === 'en' ? 'Laura & Pedro' : 'Laura y Pedro'}</strong><span class="t-biz">{lang === 'en' ? 'Restaurant, Santo Domingo' : 'Restaurante, Santo Domingo'}</span></div></div><p class="t-text">{lang === 'en' ? '"I thought having a website was super expensive. <strong>For $150 USD</strong> my restaurant now has professional presence and WhatsApp reservations."' : '"Pensé que tener web era carísimo. <strong>Por $150 USD</strong> mi restaurante ya tiene presencia profesional y reservas por WhatsApp."'}</p></article>
+      {t.items.map((item, i) => (
+        <article class="t-card">
+          <div class="t-card-top">
+            <div class={`t-avatar t-avatar--${i + 1}`}>{item.initials}</div>
+            <div>
+              <div class="t-stars">{item.rating}</div>
+              <strong class="t-name">{item.name}</strong>
+              <span class="t-biz">{item.biz}</span>
+            </div>
+          </div>
+          <p class="t-text">
+            {item.text}<strong>{item.textBold}</strong>{item.textEnd}
+          </p>
+        </article>
+      ))}
     </div>
     <div class="testimonials-cta">
-      <a href={lang === 'en' ? '/en/portfolio' : '/portfolio'} class="btn-creative btn-secondary btn-md">
-        {lang === 'en' ? 'See more stories' : 'Ver más historias'}
+      <a href="/portfolio" class="btn-creative btn-secondary btn-md">
+        {t.cta}
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>

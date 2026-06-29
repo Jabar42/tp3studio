@@ -1,36 +1,43 @@
 ---
+import type en from '../i18n/en';
+
 export interface Props {
-  lang?: 'es' | 'en';
+  t: typeof en.howItWorks;
 }
 
-const { lang = 'es' } = Astro.props;
+const { t } = Astro.props;
 ---
 
 <section class="hiw section" id="como-funciona">
   <div class="container">
     <div class="hiw-header">
-      <span class="section-label">{lang === 'en' ? 'How it works' : 'Cómo funciona'}</span>
-      <h2>{lang === 'en' ? 'So simple you can do it ' : 'Tan simple que lo haces '}<span class="accent-text">{lang === 'en' ? 'from your phone' : 'desde el cel'}</span></h2>
-      <p>{lang === 'en' ? 'No meetings. No calls. No code.' : 'Sin reuniones. Sin llamadas. Sin código.'}</p>
+      <span class="section-label">{t.label}</span>
+      <h2>{t.title} <span class="accent-text">{t.titleHighlight}</span></h2>
+      <p>{t.subtitle}</p>
     </div>
     <div class="hiw-steps">
       <div class="hiw-step">
-        <div class="hiw-step-number"><span>1</span></div>
-        <div class="hiw-step-card"><div class="hiw-step-icon">📝</div><h3>{lang === 'en' ? 'Tell us about your business' : 'Cuéntanos de tu negocio'}</h3><p>{lang === 'en' ? 'Fill out a 3-minute form from your phone. No calls, no endless meetings.' : 'Llenás un formulario de 3 minutos desde el cel. Sin llamadas, sin reuniones eternas.'}</p></div>
+        <div class="hiw-step-number"><span>{t.step1.number}</span></div>
+        <div class="hiw-step-card"><div class="hiw-step-icon">📝</div><h3>{t.step1.title}</h3><p>{t.step1.desc}</p></div>
       </div>
       <div class="hiw-connector"><div class="hiw-connector-line"></div></div>
       <div class="hiw-step">
-        <div class="hiw-step-number"><span>2</span></div>
-        <div class="hiw-step-card"><div class="hiw-step-icon">⚙️</div><h3>{lang === 'en' ? 'We build everything' : 'Nosotros armamos todo'}</h3><p>{lang === 'en' ? 'Professional website + WhatsApp chatbot. Designed so you can sell without lifting a finger.' : 'Web profesional + chatbot de WhatsApp. Diseñado para que vendas sin mover un dedo.'}</p></div>
+        <div class="hiw-step-number"><span>{t.step2.number}</span></div>
+        <div class="hiw-step-card"><div class="hiw-step-icon">🤖</div><h3>{t.step2.title}</h3><p>{t.step2.desc}</p></div>
       </div>
       <div class="hiw-connector"><div class="hiw-connector-line"></div></div>
       <div class="hiw-step">
-        <div class="hiw-step-number"><span>3</span></div>
-        <div class="hiw-step-card"><div class="hiw-step-icon">🚀</div><h3>{lang === 'en' ? 'Your business works on its own' : 'Tu negocio trabaja solo'}</h3><p>{lang === 'en' ? 'In 48 hours you have a website and chatbot serving customers ' : 'En 48 horas tenés web y chatbot atendiendo clientes '}<strong>{lang === 'en' ? 'while you sleep' : 'mientras dormís'}</strong>.</p></div>
+        <div class="hiw-step-number"><span>{t.step3.number}</span></div>
+        <div class="hiw-step-card"><div class="hiw-step-icon">💬</div><h3>{t.step3.title}</h3><p>{t.step3.desc}</p></div>
+      </div>
+      <div class="hiw-connector"><div class="hiw-connector-line"></div></div>
+      <div class="hiw-step">
+        <div class="hiw-step-number"><span>{t.step4.number}</span></div>
+        <div class="hiw-step-card"><div class="hiw-step-icon">📈</div><h3>{t.step4.title}</h3><p>{t.step4.desc}</p></div>
       </div>
     </div>
     <div class="hiw-cta">
-      <a href={lang === 'en' ? '/en/precios' : '/precios'} class="btn-creative btn-primary btn-md">{lang === 'en' ? 'I want to start' : 'Quiero empezar'} <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="#precios" class="btn-creative btn-primary btn-md">{t.cta} <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>

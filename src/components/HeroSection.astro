@@ -1,33 +1,11 @@
 ---
+import type en from '../i18n/en';
+
 export interface Props {
-  lang?: 'es' | 'en';
+  t: typeof en.hero;
 }
 
-const { lang = 'es' } = Astro.props;
-
-const badgeText = lang === 'en'
-  ? '+100 businesses in Colombia, Mexico, and DR already have it'
-  : '+100 negocios en Colombia, México y RD ya la tienen';
-
-const titleParts = lang === 'en'
-  ? { before: 'Your business online, working on its own, in', highlight1: '48 hours', middle: '. From', highlight2: '$100 USD', after: '.' }
-  : { before: 'Tu negocio en línea, atendiendo solo, en', highlight1: '48 horas', middle: '. Desde', highlight2: '$100 USD', after: '.' };
-
-const subtitle = lang === 'en'
-  ? 'Tell us about your business. In 48 hours we deliver a professional website with an integrated WhatsApp chatbot. From <strong>$100 USD</strong>. One time.'
-  : 'Nos cuentas de tu negocio. En 48 horas te entregamos una web profesional con chatbot de WhatsApp incluido. Desde <strong>$100 USD</strong>. Una sola vez.';
-
-const features = lang === 'en'
-  ? ['Ready in 48h', '24/7 Chatbot', 'Perfect on mobile']
-  : ['Lista en 48h', 'Chatbot 24/7', 'Perfecto en celular'];
-
-const asesorText = lang === 'en' ? 'Personalized advice' : 'Asesoría personalizada';
-const ctaPrimaryText = lang === 'en' ? 'I want my website' : 'Quiero mi página web';
-const chatBotLabel = lang === 'en' ? 'Chatbot active now' : 'Chatbot activo ahora';
-const chatBotGreeting = lang === 'en' ? 'Hello! How can I help you today?' : '¡Hola! ¿En qué puedo ayudarte hoy?';
-const chatBotReply = lang === 'en' ? 'I want info about your services' : 'Quiero información sobre sus servicios';
-const chatBotResponse = lang === 'en' ? 'Sure! What kind of business do you have?' : '¡Claro! ¿Qué tipo de negocio tienes?';
-const chatHeader = 'Chatbot Tp3studio';
+const { t } = Astro.props;
 ---
 
 <section class="hero">
@@ -42,16 +20,17 @@ const chatHeader = 'Chatbot Tp3studio';
     <div class="hero-content">
       <div class="hero-badge">
         <span class="hero-badge-dot" aria-hidden="true"></span>
-        {badgeText}
+        {t.badge}
       </div>
       <h1 class="hero-title">
-        {titleParts.before} <span class="hero-highlight">{titleParts.highlight1}</span>{titleParts.middle} <span class="hero-highlight">{titleParts.highlight2}</span>{titleParts.after}
+        {t.title} <span class="hero-highlight">{t.titleHighlight}</span>
       </h1>
-      <p class="hero-subtitle" set:html={subtitle}>
+      <p class="hero-subtitle">
+        {t.subtitle} <strong>{t.subtitleBold}</strong> {t.subtitleEnd}
       </p>
       <div class="hero-actions">
-        <a href={lang === 'en' ? '/en/precios' : '/precios'} class="btn-primary-hero">
-          <span class="btn-primary-label">{ctaPrimaryText}</span>
+        <a href="#precios" class="btn-primary-hero">
+          <span class="btn-primary-label">{t.ctaPrimary}</span>
           <span class="btn-primary-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -63,16 +42,22 @@ const chatHeader = 'Chatbot Tp3studio';
           <span class="btn-wa-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
           </span>
-          {asesorText}
+          {t.ctaWhatsapp}
         </a>
       </div>
       <div class="hero-features">
-        {features.map(f => (
-          <div class="hero-feat">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            {f}
-          </div>
-        ))}
+        <div class="hero-feat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {t.feat1}
+        </div>
+        <div class="hero-feat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {t.feat2}
+        </div>
+        <div class="hero-feat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {t.feat3}
+        </div>
       </div>
     </div>
 
@@ -84,17 +69,17 @@ const chatHeader = 'Chatbot Tp3studio';
             <div class="hp-nav"><div class="hp-logo"></div><div class="hp-menu"></div></div>
             <div class="hp-hero"><div class="hp-line"></div><div class="hp-line short"></div><div class="hp-btn"></div></div>
             <div class="hp-chat-window">
-              <div class="hp-chat-header">{chatHeader}</div>
-              <div class="hp-msg">{chatBotGreeting}</div>
-              <div class="hp-msg reply">{chatBotReply}</div>
-              <div class="hp-msg">{chatBotResponse}</div>
+              <div class="hp-chat-header">{t.chatHeader}</div>
+              <div class="hp-msg">{t.chatMsg1}</div>
+              <div class="hp-msg reply">{t.chatMsg2}</div>
+              <div class="hp-msg">{t.chatMsg3}</div>
               <div class="hp-typing"><span></span><span></span><span></span></div>
             </div>
           </div>
         </div>
         <div class="hero-float-card">
           <span class="hf-dot"></span>
-          {chatBotLabel}
+          {t.floatCard}
         </div>
       </div>
     </div>
@@ -124,7 +109,7 @@ const chatHeader = 'Chatbot Tp3studio';
 .hero-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; box-shadow: 0 0 6px rgba(34, 197, 94, 0.5); animation: pulse-dot 2s ease-in-out infinite; }
 @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-.hero-title { font-size: clamp(2.75rem, 7vw, 5rem); line-height: 1.08; margin-bottom: 1.25rem; color: var(--color-deep); }
+.hero-title { font-size: clamp(2rem, 4.5vw, 3.25rem); line-height: 1.15; margin-bottom: 1.25rem; color: var(--color-deep); }
 .hero-highlight { position: relative; display: inline-block; }
 .hero-highlight::after { content: ''; position: absolute; bottom: 2px; left: 0; right: 0; height: 0.35em; background: rgba(99, 102, 241, 0.2); border-radius: 2px; z-index: -1; }
 
@@ -132,7 +117,6 @@ const chatHeader = 'Chatbot Tp3studio';
 
 .hero-actions { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-bottom: 2rem; }
 
-/* Primary CTA */
 .btn-primary-hero {
   position: relative;
   display: inline-flex; align-items: center; gap: 0.625rem;
@@ -163,11 +147,9 @@ const chatHeader = 'Chatbot Tp3studio';
 @keyframes shimmer-sweep { 0%, 100% { transform: translateX(-100%); } 50% { transform: translateX(100%); } }
 
 .btn-primary-label { position: relative; z-index: 1; }
-
 .btn-primary-icon { position: relative; z-index: 1; display: flex; align-items: center; transition: transform 300ms cubic-bezier(.34,1.56,.64,1); }
 .btn-primary-hero:hover .btn-primary-icon { transform: translateX(5px); }
 
-/* WhatsApp CTA */
 .btn-whatsapp-hero {
   display: inline-flex; align-items: center; gap: 0.5rem;
   font-family: var(--font-body); font-weight: 700; font-size: 0.9375rem;

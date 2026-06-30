@@ -60,7 +60,7 @@ export default {
     titleHighlight: 'Manejada por IA.',
     from: 'Desde',
     titleEnd: '$49 USD/mes',
-    subtitle: 'No es una web genérica de 5 páginas. Es la página que vende tu producto — con agente IA que responde, califica, cobra y te reporta.',
+    subtitle: 'No es una web genérica. Es tu negocio operado por IA — una capa de contexto viva donde tus productos, precios y políticas hablan por ti. Tu agente vende, califica y reporta. Tú solo decides.',
     subtitleBold: 'Tú solo le hablas.',
     subtitleEnd: '',
     ctaPrimary: 'Quiero mi página de venta',
@@ -81,8 +81,14 @@ export default {
     label: 'Qué es Tp3',
     title: 'The Perfect',
     titleHighlight: 'Product Page',
-    subtitle: 'No es otro constructor de páginas web. Es una página de producto única, optimizada para vender y operada por inteligencia artificial.',
+    subtitle: 'No es otro constructor de páginas web. Es la capa de contexto de tu negocio — tu negocio se vuelve legible para la IA.',
     pillars: [
+      {
+        icon: '🧠',
+        title: 'Tu negocio se vuelve legible.',
+        subtitle: 'La IA lo entiende todo.',
+        desc: 'Tus productos, precios, políticas y clientes viven en una capa de contexto compartida. Tu agente la entiende, la opera y la actualiza. No es un chatbot genérico — es el cerebro de tu negocio funcionando 24/7.',
+      },
       {
         icon: '📄',
         title: 'Una sola página.',
@@ -410,7 +416,7 @@ export default {
     label: 'Tu negocio merece esto',
     title: 'Tu negocio merece un empleado que',
     titleHighlight: 'nunca descansa',
-    subtitle: 'Más de 100 negocios en Latinoamérica ya operan con un agente IA que vende, responde y administra mientras ellos duermen. Cuéntanos del tuyo y en 48 horas te entregamos las llaves de tu negocio digital.',
+    subtitle: 'Tu negocio se vuelve legible para la IA. Tu agente vende 24/7 mientras tú te enfocas en lo que importa. Más de 100 negocios en Latinoamérica ya operan así. El tuyo puede ser el próximo — en 48 horas.',
     riskReversal: '🔒 Si en el primer mes no ves resultados, ajustamos el agente o te devolvemos tu dinero. Sin preguntas.',
     ctaPrimary: 'Quiero mi negocio con IA',
     ctaWhatsapp: 'Asesoría personalizada',

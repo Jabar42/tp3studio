@@ -62,7 +62,7 @@ const en: typeof es = {
     titleHighlight: 'AI-driven.',
     from: 'From',
     titleEnd: '$49 USD/mo',
-    subtitle: 'Not a generic 5-page website. It\'s the page that sells your product — with an AI agent that responds, qualifies, collects payments, and reports back.',
+    subtitle: `Not a generic website. It\u2019s your AI-operated business \u2014 a living context layer where your products, prices and policies speak for themselves. Your agent sells, qualifies and reports. You just decide.`,
     subtitleBold: 'You just talk to it.',
     subtitleEnd: '',
     ctaPrimary: 'I want my product page',
@@ -83,8 +83,14 @@ const en: typeof es = {
     label: 'What is Tp3',
     title: 'The Perfect',
     titleHighlight: 'Product Page',
-    subtitle: 'Not another website builder. A single product page, optimized to sell, operated by artificial intelligence.',
+    subtitle: `Not another website builder. It's your business's context layer \u2014 your business becomes legible to AI.`,
     pillars: [
+      {
+        icon: '🧠',
+        title: 'Your business becomes legible.',
+        subtitle: 'AI understands it all.',
+        desc: `Your products, prices, policies and customers live in a shared context layer. Your agent understands it, operates it, and updates it. Not a generic chatbot \u2014 it's the brain of your business running 24/7.`,
+      },
       {
         icon: '📄',
         title: 'A single page.',
@@ -413,7 +419,7 @@ const en: typeof es = {
     label: 'Your business deserves this',
     title: 'Your business deserves an employee that',
     titleHighlight: 'never sleeps',
-    subtitle: 'Over 100 businesses in Latin America already run with an AI agent that sells, responds, and manages while they sleep. Tell us about yours and in 48 hours we\'ll hand you the keys to your digital business.',
+    subtitle: 'Your business becomes legible to AI. Your agent sells 24/7 while you focus on what matters. Over 100 businesses in Latin America already run this way. Yours can be next — in 48 hours.',
     riskReversal: '🔒 If you don\'t see results in the first month, we adjust the agent or refund your money. No questions asked.',
     ctaPrimary: 'I want my AI-operated business',
     ctaWhatsapp: 'Get personalized advice',

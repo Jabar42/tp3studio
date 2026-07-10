@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body = await request.json();
 
@@ -20,10 +20,14 @@ export const POST: APIRoute = async ({ request }) => {
       userAgent: request.headers.get('user-agent') || 'unknown',
     };
 
-    console.log('[LEAD] Captured:', JSON.stringify(lead));
+    // Store in KV (SESSION namespace reused for leads)
+    const leadId = `lead:${Date.now()}:${Math.random().toString(36).slice(2, 8)}`;
+    await locals.runtime.env.SESSION.put(leadId, JSON.stringify(lead));
+
+    console.log('[LEAD] Stored in KV:', leadId);
 
     return new Response(
-      JSON.stringify({ success: true, message: 'Lead captured' }),
+      JSON.stringify({ success: true, message: 'Lead stored', id: leadId }),
       { status: 200, headers: { 'Content-Type': 'application/json' } },
     );
   } catch (error) {

@@ -208,7 +208,7 @@ export default {
         headline: 'Venden retiros, productos de la huerta y reciben voluntarios — todo desde una sola página.',
         results: 'Reservas automatizadas · Catálogo de productos frescos · Postulaciones de voluntarios 24/7',
         body: 'Varsana necesitaba una página que hiciera tres cosas a la vez: vender retiros de yoga, mostrar productos de su huerta, y recibir postulaciones de voluntarios. Les construimos una product page con agente IA que entiende las tres cosas. Cuando alguien pregunta por un retiro, el agente muestra fechas, precios y disponibilidad. Si preguntan por productos, muestra el catálogo. Si quieren ser voluntarios, los guía en el proceso. Todo en una sola página, sin menús, sin confusión.',
-        url: 'https://varsana.co',
+        url: 'https://varsana-astro.vercel.app',
       },
       {
         tab: 'Vanta',
@@ -218,7 +218,7 @@ export default {
         headline: 'Cada fragancia tiene su historia. El agente la cuenta mejor que nadie.',
         results: 'Catálogo visual interactivo · Pedidos automatizados · Atención personalizada 24/7',
         body: 'Vanta crea perfumes artesanales. Cada fragancia es única y necesita ser contada. Les hicimos una product page donde el agente IA es un perfumista virtual: describe las notas de cada perfume, recomienda según la ocasión, y guía al cliente desde "qué rico huele" hasta "lo compro". El dueño solo se encarga de crear fragancias. La página se encarga de venderlas.',
-        url: 'https://vanta-perfume.com',
+        url: 'https://vanta-ecomerce-template.onrender.com',
       },
       {
         tab: 'Outkast',
@@ -228,7 +228,7 @@ export default {
         headline: 'De mandar cotizaciones por WhatsApp a tener un vendedor automático.',
         results: 'Cotizaciones instantáneas · Portafolio vivo · Leads calificados automáticamente',
         body: 'Outkast es un estudio de diseño que perdía horas mandando presupuestos por WhatsApp y respondiendo las mismas preguntas una y otra vez. Les construimos una product page donde su portafolio habla solo y el agente IA califica a cada prospecto: pregunta qué necesitan, muestra proyectos similares, y envía una cotización automática. Solo les pasan los clientes listos para empezar.',
-        url: 'https://outkast-creative.com',
+        url: 'https://outkast-astro.pages.dev',
       },
       {
         tab: 'LovelyPet',
@@ -238,7 +238,7 @@ export default {
         headline: 'La tienda de mascotas que nunca cierra. Literalmente.',
         results: 'Pedidos 24/7 · Confirmación automática · Catálogo siempre actualizado',
         body: 'LovelyPet tenía una tienda física que cerraba a las 6 pm. Ahora su product page recibe pedidos a cualquier hora: el cliente elige productos, el agente confirma stock y precio, procesa el pago, y coordina la entrega. Los dueños solo pasan a recoger los pedidos listos. Las ventas nocturnas ya representan el 40% de su facturación.',
-        url: 'https://lovelypet-store.com',
+        url: 'https://lovelypet.kantongsoftware.com',
       },
     ],
   },

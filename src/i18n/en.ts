@@ -211,7 +211,7 @@ const en: typeof es = {
         headline: 'They sell retreats, farm products, and receive volunteers — all from a single page.',
         results: 'Automated bookings · Fresh produce catalog · Volunteer applications 24/7',
         body: 'Varsana needed a page that could do three things at once: sell yoga retreats, showcase their farm products, and receive volunteer applications. We built them a product page with an AI agent that understands all three. When someone asks about a retreat, the agent shows dates, prices, and availability. If they ask about products, it shows the catalog. If they want to volunteer, it guides them through the process. All on one page, no menus, no confusion.',
-        url: 'https://varsana.co',
+        url: 'https://varsana-astro.vercel.app',
       },
       {
         tab: 'Vanta',
@@ -221,7 +221,7 @@ const en: typeof es = {
         headline: 'Every fragrance has a story. The agent tells it better than anyone.',
         results: 'Interactive visual catalog · Automated orders · Personalized service 24/7',
         body: 'Vanta creates artisanal perfumes. Each fragrance is unique and needs to be told. We built them a product page where the AI agent is a virtual perfumer: it describes the notes of each fragrance, recommends based on occasion, and guides the customer from "that smells nice" to "I\'ll buy it." The owner just creates fragrances. The page handles selling them.',
-        url: 'https://vanta-perfume.com',
+        url: 'https://vanta-ecomerce-template.onrender.com',
       },
       {
         tab: 'Outkast',
@@ -231,7 +231,7 @@ const en: typeof es = {
         headline: 'From sending quotes via WhatsApp to having an automatic salesperson.',
         results: 'Instant quotes · Living portfolio · Auto-qualified leads',
         body: 'Outkast is a design studio that was losing hours sending proposals via WhatsApp and answering the same questions over and over. We built them a product page where their portfolio speaks for itself and the AI agent qualifies every prospect: it asks what they need, shows similar projects, and sends an automatic quote. They only receive clients ready to start.',
-        url: 'https://outkast-creative.com',
+        url: 'https://outkast-astro.pages.dev',
       },
       {
         tab: 'LovelyPet',
@@ -241,7 +241,7 @@ const en: typeof es = {
         headline: 'The pet store that never closes. Literally.',
         results: 'Orders 24/7 · Automatic confirmation · Always-updated catalog',
         body: 'LovelyPet had a physical store that closed at 6 pm. Now their product page takes orders around the clock: the customer chooses products, the agent confirms stock and price, processes the payment, and coordinates delivery. The owners just pick up the ready orders. Nighttime sales now account for 40% of their revenue.',
-        url: 'https://lovelypet-store.com',
+        url: 'https://lovelypet.kantongsoftware.com',
       },
     ],
   },

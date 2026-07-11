@@ -50,7 +50,7 @@ const p = t.audit;
     </div>
   </div></section>
 
-  <script>
+  <script define:vars={{ sending: p.form.sending, errorMsg: p.form.error }}>
     const form = document.querySelector('.audit-form');
     const success = document.getElementById('form-success');
 
@@ -58,7 +58,7 @@ const p = t.audit;
       e.preventDefault();
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
-      btn.textContent = {JSON.stringify(p.form.sending)};
+      btn.textContent = sending;
 
       try {
         const resp = await fetch(form.action, {
@@ -71,7 +71,7 @@ const p = t.audit;
         success.hidden = false;
       } catch {
         btn.disabled = false;
-        btn.textContent = {JSON.stringify(p.form.error)};
+        btn.textContent = errorMsg;
       }
     });
   </script>

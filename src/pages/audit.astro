@@ -39,7 +39,7 @@ const p = t.audit;
         <label for="message">{p.form.message}</label>
         <textarea id="message" name="message" rows="4" placeholder={p.form.messagePlaceholder}></textarea>
       </div>
-      <button type="submit" class="btn-creative btn-primary btn-lg form-submit">{p.form.submit}</button>
+      <button type="submit" class="audit-submit-btn">{p.form.submit}</button>
       <p class="form-disclaimer">{p.form.privacy}</p>
     </form>
 
@@ -58,7 +58,7 @@ const p = t.audit;
       e.preventDefault();
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
-      btn.textContent = '{p.form.sending}';
+      btn.textContent = {JSON.stringify(p.form.sending)};
 
       try {
         const resp = await fetch(form.action, {
@@ -71,7 +71,7 @@ const p = t.audit;
         success.hidden = false;
       } catch {
         btn.disabled = false;
-        btn.textContent = '{p.form.error}';
+        btn.textContent = {JSON.stringify(p.form.error)};
       }
     });
   </script>
@@ -86,8 +86,22 @@ const p = t.audit;
 .form-group label { font-weight: 600; font-size: 0.9rem; }
 .form-group input, .form-group select, .form-group textarea { padding: 0.75rem 1rem; border: 2px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.9375rem; transition: border-color 200ms; }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--color-primary); }
-.form-submit { width: 100%; justify-content: center; margin-top: 0.5rem; }
 .form-disclaimer { font-size: 0.75rem; color: rgba(45,26,15,0.4); text-align: center; }
+.audit-submit-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 200ms, transform 150ms;
+}
+.audit-submit-btn:hover { background: var(--color-primary-dark, #4F46E5); transform: translateY(-1px); }
+.audit-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .form-success { text-align: center; padding: 3rem 0; }
 .form-success h2 { margin: 1rem 0 0.5rem; }
 .form-success p { color: rgba(45,26,15,0.6); }

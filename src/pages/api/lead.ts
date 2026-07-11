@@ -21,15 +21,15 @@ async function notifyTelegram(lead: Record<string, unknown>, leadId: string, env
   ].filter(Boolean).join('\n');
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text,
-        parse_mode: 'HTML',
-      }),
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
   } catch {
     // Non-blocking: lead is already stored in KV
   }

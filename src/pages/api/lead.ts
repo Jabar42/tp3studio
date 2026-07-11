@@ -37,7 +37,14 @@ async function notifyTelegram(lead: Record<string, unknown>, leadId: string, env
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    const body = await request.json();
+    let body: Record<string, unknown> = {};
+    const contentType = request.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      body = await request.json() as Record<string, unknown>;
+    } else {
+      const formData = await request.formData();
+      formData.forEach((value, key) => { body[key] = value; });
+    }
 
     if (!body || !body.name || !body.email) {
       return new Response(

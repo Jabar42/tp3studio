@@ -55,7 +55,7 @@ export default {
 
   // ===== Hero =====
   hero: {
-    badge: '+100 negocios en Colombia, México y RD ya operan con IA',
+    badge: 'Agentes IA para negocios en Colombia, México y RD',
     title: 'La página de producto perfecta.',
     titleHighlight: 'Manejada por IA.',
     from: 'Desde',
@@ -134,10 +134,10 @@ export default {
   },
   statsBar: {
     items: [
-      { value: '+100', label: 'Negocios activos' },
       { value: '24/7', label: 'Atención continua' },
-      { value: '48h', label: 'Tu negocio listo' },
-      { value: '99%', label: 'Satisfacción' },
+      { value: 'IA', label: 'Agente real' },
+      { value: '48h', label: 'Tu sitio listo' },
+      { value: '3', label: 'Países' },
     ],
   },
 
@@ -416,7 +416,7 @@ export default {
     label: 'Tu negocio merece esto',
     title: 'Tu negocio merece un empleado que',
     titleHighlight: 'nunca descansa',
-    subtitle: 'Tu negocio se vuelve legible para la IA. Tu agente vende 24/7 mientras tú te enfocas en lo que importa. Más de 100 negocios en Latinoamérica ya operan así. El tuyo puede ser el próximo — en 48 horas.',
+    subtitle: 'Tu negocio se vuelve legible para la IA. Tu agente vende 24/7 mientras tú te enfocas en lo que importa. Tu negocio puede ser el próximo en operar con IA.',
     riskReversal: '🔒 Si en el primer mes no ves resultados, ajustamos el agente o te devolvemos tu dinero. Sin preguntas.',
     ctaPrimary: 'Quiero mi negocio con IA',
     ctaWhatsapp: 'Asesoría personalizada',
@@ -425,18 +425,17 @@ export default {
   // ===== Pages - About =====
   about: {
     title: 'Sobre Nosotros — Tp3studio',
-    desc: 'Conoce la historia de Tp3studio. Cómo pasamos de una idea a potenciar +100 negocios en Latinoamérica con inteligencia artificial.',
+    desc: 'Conoce la historia de Tp3studio. Cómo pasamos de una idea a construir agentes IA para negocios reales en Latinoamérica.',
     introLabel: 'Nuestra Historia',
     introTitle: 'De un chat a',
-    introTitleHighlight: '+100 negocios',
+    introTitleHighlight: 'negocios reales',
     introDesc: 'Nació por hartazgo: ver negocios perdiendo clientes todos los días porque su presencia digital dependía de agencias caras, plataformas complicadas o "el sobrino que sabe de webs". La tecnología ya existe para que un negocio se opere solo — solo había que armarla.',
     storyTitle: 'Tecnología que trabaja por ti',
     storyDesc1: 'No hacemos "páginas web". Construimos negocios digitales operados por inteligencia artificial. Un agente que conoce tus productos, chatea con tus clientes, califica leads, procesa pagos y te mantiene informado — mientras tú haces lo que realmente importa.',
-    storyDesc2: 'Hoy, más de 100 negocios en Colombia, México y República Dominicana operan con un agente Tp3studio. No somos una agencia tradicional. Somos el equipo que está poniendo un empleado digital en cada negocio de Latinoamérica.',
+    storyDesc2: 'Estamos construyendo el futuro: un empleado digital en cada negocio de Latinoamérica. Empezamos con Varsana, una eco aldea en Colombia. Tu negocio puede ser el próximo.',
     stats: [
-      { number: '+100', label: 'Negocios activos' },
+      { number: '1', label: 'Cliente activo' },
       { number: '24/7', label: 'Operación continua' },
-      { number: '99%', label: 'Satisfacción' },
       { number: '3', label: 'Países' },
     ],
     cta: 'Quiero ser el próximo',

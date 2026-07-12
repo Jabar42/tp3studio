@@ -57,7 +57,7 @@ const en: typeof es = {
 
   // ===== Hero =====
   hero: {
-    badge: '+100 businesses in Colombia, Mexico & DR already run on AI',
+    badge: 'AI agents for businesses in Colombia, Mexico & DR',
     title: 'The perfect product page.',
     titleHighlight: 'AI-driven.',
     from: 'From',
@@ -137,10 +137,10 @@ const en: typeof es = {
   // ===== Stats Bar =====
   statsBar: {
     items: [
-      { value: '+100', label: 'Active businesses' },
       { value: '24/7', label: 'Always online' },
-      { value: '48h', label: 'Your business ready' },
-      { value: '99%', label: 'Satisfaction' },
+      { value: 'AI', label: 'Real agent' },
+      { value: '48h', label: 'Your site ready' },
+      { value: '3', label: 'Countries' },
     ],
   },
 
@@ -419,7 +419,7 @@ const en: typeof es = {
     label: 'Your business deserves this',
     title: 'Your business deserves an employee that',
     titleHighlight: 'never sleeps',
-    subtitle: 'Your business becomes legible to AI. Your agent sells 24/7 while you focus on what matters. Over 100 businesses in Latin America already run this way. Yours can be next — in 48 hours.',
+    subtitle: 'Your business becomes legible to AI. Your agent sells 24/7 while you focus on what matters. Your business can be the next one running on AI.',
     riskReversal: '🔒 If you don\'t see results in the first month, we adjust the agent or refund your money. No questions asked.',
     ctaPrimary: 'I want my AI-operated business',
     ctaWhatsapp: 'Get personalized advice',
@@ -428,18 +428,17 @@ const en: typeof es = {
   // ===== Pages - About =====
   about: {
     title: 'About Us — Tp3studio',
-    desc: 'Learn the story of Tp3studio. How we went from an idea to empowering +100 businesses in Latin America with artificial intelligence.',
+    desc: 'Learn the story of Tp3studio. How we went from an idea to building AI agents for real businesses in Latin America.',
     introLabel: 'Our Story',
     introTitle: 'From a chat to',
-    introTitleHighlight: '+100 businesses',
+    introTitleHighlight: 'real businesses',
     introDesc: 'Born out of frustration: watching businesses lose customers every day because their digital presence depended on expensive agencies, complicated platforms, or "the nephew who knows websites." The technology already exists for a business to run itself — it just needed to be assembled.',
     storyTitle: 'Technology that works for you',
     storyDesc1: 'We don\'t build "websites." We build digital businesses operated by artificial intelligence. An agent that knows your products, chats with your customers, qualifies leads, processes payments, and keeps you informed — while you focus on what really matters.',
-    storyDesc2: 'Today, over 100 businesses in Colombia, Mexico, and the Dominican Republic run with a Tp3studio agent. We\'re not a traditional agency. We\'re the team putting a digital employee in every business across Latin America.',
+    storyDesc2: 'We\'re building the future: a digital employee in every business across Latin America. We started with Varsana, an eco village in Colombia. Your business could be next.',
     stats: [
-      { number: '+100', label: 'Active businesses' },
+      { number: '1', label: 'Active client' },
       { number: '24/7', label: 'Continuous operation' },
-      { number: '99%', label: 'Satisfaction' },
       { number: '3', label: 'Countries' },
     ],
     cta: 'I want to be next',

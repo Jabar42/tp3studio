@@ -134,9 +134,9 @@ export default {
   },
   statsBar: {
     items: [
-      { value: '24/7', label: 'Atención continua' },
-      { value: 'IA', label: 'Agente real' },
-      { value: '48h', label: 'Tu sitio listo' },
+      { value: '24/7', label: 'Operación continua' },
+      { value: '<48h', label: 'Tiempo de entrega' },
+      { value: 'IA', label: 'Agente entrenado' },
       { value: '3', label: 'Países' },
     ],
   },
@@ -432,10 +432,10 @@ export default {
     introDesc: 'Nació por hartazgo: ver negocios perdiendo clientes todos los días porque su presencia digital dependía de agencias caras, plataformas complicadas o "el sobrino que sabe de webs". La tecnología ya existe para que un negocio se opere solo — solo había que armarla.',
     storyTitle: 'Tecnología que trabaja por ti',
     storyDesc1: 'No hacemos "páginas web". Construimos negocios digitales operados por inteligencia artificial. Un agente que conoce tus productos, chatea con tus clientes, califica leads, procesa pagos y te mantiene informado — mientras tú haces lo que realmente importa.',
-    storyDesc2: 'Estamos construyendo el futuro: un empleado digital en cada negocio de Latinoamérica. Empezamos con Varsana, una eco aldea en Colombia. Tu negocio puede ser el próximo.',
+    storyDesc2: 'Nuestro primer cliente, Varsana, ya opera con un agente Tp3studio: reservas automatizadas, catálogo de productos frescos y postulaciones de voluntarios, todo desde una sola página. Estamos llevando esta misma tecnología a más negocios en Colombia, México y República Dominicana.',
     stats: [
-      { number: '1', label: 'Cliente activo' },
       { number: '24/7', label: 'Operación continua' },
+      { number: '<48h', label: 'Tiempo de entrega' },
       { number: '3', label: 'Países' },
     ],
     cta: 'Quiero ser el próximo',

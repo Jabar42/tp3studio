@@ -137,9 +137,9 @@ const en: typeof es = {
   // ===== Stats Bar =====
   statsBar: {
     items: [
-      { value: '24/7', label: 'Always online' },
-      { value: 'AI', label: 'Real agent' },
-      { value: '48h', label: 'Your site ready' },
+      { value: '24/7', label: 'Continuous operation' },
+      { value: '<48h', label: 'Delivery time' },
+      { value: 'AI', label: 'Trained agent' },
       { value: '3', label: 'Countries' },
     ],
   },
@@ -435,10 +435,10 @@ const en: typeof es = {
     introDesc: 'Born out of frustration: watching businesses lose customers every day because their digital presence depended on expensive agencies, complicated platforms, or "the nephew who knows websites." The technology already exists for a business to run itself — it just needed to be assembled.',
     storyTitle: 'Technology that works for you',
     storyDesc1: 'We don\'t build "websites." We build digital businesses operated by artificial intelligence. An agent that knows your products, chats with your customers, qualifies leads, processes payments, and keeps you informed — while you focus on what really matters.',
-    storyDesc2: 'We\'re building the future: a digital employee in every business across Latin America. We started with Varsana, an eco village in Colombia. Your business could be next.',
+    storyDesc2: 'Our first client, Varsana, already runs on a Tp3studio agent: automated bookings, a fresh produce catalog, and volunteer applications — all from a single page. We\'re bringing this same technology to more businesses across Colombia, Mexico, and the Dominican Republic.',
     stats: [
-      { number: '1', label: 'Active client' },
       { number: '24/7', label: 'Continuous operation' },
+      { number: '<48h', label: 'Delivery time' },
       { number: '3', label: 'Countries' },
     ],
     cta: 'I want to be next',

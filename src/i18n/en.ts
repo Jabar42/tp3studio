@@ -3,7 +3,7 @@ import type es from './es';
 const en: typeof es = {
   // ===== SEO / Meta =====
   siteTitle: 'Tp3studio — AI-Operated Digital Business',
-  siteDesc: 'Your business online, run by artificial intelligence. The agent chats with customers, sells, schedules, and sends you reports. You just talk to it.',
+  siteDesc: 'Your business online, operated by artificial intelligence. The agent chats with your customers 24/7 — you just talk to it.',
   siteKeywords: 'AI business agent, AI-operated digital business, chat-to-admin, e-commerce AI, business automation, Colombia, Mexico, Dominican Republic',
   siteAuthor: 'Tp3studio',
 
@@ -68,10 +68,10 @@ const en: typeof es = {
     ctaPrimary: 'I want my product page',
     ctaWhatsapp: 'Get personalized advice',
     feat1: 'A single page',
-    feat2: 'AI sales agent',
-    feat3: 'Payments included',
+    feat2: 'AI agent 24/7',
+    feat3: 'No complexity',
     chatHeader: 'Your Tp3studio Agent',
-    chatMsg1: 'Hi Carlos, this week you had 23 sales for $1,850,000 COP. Want me to send the report?',
+    chatMsg1: 'Hi Carlos, your agent handled 23 customer inquiries this week. Want to see the summary?',
     chatMsg2: 'Yes, and add the new product: "Organic lavender candles" at $45,000',
     chatMsg3: 'Done. Product published in the store and it\'s already in the catalog. Need anything else?',
     floatCard: 'Agent active now',
@@ -130,7 +130,7 @@ const en: typeof es = {
         'The agent updates content, prices, and products on its own',
         'AI agent trained for your business. Responds, qualifies, closes.',
         'No admin panel. Manage it by chatting, like WhatsApp',
-        'Built-in payments: Nequi, cards, bank transfers',
+        'Automated operations 24/7',
       ],
     },
   },
@@ -138,7 +138,7 @@ const en: typeof es = {
   statsBar: {
     items: [
       { value: '24/7', label: 'Continuous operation' },
-      { value: '<48h', label: 'Delivery time' },
+      { value: '3-7 days', label: 'Delivery time' },
       { value: 'AI', label: 'Trained agent' },
       { value: '3', label: 'Countries' },
     ],
@@ -152,7 +152,7 @@ const en: typeof es = {
     subtitle: 'The agent is trained specifically for your type of business. See how it helps in each sector.',
     cards: [
       { icon: '🍽️', name: 'Restaurants', desc: 'Reservations, orders, and menu via WhatsApp. The agent takes orders while you cook.' },
-      { icon: '👗', name: 'Clothing stores', desc: 'Automatic catalog, sizes, colors, and payments. Publish products just by talking.' },
+      { icon: '👗', name: 'Clothing stores', desc: 'Automatic catalog with sizes and colors. Publish products just by talking.' },
       { icon: '🩺', name: 'Medical offices', desc: 'Schedule appointments, send reminders, and resolve questions without overwhelming your phone.' },
       { icon: '⚖️', name: 'Professional services', desc: 'Qualify leads, send quotes, and only pass along clients ready to hire.' },
       { icon: '🏠', name: 'Real estate', desc: 'Show properties, schedule tours, and answer inquiries 24/7 with photos and prices.' },
@@ -178,7 +178,7 @@ const en: typeof es = {
     withChats: [
       {
         user: 'How many sales did we have today?',
-        agent: '12 sales for $890,000 COP. 3 via Nequi, 9 with card. Want me to send you the details?',
+        agent: '12 inquiries handled today. 8 were about pricing, 4 about availability. Want me to send you the details?',
       },
       {
         user: 'Add this product: attached photo, "Organic cotton T-shirt", $65,000',
@@ -189,8 +189,8 @@ const en: typeof es = {
         agent: 'Here are the last 5 conversations about shipping. In all of them I responded with the correct policy and updated delivery times.',
       },
       {
-        user: 'Send me the weekly report',
-        agent: '📊 Weekly report: 87 visits, 34 leads, 18 sales for $3,200,000 COP. 15% more than last week. The best-selling product was "Aromatic candles".',
+        user: 'How are we doing this week?',
+        agent: '📊 This week: 87 visits, 34 qualified leads, 18 customers contacted. 15% more than last week. Want to see more details?',
       },
     ],
   },
@@ -270,7 +270,7 @@ const en: typeof es = {
     step4: {
       number: '4',
       title: 'Your agent learns and improves on its own',
-      desc: 'Every time you publish new content, change a price, or add a product, the agent updates automatically. You get weekly reports so you always know how your business is doing.',
+      desc: 'Every time you publish new content, change a price, or add a product, the agent updates automatically. Your business learns and improves with every interaction.',
     },
     cta: 'I want to start',
   },
@@ -313,12 +313,11 @@ const en: typeof es = {
         monthly: '≈ 300,000 COP',
         features: [
           'Everything in Start Plan',
-          'Full e-commerce (Nequi, card, bank payments)',
+          'Product catalog with variants',
           'Fully programmable agent (appointments, leads, workflows)',
           'WhatsApp Business integrated',
-          'Weekly performance reports',
-          'Unlimited pages',
           'Priority support (same-day)',
+          'Unlimited pages',
         ],
         hosting: 'Hosting + domain included',
         cta: 'Buy Now',
@@ -332,7 +331,7 @@ const en: typeof es = {
         monthly: '≈ 600,000 COP',
         features: [
           'Everything in Growth Plan',
-          'Multi-channel admin (Telegram)',
+          'Monthly metrics dashboard',
           'Custom integrations',
           'Dedicated agent training',
           'White-label option',
@@ -372,7 +371,7 @@ const en: typeof es = {
         initials: 'LP',
         name: 'Laura & Pedro',
         biz: 'Restaurant, Santo Domingo',
-        text: '"The agent takes reservations, confirms via WhatsApp, and sends us a report every Monday.',
+        text: '"The agent takes reservations, confirms via WhatsApp, and keeps us updated every week.',
         textBold: 'It\'s like having a manager who doesn\'t take a salary.',
         textEnd: '"',
         rating: '★★★★★',
@@ -405,11 +404,11 @@ const en: typeof es = {
       },
       {
         q: 'Can the agent actually handle payments?',
-        a: 'Yes. On the Growth and Scale plans, your agent can process payments via Nequi, credit/debit cards, and bank transfers. Payments go directly to your account. The agent confirms the transaction and notifies you.',
+        a: 'Currently, the agent guides your customers through the purchase process, but payments are handled outside the platform (bank transfer, Nequi, cash on delivery). Direct payment integration is on our roadmap.',
       },
       {
         q: 'How long until my digital business is ready?',
-        a: 'In 48 hours your site is live with the agent active. Then we do a 15-minute session where we teach you how to talk to it. Most clients are fully operational in less than a week.',
+        a: 'In 3 to 7 business days your site is live with the agent active. Then we do a session where we teach you how to manage it. Most clients are fully operational within the first week.',
       },
     ],
   },
@@ -434,11 +433,11 @@ const en: typeof es = {
     introTitleHighlight: 'real businesses',
     introDesc: 'Born out of frustration: watching businesses lose customers every day because their digital presence depended on expensive agencies, complicated platforms, or "the nephew who knows websites." The technology already exists for a business to run itself — it just needed to be assembled.',
     storyTitle: 'Technology that works for you',
-    storyDesc1: 'We don\'t build "websites." We build digital businesses operated by artificial intelligence. An agent that knows your products, chats with your customers, qualifies leads, processes payments, and keeps you informed — while you focus on what really matters.',
+    storyDesc1: 'We don\'t build "websites." We build digital businesses operated by artificial intelligence. An agent that knows your products, chats with your customers 24/7, qualifies leads, and keeps you informed — while you focus on what really matters.',
     storyDesc2: 'Our first client, Varsana, already runs on a Tp3studio agent: automated bookings, a fresh produce catalog, and volunteer applications — all from a single page. We\'re bringing this same technology to more businesses across Colombia, Mexico, and the Dominican Republic.',
     stats: [
       { number: '24/7', label: 'Continuous operation' },
-      { number: '<48h', label: 'Delivery time' },
+      { number: '3-7 days', label: 'Delivery time' },
       { number: '3', label: 'Countries' },
     ],
     cta: 'I want to be next',
@@ -446,8 +445,8 @@ const en: typeof es = {
     values: [
       { icon: '🤖', title: 'AI that works', desc: 'Not a generic chatbot. An agent trained for your specific business.' },
       { icon: '💬', title: 'Managing is talking', desc: 'No dashboards. No tutorials. If you can talk, you can run your business.' },
-      { icon: '⚡', title: 'Actually fast', desc: 'Your site in 48h. Results in the first week. No hype.' },
-      { icon: '🌎', title: 'Built for LatAm', desc: 'Nequi, local banks, real Spanish. We understand your market because we\'re from here.' },
+      { icon: '⚡', title: 'Actually fast', desc: 'Your site in 3-7 days. Results in the first week. No hype.' },
+      { icon: '🌎', title: 'Built for LatAm', desc: 'Real Spanish, COP pricing, we understand your market because we\'re from here.' },
     ],
   },
 
@@ -603,7 +602,7 @@ const en: typeof es = {
     businessName: 'Tp3studio',
     businessDesc: 'AI-operated digital business platform for small businesses in Latin America. 24/7 AI agent, chat-to-admin, integrated e-commerce.',
     serviceName: 'AI-Operated Digital Business',
-    serviceDesc: 'Professional website with integrated AI agent that chats with customers, qualifies leads, processes payments, and is managed conversationally. No dashboards, no WordPress, no complications.',
+    serviceDesc: 'Professional website with integrated AI agent that chats with customers 24/7 and is managed conversationally. No dashboards, no WordPress, no complications.',
     areaServed: ['CO', 'MX', 'DO'],
     faqLabel: 'Frequently Asked Questions — Tp3studio',
   },

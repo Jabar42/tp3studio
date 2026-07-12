@@ -1,7 +1,7 @@
 export default {
   // ===== SEO / Meta =====
   siteTitle: 'Tp3studio — Negocio Digital Operado por IA',
-  siteDesc: 'Tu negocio en internet manejado por inteligencia artificial. El agente chatea con clientes, vende, agenda y te manda reportes. Tú solo le hablas.',
+  siteDesc: 'Tu negocio en internet operado por inteligencia artificial. El agente chatea con tus clientes 24/7 — tú solo le hablas.',
   siteKeywords: 'agente IA negocios, negocio digital operado por IA, chat-to-admin, e-commerce IA, automatización empresarial, Colombia, México, República Dominicana',
   siteAuthor: 'Tp3studio',
 
@@ -66,10 +66,10 @@ export default {
     ctaPrimary: 'Quiero mi página de venta',
     ctaWhatsapp: 'Asesoría personalizada',
     feat1: 'Una sola página',
-    feat2: 'Agente IA vendedor',
-    feat3: 'Pagos incluidos',
+    feat2: 'Agente IA 24/7',
+    feat3: 'Sin complicaciones',
     chatHeader: 'Tu Agente Tp3studio',
-    chatMsg1: 'Hola Carlos, esta semana tuviste 23 ventas por \$1,850,000 COP. ¿Te mando el reporte?',
+    chatMsg1: 'Hola Carlos, esta semana tu agente atendió 23 consultas de clientes. ¿Quieres ver el resumen?',
     chatMsg2: 'Sí, y agrega el producto nuevo: "Velas aromáticas lavanda" a \$45,000',
     chatMsg3: 'Listo. Producto publicado en la tienda y ya aparece en el catálogo. ¿Necesitas algo más?',
     floatCard: 'Agente activo ahora',
@@ -117,7 +117,7 @@ export default {
         'Tú tienes que actualizar todo manualmente',
         'Chatbot genérico que solo dice "deja tu correo"',
         'Panel de administración complicado',
-        'Sin pagos integrados',
+        'Requiere mantenimiento constante',
       ],
     },
     vsRight: {
@@ -128,14 +128,14 @@ export default {
         'El agente actualiza contenido, precios y productos solo',
         'Agente IA entrenado para tu negocio. Responde, califica, cierra.',
         'Sin panel. Adminístralo chateando como en WhatsApp',
-        'Pagos integrados: Nequi, tarjeta, bancos',
+        'Operación automatizada 24/7',
       ],
     },
   },
   statsBar: {
     items: [
       { value: '24/7', label: 'Operación continua' },
-      { value: '<48h', label: 'Tiempo de entrega' },
+      { value: '3-7 días', label: 'Tiempo de entrega' },
       { value: 'IA', label: 'Agente entrenado' },
       { value: '3', label: 'Países' },
     ],
@@ -149,7 +149,7 @@ export default {
     subtitle: 'El agente se entrena específicamente para tu tipo de negocio. Mira cómo ayuda en cada sector.',
     cards: [
       { icon: '🍽️', name: 'Restaurantes', desc: 'Reservas, pedidos y menú por WhatsApp. El agente toma la orden mientras tú cocinas.' },
-      { icon: '👗', name: 'Tiendas de ropa', desc: 'Catálogo automático, tallas, colores y pagos. Publica productos hablándole.' },
+      { icon: '👗', name: 'Tiendas de ropa', desc: 'Catálogo automático con tallas y colores. Publica productos hablándole.' },
       { icon: '🩺', name: 'Consultorios', desc: 'Agenda citas, confirma recordatorios y resuelve dudas sin saturar tu teléfono.' },
       { icon: '⚖️', name: 'Servicios profesionales', desc: 'Califica leads, envía cotizaciones y solo te pasa clientes listos para contratar.' },
       { icon: '🏠', name: 'Inmobiliarias', desc: 'Muestra propiedades, agenda visitas y responde consultas 24/7 con fotos y precios.' },
@@ -175,7 +175,7 @@ export default {
     withChats: [
       {
         user: '¿Cuántas ventas tuvimos hoy?',
-        agent: '12 ventas por \$890,000 COP. 3 fueron por Nequi, 9 con tarjeta. ¿Quieres que te mande el detalle?',
+        agent: '12 consultas atendidas hoy. 8 eran sobre precios, 4 sobre disponibilidad. ¿Quieres que te mande el detalle?',
       },
       {
         user: 'Agregá este producto: foto adjunta, "Camiseta algodón orgánico", \$65,000',
@@ -186,8 +186,8 @@ export default {
         agent: 'Acá tienes las últimas 5 conversaciones sobre envíos. En todas respondí con la política correcta y el tiempo de entrega actualizado.',
       },
       {
-        user: 'Mandame el reporte semanal',
-        agent: '📊 Reporte de la semana: 87 visitas, 34 leads, 18 ventas por \$3,200,000 COP. 15% más que la semana pasada. El producto más vendido fue "Velas aromáticas".',
+        user: '¿Cómo vamos esta semana?',
+        agent: '📊 Esta semana: 87 visitas, 34 leads calificados, 18 clientes contactados. 15% más que la semana pasada. ¿Quieres ver algo en detalle?',
       },
     ],
   },
@@ -267,7 +267,7 @@ export default {
     step4: {
       number: '4',
       title: 'Tu agente aprende y mejora solo',
-      desc: 'Cada vez que publicas contenido nuevo, cambias un precio o agregas un producto, el agente se actualiza automáticamente. Recibes reportes semanales para saber cómo va tu negocio.',
+      desc: 'Cada vez que publicas contenido nuevo, cambias un precio o agregas un producto, el agente se actualiza automáticamente. Tu negocio aprende y mejora con cada interacción.',
     },
     cta: 'Quiero empezar',
   },
@@ -310,10 +310,9 @@ export default {
         monthly: '≈ 300,000 COP',
         features: [
           'Todo lo del Plan Inicio',
-          'E-commerce completo (Nequi, tarjeta, bancos)',
+          'Catálogo de productos con variantes',
           'Agente programable a tu medida (citas, leads, workflows)',
           'WhatsApp Business integrado',
-          'Reportes semanales de rendimiento',
           'Páginas ilimitadas',
           'Soporte prioritario (mismo día)',
         ],
@@ -329,7 +328,7 @@ export default {
         monthly: '≈ 600,000 COP',
         features: [
           'Todo lo del Plan Crecer',
-          'Administración multi-canal (Telegram)',
+          'Dashboard de métricas mensuales',
           'Integraciones personalizadas',
           'Entrenamiento dedicado del agente',
           'Opción white-label',
@@ -369,7 +368,7 @@ export default {
         initials: 'LP',
         name: 'Laura y Pedro',
         biz: 'Restaurante, Santo Domingo',
-        text: '"El agente toma reservas, confirma por WhatsApp, y nos manda un reporte cada lunes.',
+        text: '"El agente toma reservas, confirma por WhatsApp, y nos mantiene al tanto cada semana.',
         textBold: 'Es como tener un gerente que no cobra salario.',
         textEnd: '"',
         rating: '★★★★★',
@@ -402,11 +401,11 @@ export default {
       },
       {
         q: '¿El agente puede manejar pagos de verdad?',
-        a: 'Sí. En el Plan Crecer y Escalar, tu agente puede procesar pagos con Nequi, tarjetas de crédito/débito y transferencias bancarias. Los pagos llegan directamente a tu cuenta. El agente confirma la transacción y te notifica.',
+        a: 'Actualmente el agente asesora a tus clientes en el proceso de compra, pero los pagos se gestionan por fuera de la plataforma (transferencia, Nequi, efectivo contra entrega). La integración de pagos directos está en nuestro roadmap.',
       },
       {
         q: '¿Cuánto tarda en estar listo mi negocio digital?',
-        a: 'En 48 horas tienes tu sitio funcionando con el agente activo. Luego hacemos una sesión de 15 minutos donde te enseñamos a hablarle. La mayoría de los clientes están operando completamente en menos de una semana.',
+        a: 'En 3 a 7 días hábiles tienes tu sitio funcionando con el agente activo. Luego hacemos una sesión donde te enseñamos a administrarlo. La mayoría de los clientes están operando completamente en la primera semana.',
       },
     ],
   },
@@ -431,11 +430,11 @@ export default {
     introTitleHighlight: 'negocios reales',
     introDesc: 'Nació por hartazgo: ver negocios perdiendo clientes todos los días porque su presencia digital dependía de agencias caras, plataformas complicadas o "el sobrino que sabe de webs". La tecnología ya existe para que un negocio se opere solo — solo había que armarla.',
     storyTitle: 'Tecnología que trabaja por ti',
-    storyDesc1: 'No hacemos "páginas web". Construimos negocios digitales operados por inteligencia artificial. Un agente que conoce tus productos, chatea con tus clientes, califica leads, procesa pagos y te mantiene informado — mientras tú haces lo que realmente importa.',
+    storyDesc1: 'No hacemos "páginas web". Construimos negocios digitales operados por inteligencia artificial. Un agente que conoce tus productos, chatea con tus clientes, califica leads y te mantiene informado — mientras tú haces lo que realmente importa.',
     storyDesc2: 'Nuestro primer cliente, Varsana, ya opera con un agente Tp3studio: reservas automatizadas, catálogo de productos frescos y postulaciones de voluntarios, todo desde una sola página. Estamos llevando esta misma tecnología a más negocios en Colombia, México y República Dominicana.',
     stats: [
       { number: '24/7', label: 'Operación continua' },
-      { number: '<48h', label: 'Tiempo de entrega' },
+      { number: '3-7 días', label: 'Tiempo de entrega' },
       { number: '3', label: 'Países' },
     ],
     cta: 'Quiero ser el próximo',
@@ -443,8 +442,8 @@ export default {
     values: [
       { icon: '🤖', title: 'IA que trabaja', desc: 'No es un chatbot genérico. Es un agente entrenado para tu negocio específico.' },
       { icon: '💬', title: 'Administrar es hablar', desc: 'Sin dashboards. Sin tutoriales. Si sabes hablar, sabes manejar tu negocio.' },
-      { icon: '⚡', title: 'Rápido de verdad', desc: 'Tu sitio en 48h. Resultados en la primera semana. Sin humo.' },
-      { icon: '🌎', title: 'Hecho para LatAm', desc: 'Nequi, bancos locales, español real. Entendemos tu mercado porque somos de acá.' },
+      { icon: '⚡', title: 'Rápido de verdad', desc: 'Tu sitio en 3-7 días. Resultados en la primera semana. Sin humo.' },
+      { icon: '🌎', title: 'Hecho para LatAm', desc: 'Español real, precios en COP, entendemos tu mercado porque somos de acá.' },
     ],
   },
 
@@ -578,7 +577,7 @@ export default {
     desc: 'Términos y condiciones del servicio de Tp3studio: negocios digitales operados por IA, agente virtual, e-commerce y WhatsApp Business.',
     lastUpdate: 'Última actualización: 28 de junio de 2026',
     s1Title: '1. Descripción del servicio',
-    s1Body: 'Tp3studio ofrece la creación y operación de negocios digitales gestionados por inteligencia artificial. Esto incluye: sitio web profesional (Astro/HTML puro), agente IA de atención al cliente 24/7, panel de administración conversacional (chat-to-admin), integración de pagos, y canales de comunicación (Web, WhatsApp, Telegram según el plan). El sitio web se entrega en un plazo máximo de 48 horas hábiles desde la recepción de la información completa del cliente.',
+    s1Body: 'Tp3studio ofrece la creación y operación de negocios digitales gestionados por inteligencia artificial. Esto incluye: sitio web profesional (Astro/HTML puro), agente IA de atención al cliente 24/7, panel de administración conversacional (chat-to-admin), integración de pagos, y canales de comunicación (Web, WhatsApp, Telegram según el plan). El sitio web se entrega en un plazo de 3 a 7 días hábiles desde la recepción de la información completa del cliente, dependiendo del plan contratado.',
     s2Title: '2. Modelo de suscripción y pago',
     s2Body: 'El servicio se factura mensualmente según el plan seleccionado (Inicio, Crecer o Escalar). El pago se realiza por adelantado cada mes. No existen cláusulas de permanencia ni penalizaciones por cancelación. El cliente puede cancelar en cualquier momento y su sitio quedará congelado hasta que reactive la suscripción. Ofrecemos facturación anual con dos meses de descuento sobre el precio mensual.',
     s3Title: '3. Plazos de entrega',
@@ -600,7 +599,7 @@ export default {
     businessName: 'Tp3studio',
     businessDesc: 'Plataforma de negocio digital operado por inteligencia artificial para pequeños negocios en Latinoamérica. Agente IA 24/7, chat-to-admin, e-commerce integrado.',
     serviceName: 'Negocio Digital Operado por IA',
-    serviceDesc: 'Sitio web profesional con agente IA integrado que chatea con clientes, califica leads, procesa pagos y se administra conversando. Sin dashboards, sin WordPress, sin complicaciones.',
+    serviceDesc: 'Sitio web profesional con agente IA integrado que chatea con clientes 24/7 y se administra conversando. Sin dashboards, sin WordPress, sin complicaciones.',
     areaServed: ['CO', 'MX', 'DO'],
     faqLabel: 'Preguntas Frecuentes — Tp3studio',
   },

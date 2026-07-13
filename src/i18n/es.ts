@@ -331,7 +331,7 @@ export default {
           'Agente IA administrativo (gestión por chat)',
           'Hasta 3 sitios bajo el mismo plan',
           'Cambios ilimitados',
-          'Soporte directo por Telegram — te respondemos el mismo día',
+          'Soporte directo por Telegram — te respondemos el mismo día (L-V + sábados 9am-1pm)',
           'Métricas mensuales',
           'Setup en 7-10 días',
         ],
@@ -410,7 +410,7 @@ export default {
       },
       {
         q: '¿Cómo funciona el soporte? ¿Qué significa "te respondemos en 48h"?',
-        a: 'Cuando nos escribes con una duda o problema, te confirmamos que lo recibimos en el plazo de tu plan (48h, 24h o el mismo día según el plan). Esa es la primera respuesta — un "recibido, lo reviso". La solución puede tomar más tiempo dependiendo de la complejidad, pero nunca te quedas en el vacío sin saber si te leímos. Para cosas urgentes (sitio caído), respondemos de inmediato sin importar el plan.',
+        a: 'Cuando nos escribes con una duda o problema, te confirmamos que lo recibimos en el plazo de tu plan (Básico: 48h hábiles L-V, Estándar: 24h hábiles L-V, Premium: mismo día L-V + sábados 9am-1pm). Esa es la primera respuesta — un "recibido, lo reviso". La solución puede tomar más tiempo dependiendo de la complejidad, pero nunca te quedas en el vacío sin saber si te leímos. Para cosas urgentes (sitio caído), respondemos de inmediato sin importar el plan.',
       },
     ],
   },

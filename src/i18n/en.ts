@@ -334,7 +334,7 @@ const en: typeof es = {
           'Admin AI agent (manage by chat)',
           'Up to 3 sites under one plan',
           'Unlimited changes',
-          'Direct Telegram support — we respond same day',
+          'Direct Telegram support — we respond same day (Mon-Fri + Sat 9am-1pm)',
           'Monthly metrics',
           'Setup in 7-10 days',
         ],
@@ -413,7 +413,7 @@ const en: typeof es = {
       },
       {
         q: 'How does support work? What does "we respond within 48h" mean?',
-        a: 'When you reach out with a question or issue, we confirm receipt within your plan\'s timeframe (48h, 24h, or same day depending on your plan). That\'s the first response — a "got it, looking into it." The actual fix may take longer depending on complexity, but you\'ll never be left wondering if we saw your message. For urgent issues (site down), we respond immediately regardless of plan.',
+        a: 'When you reach out with a question or issue, we confirm receipt within your plan\'s timeframe (Basic: 48 business hours Mon-Fri, Standard: 24 business hours Mon-Fri, Premium: same day Mon-Fri + Sat 9am-1pm). That\'s the first response — a "got it, looking into it." The actual fix may take longer depending on complexity, but you\'ll never be left wondering if we saw your message. For urgent issues (site down), we respond immediately regardless of plan.',
       },
     ],
   },

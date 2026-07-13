@@ -415,6 +415,10 @@ const en: typeof es = {
         q: 'How does support work? What does "we respond within 48h" mean?',
         a: 'When you reach out with a question or issue, we confirm receipt within your plan\'s timeframe (Basic: 48 business hours Mon-Fri, Standard: 24 business hours Mon-Fri, Premium: same day Mon-Fri + Sat 9am-1pm). That\'s the first response — a "got it, looking into it." The actual fix may take longer depending on complexity, but you\'ll never be left wondering if we saw your message. For urgent issues (site down), we respond immediately regardless of plan.',
       },
+      {
+        q: 'What kind of issues does support cover?',
+        a: 'We cover: site down (urgent, all plans), content changes (within your plan limits), guidance on analytics, and general questions. We don\'t cover: building new features (e.g. "I need a booking system"), third-party outages (Cloudflare downtime — though we\'ll still fix it), or emergencies outside your plan\'s support hours.',
+      },
     ],
   },
 

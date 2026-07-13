@@ -412,6 +412,10 @@ export default {
         q: '¿Cómo funciona el soporte? ¿Qué significa "te respondemos en 48h"?',
         a: 'Cuando nos escribes con una duda o problema, te confirmamos que lo recibimos en el plazo de tu plan (Básico: 48h hábiles L-V, Estándar: 24h hábiles L-V, Premium: mismo día L-V + sábados 9am-1pm). Esa es la primera respuesta — un "recibido, lo reviso". La solución puede tomar más tiempo dependiendo de la complejidad, pero nunca te quedas en el vacío sin saber si te leímos. Para cosas urgentes (sitio caído), respondemos de inmediato sin importar el plan.',
       },
+      {
+        q: '¿Qué tipo de problemas cubre el soporte?',
+        a: 'Cubrimos: sitio caído (urgente, todos los planes), cambios de contenido (según límites de tu plan), orientación sobre estadísticas, y dudas generales. No cubrimos: desarrollo de funciones nuevas (ej: "necesito un sistema de reservas"), incidencias de terceros (caídas de Cloudflare — aunque igual las resolvemos), ni emergencias fuera del horario de tu plan.',
+      },
     ],
   },
 

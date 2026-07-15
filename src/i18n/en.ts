@@ -565,7 +565,7 @@ const en: typeof es = {
       'Message or description of your inquiry',
     ],
     s2Title: '2. How We Use Your Data',
-    s2Body: 'We use the collected information exclusively to: respond to your contact or audit request, send you information about our services if requested, and improve our services based on aggregated and anonymous patterns.',
+    s2Body: 'We use the collected information exclusively to: respond to your contact or audit request, send you information about our services if requested, and improve our services based on aggregated and anonymous patterns. We also use third-party APIs (such as LinkedIn) to manage and publish content on our business pages. These APIs operate under their own privacy policies and only access the information necessary to publish content on behalf of Tp3studio.',
     s3Title: '3. Cookies',
     s3Body: 'This website may use cookies and similar technologies to improve the browsing experience, analyze site traffic, and remember preferences. We do not use cookies to track you beyond this site or for targeted advertising without your explicit consent.',
     s4Title: '4. Storage and Security',

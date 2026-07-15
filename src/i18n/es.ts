@@ -562,7 +562,7 @@ export default {
       'Mensaje o descripción de tu consulta',
     ],
     s2Title: '2. Cómo usamos tus datos',
-    s2Body: 'Utilizamos la información recopilada exclusivamente para: responderte a tu solicitud de contacto o auditoría, enviarte información sobre nuestros servicios si lo solicitaste, y mejorar la calidad de nuestros servicios basándonos en patrones agregados y anónimos.',
+    s2Body: 'Utilizamos la información recopilada exclusivamente para: responderte a tu solicitud de contacto o auditoría, enviarte información sobre nuestros servicios si lo solicitaste, y mejorar la calidad de nuestros servicios basándonos en patrones agregados y anónimos. También utilizamos APIs de terceros (como LinkedIn) para gestionar y publicar contenido en nuestras páginas empresariales. Estas APIs operan bajo sus propias políticas de privacidad y solo acceden a la información necesaria para publicar contenido en nombre de Tp3studio.',
     s3Title: '3. Uso de cookies',
     s3Body: 'Este sitio web puede utilizar cookies y tecnologías similares para mejorar la experiencia de navegación, analizar el tráfico del sitio y recordar preferencias. No utilizamos cookies para rastrearte más allá de este sitio ni para publicidad dirigida sin tu consentimiento explícito.',
     s4Title: '4. Almacenamiento y seguridad',

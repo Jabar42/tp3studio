@@ -88,6 +88,18 @@ const schema = {
   <CaseStudiesSection t={t.caseStudies} />
   <HowItWorks t={t.howItWorks} />
   <PricingCards t={t.pricing} />
+  <script>
+    const pricingSection = document.getElementById('precios');
+    if (pricingSection && typeof umami !== 'undefined') {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          umami.track('view_pricing');
+          observer.disconnect();
+        }
+      }, { threshold: 0.3 });
+      observer.observe(pricingSection);
+    }
+  </script>
   <TestimonialsSection t={t.testimonials} />
   <FAQSection t={t.faq} />
   <CTAFinalSection t={t.ctaFinal} />

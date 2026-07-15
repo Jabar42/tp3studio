@@ -92,7 +92,7 @@ const enUrl = lang === 'es' ? '/en' + (currentPath === '/' ? '' : currentPath) :
       <slot />
     </main>
     <Footer lang={lang} />
-    <ChatWidget agentHost="tp3studio-chat.iaforchange.workers.dev" client:load />
+    <ChatWidget hermesUrl="wss://tp3.vsb-tech.com" client:only="react" />
   </body>
 </html>
 

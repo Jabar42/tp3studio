@@ -4,13 +4,14 @@ export interface Props {
   variant?: 'primary' | 'secondary' | 'whatsapp' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   class?: string;
+  umamiEvent?: string;
 }
 
-const { href, variant = 'primary', size = 'md', class: extraClass = '' } = Astro.props;
+const { href, variant = 'primary', size = 'md', class: extraClass = '', umamiEvent } = Astro.props;
 const classes = ['btn-creative', `btn-${variant}`, `btn-${size}`, extraClass].join(' ');
 ---
 
-<a {href} class={classes}>
+<a {href} class={classes} data-umami-event={umamiEvent}>
   <slot />
   {variant === 'primary' && (
     <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">

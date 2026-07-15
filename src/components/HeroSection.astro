@@ -29,7 +29,7 @@ const { t } = Astro.props;
         {t.subtitle} <strong>{t.subtitleBold}</strong> {t.subtitleEnd}
       </p>
       <div class="hero-actions">
-        <a href="/audit" class="btn-primary-hero">
+        <a href="/audit" class="btn-primary-hero" data-umami-event="click_cta_hero_primary">
           <span class="btn-primary-label">{t.ctaPrimary}</span>
           <span class="btn-primary-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -38,7 +38,7 @@ const { t } = Astro.props;
           </span>
           <span class="btn-shimmer" aria-hidden="true"></span>
         </a>
-        <a href="/audit" class="btn-whatsapp-hero">
+        <a href="/audit" class="btn-whatsapp-hero" data-umami-event="click_cta_hero_secondary">
           <span class="btn-wa-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </span>

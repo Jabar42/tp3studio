@@ -69,6 +69,7 @@ const p = t.audit;
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         form.style.display = 'none';
         success.hidden = false;
+        if (typeof umami !== 'undefined') umami.track('submit_lead');
       } catch {
         btn.disabled = false;
         btn.textContent = errorMsg;

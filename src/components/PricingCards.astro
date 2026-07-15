@@ -46,7 +46,7 @@ const { t } = Astro.props;
             {plan.features.map(feat => <li>{feat}</li>)}
           </ul>
           <div class="plan-hosting">{plan.hosting}</div>
-          <CTAButton href="/auth" variant={(plan.tier === 'Más popular' || plan.tier === 'Most Popular') ? 'primary' : 'outline'} size="md" class="plan-cta">{plan.cta}</CTAButton>
+          <CTAButton href="/audit" variant={(plan.tier === 'Más popular' || plan.tier === 'Most Popular') ? 'primary' : 'outline'} size="md" class="plan-cta" umamiEvent={`click_cta_pricing_${plan.name.toLowerCase().replace(/\s+/g, '_')}`}>{plan.cta}</CTAButton>
         </div>
       ))}
     </div>

@@ -1,0 +1,541 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { onboardingSteps, clientDefaults } from '../data/onboarding';
+import { env } from 'cloudflare:workers';
+
+export const prerender = false;
+
+// No cachear: el prefill debe reflejar el último progreso guardado en KV
+Astro.response.headers.set('Cache-Control', 'no-store');
+
+const params = new URL(Astro.url).searchParams;
+const cliente = (params.get('c') || '').toString().slice(0, 40).toLowerCase();
+const defaults = clientDefaults[cliente] ?? {};
+
+// Prefill = defaults del cliente + progreso guardado en KV (KV tiene prioridad)
+let saved: Record<string, unknown> = {};
+if (cliente && env.SESSION) {
+  try {
+    const raw = await env.SESSION.get(`onboarding:${cliente}`);
+    if (raw) saved = JSON.parse(raw);
+  } catch {
+    /* sin progreso previo */
+  }
+}
+
+const initial: Record<string, string | string[]> = {};
+for (const step of onboardingSteps) {
+  for (const q of step.questions) {
+    const savedVal = saved[q.id];
+    const defVal = defaults[q.id];
+    if (q.type === 'checkbox') {
+      const arr = Array.isArray(savedVal) ? savedVal : Array.isArray(defVal) ? defVal : [];
+      initial[q.id] = arr.map(String);
+    } else if (savedVal !== undefined && savedVal !== null) {
+      initial[q.id] = String(savedVal);
+    } else if (defVal !== undefined) {
+      initial[q.id] = String(defVal);
+    } else {
+      initial[q.id] = '';
+    }
+  }
+}
+
+const totalSteps = onboardingSteps.length;
+const knownClient = Boolean(defaults && Object.keys(defaults).length > 0);
+---
+
+<BaseLayout
+  title="Cuestionario de onboarding | Tp3studio"
+  description="Formulario de onboarding de clientes Tp3studio — cuéntanos sobre tu negocio para armar tu propuesta."
+  hideBreadcrumbs={true}
+>
+  <section class="ob-section">
+    <div class="container ob-container">
+      <div class="ob-card">
+        <div class="ob-header">
+          <span class="section-label">Tp3studio · Onboarding</span>
+          <h1>
+            Cuéntanos sobre tu negocio <span class="accent-text">🪄</span>
+          </h1>
+          <p class="ob-sub">
+            {knownClient
+              ? 'Ya tenemos parte de tu información — completa lo que falte y avanzamos. 🚀'
+              : 'Con esto armamos tu propuesta y el plan de trabajo. Toma ~5 minutos. Puedes guardar y continuar después.'}
+          </p>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="ob-progress-wrap">
+          <div class="ob-progress-labels">
+            {onboardingSteps.map((s) => (
+              <span class:list={['ob-step-label', { 'ob-step-active': s.num === 1 }]} data-step-label={s.num}>
+                {s.num}. {s.title}
+              </span>
+            ))}
+          </div>
+          <div class="ob-progress-track">
+            <div class="ob-progress-fill" id="progress-fill"></div>
+          </div>
+          <p class="ob-step-hint" id="step-hint"></p>
+        </div>
+
+        <form id="onboarding-form" novalidate>
+          {
+            onboardingSteps.map((step, i) => (
+              <div class:list={['ob-step', { 'ob-step-visible': i === 0 }]} data-step={step.num}>
+                <div class="ob-step-head">
+                  <span class="ob-step-icon">{step.icon}</span>
+                  <div>
+                    <h2>{step.title}</h2>
+                    <p>{step.desc}</p>
+                  </div>
+                </div>
+                <div class="ob-questions">
+                  {
+                    step.questions.map((q) => {
+                      const val = initial[q.id];
+                      return (
+                        <div class="ob-q" data-qid={q.id}>
+                          <label class="ob-q-label">
+                            {q.label}
+                            {q.required && <span class="ob-required">*</span>}
+                          </label>
+                          {q.hint && <p class="ob-q-hint">{q.hint}</p>}
+                          {q.type === 'textarea' && (
+                            <textarea
+                              name={q.id}
+                              rows={3}
+                              placeholder={q.placeholder}
+                              class="ob-input"
+                              required={q.required}
+                            >{val}</textarea>
+                          )}
+                          {q.type === 'select' && (
+                            <select name={q.id} class="ob-input" required={q.required}>
+                              <option value="">{q.placeholder || 'Seleccionar…'}</option>
+                              {(q.options ?? []).map((opt) => (
+                                <option value={opt} selected={String(val) === opt}>{opt}</option>
+                              ))}
+                            </select>
+                          )}
+                          {(q.type === 'radio' || q.type === 'checkbox') && (
+                            <div class="ob-choice-grid">
+                              {(q.options ?? []).map((opt) => {
+                                const checked =
+                                  q.type === 'checkbox'
+                                    ? Array.isArray(val) && val.includes(opt)
+                                    : String(val) === opt;
+                                return (
+                                  <label class="ob-choice" data-checked={checked ? 'true' : 'false'}>
+                                    <input
+                                      type={q.type}
+                                      name={q.id}
+                                      value={opt}
+                                      checked={checked}
+                                      required={q.required && q.type === 'radio'}
+                                    />
+                                    <span>{opt}</span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          )}
+                          {q.type === 'text' && (
+                            <input
+                              type={q.type}
+                              name={q.id}
+                              value={String(val)}
+                              placeholder={q.placeholder}
+                              class="ob-input"
+                              required={q.required}
+                            />
+                          )}
+                          {q.type === 'tel' && (
+                            <input
+                              type="tel"
+                              name={q.id}
+                              value={String(val)}
+                              placeholder={q.placeholder}
+                              class="ob-input"
+                              required={q.required}
+                            />
+                          )}
+                          {q.type === 'email' && (
+                            <input
+                              type="email"
+                              name={q.id}
+                              value={String(val)}
+                              placeholder={q.placeholder}
+                              class="ob-input"
+                              required={q.required}
+                            />
+                          )}
+                          {q.type === 'number' && (
+                            <input
+                              type="number"
+                              name={q.id}
+                              value={String(val)}
+                              placeholder={q.placeholder}
+                              class="ob-input"
+                              min={0}
+                              required={q.required}
+                            />
+                          )}
+                        </div>
+                      );
+                    })
+                  }
+                </div>
+              </div>
+            ))
+          }
+
+          <div class="ob-nav">
+            <button type="button" class="ob-btn ob-btn-ghost" id="btn-prev">← Atrás</button>
+            <div class="ob-save-status" id="save-status"></div>
+            <button type="button" class="ob-btn ob-btn-primary" id="btn-next">Siguiente →</button>
+            <button type="submit" class="ob-btn ob-btn-primary" id="btn-submit" hidden>Enviar cuestionario ✓</button>
+          </div>
+        </form>
+
+        <!-- Pantalla de éxito -->
+        <div id="ob-success" hidden>
+          <div class="ob-success-icon">🎉</div>
+          <h2>¡Gracias! Recibimos tus respuestas</h2>
+          <p>
+            Revisamos la información y te contactamos para armar la propuesta.
+            Si necesitas ajustar algo, escribenos y retomas donde quedaste.
+          </p>
+          <a class="ob-btn ob-btn-primary ob-link-btn" href="/">Volver al inicio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script define:vars={{ initial, cliente, totalSteps }}>
+    const steps = document.querySelectorAll('.ob-step');
+    const labels = document.querySelectorAll('.ob-step-label');
+    const fill = document.getElementById('progress-fill');
+    const hint = document.getElementById('step-hint');
+    const form = document.getElementById('onboarding-form');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnSubmit = document.getElementById('btn-submit');
+    const saveStatus = document.getElementById('save-status');
+    const successBox = document.getElementById('ob-success');
+
+    // Estado client-side: inicializado con prefill (defaults + KV)
+    let state = {};
+    for (const [k, v] of Object.entries(initial)) {
+      state[k] = Array.isArray(v) ? [...v] : v;
+    }
+    let current = 1;
+
+    // Sincroniza el estado al interactuar con cualquier campo
+    form.addEventListener('input', (e) => {
+      const input = e.target;
+      const id = input.name;
+      if (!id || !(id in state)) return;
+      if (input.type === 'checkbox') {
+        if (!Array.isArray(state[id])) state[id] = [];
+        const arr = state[id];
+        if (input.checked) {
+          if (!arr.includes(input.value)) arr.push(input.value);
+        } else {
+          const idx = arr.indexOf(input.value);
+          if (idx !== -1) arr.splice(idx, 1);
+        }
+        const choice = input.closest('.ob-choice');
+        if (choice) choice.dataset.checked = input.checked ? 'true' : 'false';
+      } else if (input.type === 'radio') {
+        state[id] = input.value;
+        const group = form.querySelectorAll(`input[name="${id}"]`);
+        group.forEach((el) => {
+          const c = el.closest('.ob-choice');
+          if (c) c.dataset.checked = el === input ? 'true' : 'false';
+        });
+      } else {
+        state[id] = input.value;
+      }
+    });
+
+    // Persiste progreso en KV (Cloudflare)
+    async function save(step, final = false) {
+      if (!cliente) return true; // sin cliente no persistimos
+      try {
+        const resp = await fetch('/api/onboarding', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cliente, step, respuestas: state, final }),
+        });
+        const data = await resp.json();
+        if (!data.success) throw new Error('save failed');
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function flashSaved(ok) {
+      saveStatus.textContent = ok ? '✓ Guardado' : '⚠ Sin conexión — reintenta al final';
+      saveStatus.classList.toggle('ob-save-ok', ok);
+      saveStatus.classList.toggle('ob-save-warn', !ok);
+      clearTimeout(saveStatus._t);
+      saveStatus._t = setTimeout(() => (saveStatus.textContent = ''), 2500);
+    }
+
+    function showStep(n) {
+      current = n;
+      steps.forEach((el) => {
+        el.classList.toggle('ob-step-visible', Number(el.dataset.step) === n);
+      });
+      labels.forEach((el) => {
+        const num = Number(el.dataset.stepLabel);
+        el.classList.toggle('ob-step-active', num === n);
+        el.classList.toggle('ob-step-done', num < n);
+      });
+      fill.style.width = `${((n - 1) / (totalSteps - 1)) * 100}%`;
+      const s = Array.from(steps).find((el) => Number(el.dataset.step) === n);
+      hint.textContent = s ? `Paso ${n} de ${totalSteps}` : '';
+      btnPrev.disabled = n === 1;
+      btnNext.hidden = n === totalSteps;
+      btnSubmit.hidden = n !== totalSteps;
+      history.replaceState(null, '', n === 1 ? '#contacto' : `#${s?.dataset.step || ''}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Validación: los pasos ocultos (display:none) no participan en constraint validation
+    function validateStep() {
+      const stepEl = steps[current - 1];
+      const fields = stepEl.querySelectorAll('input, select, textarea');
+      for (const f of fields) {
+        if (!f.checkValidity()) {
+          f.reportValidity();
+          return false;
+        }
+      }
+      return true;
+    }
+
+    btnNext.addEventListener('click', async () => {
+      if (!validateStep()) return;
+      const ok = await save(current);
+      flashSaved(ok);
+      showStep(current + 1);
+    });
+
+    btnPrev.addEventListener('click', async () => {
+      const ok = await save(current);
+      flashSaved(ok);
+      showStep(current - 1);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validateStep()) return;
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = 'Enviando…';
+      const ok = await save(current, true);
+      if (!ok) {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'Enviar cuestionario ✓';
+        flashSaved(false);
+        return;
+      }
+      if (typeof umami !== 'undefined') umami.track('submit_onboarding');
+      form.style.display = 'none';
+      document.querySelector('.ob-progress-wrap').style.display = 'none';
+      successBox.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    showStep(1);
+  </script>
+</BaseLayout>
+
+<style>
+.ob-section {
+  padding: 4rem 0 6rem;
+  background:
+    radial-gradient(60rem 30rem at 15% -5%, rgba(99, 102, 241, 0.08), transparent 60%),
+    radial-gradient(50rem 28rem at 95% 10%, rgba(165, 180, 252, 0.1), transparent 55%),
+    var(--color-bg);
+}
+.ob-container { max-width: 46rem; }
+.ob-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: clamp(1.75rem, 5vw, 3rem);
+}
+.ob-header { text-align: center; margin-bottom: 2.25rem; }
+.ob-header h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); margin-bottom: 0.4rem; }
+.ob-sub { color: rgba(24, 24, 27, 0.6); max-width: 34rem; margin: 0 auto; }
+
+/* Progreso */
+.ob-progress-wrap { margin-bottom: 2.5rem; }
+.ob-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+.ob-step-label {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(24, 24, 27, 0.35);
+  transition: color 250ms;
+  white-space: nowrap;
+}
+.ob-step-label.ob-step-active { color: var(--color-primary); }
+.ob-step-label.ob-step-done { color: var(--color-success); }
+.ob-progress-track {
+  height: 6px;
+  background: var(--color-muted);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.ob-progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--color-terracotta), var(--color-sand));
+  border-radius: var(--radius-full);
+  transition: width 400ms ease;
+}
+.ob-step-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: rgba(24, 24, 27, 0.45);
+  text-align: right;
+}
+
+/* Pasos */
+.ob-step { display: none; animation: obFade 350ms ease; }
+.ob-step-visible { display: block; }
+@keyframes obFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ob-step-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.ob-step-icon {
+  font-size: 1.75rem;
+  background: var(--color-cream);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.75rem;
+  flex-shrink: 0;
+}
+.ob-step-head h2 { font-size: 1.4rem; margin: 0 0 0.15rem; }
+.ob-step-head p { margin: 0; color: rgba(24, 24, 27, 0.55); font-size: 0.9375rem; }
+
+.ob-questions { display: flex; flex-direction: column; gap: 1.5rem; }
+.ob-q-label { font-weight: 700; font-size: 0.95rem; color: var(--color-deep); }
+.ob-required { color: var(--color-destructive); }
+.ob-q-hint { margin: 0.15rem 0 0; font-size: 0.8125rem; color: rgba(24, 24, 27, 0.5); }
+
+.ob-input {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  background: var(--color-surface);
+  color: var(--color-fg);
+  transition: border-color 200ms, box-shadow 200ms;
+}
+.ob-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+.ob-input::placeholder { color: rgba(24, 24, 27, 0.35); }
+textarea.ob-input { resize: vertical; min-height: 5.5rem; }
+
+.ob-choice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.6rem; margin-top: 0.5rem; }
+.ob-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(24, 24, 27, 0.7);
+  transition: border-color 200ms, background 200ms, color 200ms;
+  user-select: none;
+}
+.ob-choice:hover { border-color: var(--color-sand); }
+.ob-choice[data-checked='true'] {
+  border-color: var(--color-primary);
+  background: var(--color-cream);
+  color: var(--color-primary);
+}
+.ob-choice input { accent-color: var(--color-primary); }
+
+/* Navegación */
+.ob-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+.ob-save-status {
+  flex: 1;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.ob-save-ok { color: var(--color-success); }
+.ob-save-warn { color: var(--color-destructive); }
+.ob-btn {
+  padding: 0.85rem 1.75rem;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 200ms, transform 150ms, box-shadow 200ms;
+}
+.ob-btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: var(--shadow-glow);
+}
+.ob-btn-primary:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+.ob-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.ob-btn-ghost {
+  background: transparent;
+  color: rgba(24, 24, 27, 0.6);
+  border: 2px solid var(--color-border);
+}
+.ob-btn-ghost:hover:not(:disabled) { border-color: var(--color-primary); color: var(--color-primary); }
+.ob-btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+.ob-link-btn { display: inline-block; margin-top: 1rem; text-decoration: none; }
+
+/* Éxito */
+#ob-success { text-align: center; padding: 2.5rem 1rem; }
+.ob-success-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+#ob-success h2 { margin-bottom: 0.75rem; }
+#ob-success p { max-width: 30rem; margin: 0 auto 1.5rem; color: rgba(24, 24, 27, 0.6); }
+
+@media (max-width: 640px) {
+  .ob-step-label { font-size: 0.6875rem; }
+  .ob-nav { flex-wrap: wrap; }
+  .ob-save-status { order: 3; flex-basis: 100%; }
+}
+</style>

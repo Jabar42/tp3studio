@@ -10,6 +10,13 @@
 	"kv_namespaces": [
 		{ "binding": "SESSION", "id": "3f1c77e9742e4536a005605e33ddd3fa" }
 	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "tp3studio-db",
+			"database_id": "db5e3fb1-15d9-43f0-b0bc-c4896dfd7d9a"
+		}
+	],
 	"observability": {
 		"enabled": true
 	}

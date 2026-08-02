@@ -42,7 +42,7 @@ async function notifyTelegram(name: string, email: string, phone: string, servic
     `📅 <b>Nueva cita</b>`,
     `👤 ${escapeHtml(name)}`,
     `✉️ ${escapeHtml(email)}`,
-    `📞 ${escapeHtml(phone || '—')}`,
+    `📱 WhatsApp: ${escapeHtml(phone || '—')}`,
     `💼 ${escapeHtml(service)}`,
     `🗓 ${escapeHtml(date)} ${escapeHtml(time)}`,
     `📝 ${escapeHtml(notes || '—')}`,

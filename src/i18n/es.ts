@@ -90,12 +90,6 @@ export default {
         desc: 'Tus productos, precios, políticas y clientes viven en una capa de contexto compartida. Tu agente la entiende, la opera y la actualiza. No es un chatbot genérico — es el cerebro de tu negocio funcionando 24/7.',
       },
       {
-        icon: '📄',
-        title: 'Una sola página.',
-        subtitle: 'La que vende.',
-        desc: 'No un sitio de 5 páginas con blog, about y contacto que nadie lee. Una sola página diseñada para llevar al cliente desde "¿qué es esto?" hasta "lo quiero comprar", sin clics, sin distracciones.',
-      },
-      {
         icon: '🤖',
         title: 'Con un agente que atiende 24/7.',
         subtitle: 'IA que responde por ti.',

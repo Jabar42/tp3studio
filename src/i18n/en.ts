@@ -92,12 +92,6 @@ const en: typeof es = {
         desc: `Your products, prices, policies and customers live in a shared context layer. Your agent understands it, operates it, and updates it. Not a generic chatbot \u2014 it's the brain of your business running 24/7.`,
       },
       {
-        icon: '📄',
-        title: 'A single page.',
-        subtitle: 'The one that sells.',
-        desc: 'Not a 5-page site with blog, about, and contact that nobody reads. One single page designed to take the customer from "what is this?" to "I want to buy it" — no clicks, no distractions.',
-      },
-      {
         icon: '🤖',
         title: 'With a 24/7 agent.',
         subtitle: 'AI that responds for you.',
